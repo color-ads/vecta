@@ -1,12 +1,35 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Hero from '../sections/Hero.astro';
+import ProyectoIntro from '../sections/ProyectoIntro.astro';
+import AboutUs from '../sections/AboutUs.astro';
+import AboutCards from '../sections/AboutCards.astro';
+import AboutAmenidades from '../sections/AboutAmenidades.astro';
+import Espacios from '../sections/Espacios.astro';
+import Tipologias from '../sections/Tipologias.astro';
+import Ubicacion from '../sections/Ubicacion.astro';
+import Galeria from '../sections/Galeria.astro';
+import Preguntas from '../sections/Preguntas.astro';
+import Formulario from '../sections/Formulario.astro';
 ---
 
-<Layout title="Vecta">
-	<main class="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-700 text-white">
-		<div class="text-center space-y-4">
-			<h1 class="text-5xl font-bold tracking-tight">Vecta</h1>
-			<p class="text-lg text-slate-300">Astro + Tailwind CSS</p>
+<Layout title="VECTA 98">
+	<main class="bg-vecta-bg">
+		<!-- Hero spans the full viewport width -->
+		<Hero />
+
+		<!-- Remaining sections stay anchored to the 1280px Figma canvas -->
+		<div class="min-w-[1280px] w-[1280px] mx-auto">
+			<ProyectoIntro />
+			<AboutUs />
+			<AboutCards />
+			<AboutAmenidades />
+			<Espacios />
+			<Tipologias />
+			<Ubicacion />
+			<Galeria />
+			<Preguntas />
+			<Formulario />
 		</div>
 	</main>
 </Layout>

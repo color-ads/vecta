@@ -1,1 +1,18 @@
+@import url("https://fonts.googleapis.com/css2?family=Afacad:wght@400&family=Albert+Sans:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
+
+@theme {
+  --color-vecta-bg: #f0f0f0;
+  --color-vecta-lime: #eafc9d;
+  --color-vecta-lime-text: #eafc9c;
+  --color-vecta-dark: #22291d;
+  --color-vecta-night: #151515;
+  --font-display: "Albert Sans", system-ui, sans-serif;
+  --font-nav: "Afacad", system-ui, sans-serif;
+}
+
+html, body {
+  background-color: var(--color-vecta-bg);
+  color: var(--color-vecta-dark);
+  font-family: var(--font-display);
+}

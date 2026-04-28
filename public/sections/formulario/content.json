@@ -1,0 +1,22 @@
+{
+  "section": "formulario",
+  "title": "Quiero saber más",
+  "commentLabel": "Deja tu comentario aquí:",
+  "fields": [
+    { "id": "nombre", "label": "Nombre:", "type": "text" },
+    { "id": "celular", "label": "Celular:", "type": "tel" },
+    { "id": "correo", "label": "Correo:", "type": "email" }
+  ],
+  "purposeLabel": "Este proyecto se acomoda a ti para:",
+  "purposeOptions": [
+    { "id": "inversion", "label": "Inversión:" },
+    { "id": "vivienda", "label": "Vivienda:" }
+  ],
+  "contactLabel": "Quieres ser contactado telefónicamente:",
+  "contactOptions": [
+    { "id": "si", "label": "Sí:" },
+    { "id": "no", "label": "No:" }
+  ],
+  "consent": "Autorizo a recibir información del proyecto a mi correo electrónico y autorizo el uso de mis datos según la política de tratamiento de datos personales.",
+  "submit": "ENVIAR"
+}

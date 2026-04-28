@@ -1,0 +1,36 @@
+---
+// Espacios - dark image with carousel of spaces (GIMNASIO, COWORKING, LOUNGE, RESTAURANTE, LOOBY)
+---
+<section class="relative w-[1280px] h-[832px] mx-auto overflow-hidden bg-black">
+  <img
+    src="/sections/espacios/espacios-bg.png"
+    alt="Espacio gimnasio VECTA 98"
+    class="absolute inset-0 w-full h-full object-cover"
+  />
+  <div class="absolute inset-0 bg-[rgba(56,48,28,0.44)]"></div>
+
+  <!-- Decorative diamond/circle frame (Group 11) -->
+  <svg class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" width="900" height="700" viewBox="0 0 900 700" fill="none">
+    <rect x="125" y="80" width="650" height="540" stroke="white" stroke-opacity="0.6" stroke-width="1"/>
+    <circle cx="450" cy="350" r="270" stroke="white" stroke-opacity="0.6" stroke-width="1"/>
+    <path d="M450 80 L775 350 L450 620 L125 350 Z" stroke="white" stroke-opacity="0.6" stroke-width="1" fill="none"/>
+  </svg>
+
+  <!-- Title centered -->
+  <div class="absolute left-1/2 top-[383px] -translate-x-1/2 text-center text-white" style="font-family: 'Albert Sans', sans-serif;">
+    <h2 class="text-[64px] font-medium leading-[0.959]">GIMNASIO</h2>
+    <p class="mt-[16px] text-[32px] leading-[0.959]">Espacio altamente equipado</p>
+  </div>
+
+  <!-- Arrows -->
+  <button class="absolute left-[153px] top-[378px] w-[76px] h-[76px] rounded-full border border-white text-white flex items-center justify-center" aria-label="Anterior">
+    <svg viewBox="0 0 24 24" class="w-[24px] h-[24px]" fill="none" stroke="currentColor" stroke-width="1.6">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+    </svg>
+  </button>
+  <button class="absolute left-[1048px] top-[378px] w-[76px] h-[76px] rounded-full border border-white text-white flex items-center justify-center" aria-label="Siguiente">
+    <svg viewBox="0 0 24 24" class="w-[24px] h-[24px]" fill="none" stroke="currentColor" stroke-width="1.6">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+    </svg>
+  </button>
+</section>

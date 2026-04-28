@@ -1,0 +1,13 @@
+{
+  "section": "espacios",
+  "spaces": [
+    { "name": "GIMNASIO", "subtitle": "Espacio altamente equipado", "image": "/sections/espacios/espacios-bg.png" },
+    { "name": "COWORKING", "subtitle": "Espacio con alta activación" },
+    { "name": "LOUNGE", "subtitle": "Espacio con alta activación" },
+    { "name": "RESTAURANTE", "subtitle": "Espacio con alta activación" },
+    { "name": "LOOBY", "subtitle": "Espacio con alta activación" }
+  ],
+  "assets": {
+    "background": "/sections/espacios/espacios-bg.png"
+  }
+}

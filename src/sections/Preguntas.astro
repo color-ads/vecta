@@ -1,0 +1,57 @@
+---
+// Preguntas - FAQ section with building image on right
+const items = [
+  { question: "¿Cuál es el precio del proyecto?", answer: "Cercanía a zonas corporativas, vías principales y servicios clave.", open: true },
+  { question: "¿Qué áreas tienen?" },
+  { question: "¿Dónde está ubicado?" },
+  { question: "¿Qué incluye el proyecto?" },
+  { question: "¿Cómo es el proceso de compra?" }
+];
+---
+<section class="relative w-[1280px] h-[832px] mx-auto overflow-hidden bg-[#0a0a0a]">
+  <!-- Decorative circle -->
+  <div class="absolute left-[481px] top-[561px] w-[620px] h-[620px] rounded-full border border-vecta-lime-text/40"></div>
+
+  <!-- Vertical line -->
+  <div class="absolute left-[759px] top-0 w-px h-[815px] bg-white/30"></div>
+  <!-- Horizontal lines -->
+  <div class="absolute -left-[179px] top-[279px] w-[1528px] h-px bg-white/30"></div>
+  <div class="absolute left-[759px] top-[500px] w-[563px] h-px bg-white/30"></div>
+
+  <!-- Lime dots -->
+  <span class="absolute left-[752px] top-[273px] w-[13px] h-[12px] rounded-full bg-vecta-lime-text"></span>
+  <span class="absolute left-[752px] top-[494px] w-[13px] h-[12px] rounded-full bg-vecta-lime-text"></span>
+
+  <!-- Title -->
+  <h2 class="absolute left-[68px] top-[103px] w-[639px] text-vecta-lime-text font-semibold text-[60px] leading-[0.959]"
+      style="font-family: 'Albert Sans', sans-serif;">
+    Algunas preguntas frecuentes
+  </h2>
+
+  <!-- FAQ items -->
+  <div class="absolute left-[32px] top-[313px] w-[700px]" style="font-family: 'Albert Sans', sans-serif;">
+    {items.map((item, idx) => (
+      <div class={`relative py-[18px] ${idx === 0 ? "" : ""}`}>
+        <button class="flex items-start gap-[13px] w-full text-left">
+          <span class={`mt-[2px] inline-flex w-[36px] h-[36px] rounded-full border-2 ${item.open ? "border-vecta-lime-text text-vecta-lime-text" : "border-white text-white"} items-center justify-center shrink-0`}>
+            <svg viewBox="0 0 24 24" class="w-[14px] h-[14px]" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </span>
+          <span class={`text-[26px] font-semibold leading-[1.2] ${item.open ? "text-vecta-lime-text" : "text-white"}`}>
+            {item.question}
+          </span>
+        </button>
+        {item.open && item.answer && (
+          <p class="ml-[49px] mt-[6px] text-white/80 text-[18px] leading-[1.3]">{item.answer}</p>
+        )}
+        {idx === 0 && <div class="absolute left-[-49px] right-0 bottom-0 h-px bg-white/30 ml-[49px]"></div>}
+      </div>
+    ))}
+  </div>
+
+  <!-- Right image -->
+  <div class="absolute left-[604px] -top-[42px] w-[829px] h-[1037px] overflow-hidden">
+    <img src="/sections/galeria/gallery-1.png" alt="Edificio VECTA 98" class="w-full h-full object-cover" />
+  </div>
+</section>

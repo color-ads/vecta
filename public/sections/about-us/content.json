@@ -1,0 +1,56 @@
+{
+  "section": "about-us",
+  "title": "Aquí no vendemos sueños inmobiliarios.",
+  "body": [
+    "El mercado está lleno de promesas, renders perfectos. Discursos aspiracionales. Rentabilidades sin contexto.",
+    "VECTA 98 parte de una lógica distinta: No se construyó para emocionar, sino para funcionar."
+  ],
+  "highlight": ["VECTA 98", "sino para funcionar."],
+  "cards": [
+    {
+      "number": "1.",
+      "title": "Claridad",
+      "description": "Aquí todo se explica. Sin discursos inflados ni promesas ambiguas."
+    },
+    {
+      "number": "2.",
+      "title": "Arquitectura funcional",
+      "description": "Cada espacio tiene un propósito real de uso."
+    },
+    {
+      "number": "3.",
+      "title": "Ciudad activa",
+      "description": "Ubicación con dinámica real, no aspiracional."
+    },
+    {
+      "number": "4.",
+      "title": "Coherencia a largo plazo",
+      "description": "Una lógica estructurada diseñado para sostener valor en el tiempo."
+    }
+  ],
+  "amenidades": [
+    {
+      "title": "Ubicación estratégica",
+      "description": "Cercanía a zonas corporativas, vías principales y servicios clave."
+    },
+    {
+      "title": "Alta demanda potencial",
+      "description": "Zona con flujo constante de personas y actividad económica."
+    },
+    {
+      "title": "Eficiencia en el diseño",
+      "description": "Espacios optimizados para maximizar uso y ocupación."
+    },
+    {
+      "title": "Amenidades funcionales",
+      "description": "No decorativas, sino pensadas para complementar la operación."
+    },
+    {
+      "title": "Bajo ruido comercial",
+      "description": "Una marca que prioriza la información sobre la persuasión."
+    }
+  ],
+  "assets": {
+    "manImage": "/sections/about-us/man-phone.png"
+  }
+}

@@ -1,0 +1,56 @@
+---
+// Hero - HOME page top section (1280x832 in Figma)
+// Reference: HOME frame 2030:31, Rectangle 6 (2030:115) holds the B&W building photo as image fill.
+// The Figma MCP design-context exposes Rectangle 6 as an empty div; the photo is only visible in
+// rendered screenshots. Export it manually from Figma if you want pixel-perfect parity, then
+// replace `/sections/hero/hero-bg.jpg` (or .png) below.
+import Header from "../components/Header.astro";
+---
+<section class="relative w-full h-[832px] overflow-hidden bg-[#0d0e0c]">
+  <!-- Hero background: B&W building photo (Rectangle 6 in Figma).
+       Falls back to a deep neutral gradient if hero-bg image isn't present. -->
+  <picture class="absolute inset-0 block">
+    <img
+      src="/sections/hero/hero-bg.jpg"
+      alt=""
+      class="w-full h-full object-cover object-center"
+      onerror="this.style.display='none'"
+    />
+  </picture>
+  <div class="absolute inset-0 bg-gradient-to-b from-[#3d3d3d] via-[#1f201d] to-[#0a0c0a]"></div>
+  <div class="absolute inset-0 mix-blend-overlay opacity-60"
+       style="background-image: repeating-linear-gradient(90deg, transparent 0 36px, rgba(0,0,0,0.18) 36px 38px), linear-gradient(180deg, rgba(255,255,255,0.05), transparent 70%);"></div>
+
+  <!-- Inner 1280px canvas keeps Figma absolute positions intact -->
+  <div class="relative w-[1280px] h-full mx-auto">
+    <Header active="HOME" variant="light" />
+
+    <!-- Vertical separators (Vector 25 left, Vector 26 right) -->
+    <!-- Vector 25: x=102, y=163, h=417 -->
+    <div class="absolute left-[102px] top-[163px] w-px h-[417px] bg-white/40"></div>
+    <!-- Vector 26: x=1196, y=210, h=488 -->
+    <div class="absolute left-[1196px] top-[210px] w-px h-[488px] bg-white/40"></div>
+
+    <!-- Small horizontal accents near the logo (Vector 27 + Vector 28) -->
+    <!-- Vector 27: x=102, y=456, w=76 -->
+    <div class="absolute left-[102px] top-[456px] w-[76px] h-px bg-white/70"></div>
+    <!-- Vector 28: x=102.5, y=483, w=162.5 -->
+    <div class="absolute left-[102px] top-[483px] w-[163px] h-px bg-white/70"></div>
+
+    <!-- VECTA 98 logo (image 11 [Vectorized] 2030:149)  x=350, y=361, 580.84 x 133 -->
+    <div class="absolute left-[350px] top-[361px] w-[581px] h-[133px]">
+      <img src="/sections/hero/vecta-logo.svg" alt="VECTA 98" class="w-full h-full object-contain" />
+    </div>
+
+    <!-- Tagline (text 2030:68) at x=74, y=605, w=352, h=93 -->
+    <p class="absolute left-[74px] top-[605px] w-[360px] text-vecta-lime-text font-medium text-[32px] leading-[0.959] whitespace-pre-line"
+       style="font-family: 'Albert Sans', sans-serif;">
+Un buen activo
+no necesita convencer,
+se demuestra.
+    </p>
+
+    <!-- Bottom horizontal divider (Vector 20) x=138, y=800, w=1002.5 -->
+    <div class="absolute left-[138px] top-[800px] w-[1003px] h-px bg-white/40"></div>
+  </div>
+</section>

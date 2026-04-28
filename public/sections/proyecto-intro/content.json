@@ -1,0 +1,12 @@
+{
+  "section": "proyecto-intro",
+  "city": "Bogotá, Colombia",
+  "areaLabel": "Aptos desde",
+  "areaValue": "40 mts²",
+  "priceLabel": "Desde",
+  "priceValue": "$790",
+  "priceUnit": "millones",
+  "assets": {
+    "background": "/sections/proyecto-intro/apartment.png"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "section": "tipologias",
+  "title": "Tipologias",
+  "logo": "VECTA 98",
+  "tipos": [
+    { "id": 1, "label": "Tipología 1", "area": "20 mts²" },
+    { "id": 2, "label": "Tipología 2", "area": "40 mts²" },
+    { "id": 3, "label": "Tipología 3", "area": "35 mts²" },
+    { "id": 4, "label": "Tipología 3", "area": "18 mts²" },
+    { "id": 5, "label": "Tipología 5", "area": "25 mts²" }
+  ],
+  "detail": {
+    "tipo": "Tipo 3",
+    "area": "35 mts²",
+    "description": "Espacio compacto y funcional que integra sala, cocina, habitación y zona de lavado en una distribución eficiente.",
+    "specs": [
+      { "label": "ÁREA TOTAL", "value": "35 mts²" },
+      { "label": "CAMAS", "value": "2" },
+      { "label": "SALA COMEDOR", "value": "1" },
+      { "label": "BAÑOS", "value": "2" }
+    ]
+  },
+  "assets": {
+    "background": "/sections/tipologias/tipologias-bg.png"
+  }
+}

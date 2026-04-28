@@ -5,18 +5,20 @@ interface Props {
 	title?: string;
 }
 
-const { title = 'Vecta' } = Astro.props;
+const { title = 'VECTA 98' } = Astro.props;
 ---
 
 <html lang="es">
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=1280" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 	</head>
-	<body>
+	<body class="bg-vecta-bg text-vecta-dark antialiased">
 		<slot />
 	</body>
 </html>
