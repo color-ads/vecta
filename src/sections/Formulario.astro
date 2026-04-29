@@ -1,7 +1,9 @@
 ---
 // Formulario - contact form on lime background
 ---
-<section class="relative w-[1280px] h-[832px] mx-auto overflow-hidden bg-vecta-lime">
+<section class="relative w-full min-w-[1280px] h-[832px] overflow-hidden bg-vecta-lime">
+  <!-- Inner 1280px canvas keeps Figma absolute positions intact -->
+  <div class="relative w-[1280px] h-full mx-auto">
   <!-- Title -->
   <h2 class="absolute left-[168px] top-[148px] text-vecta-dark font-semibold text-[44px] leading-[0.959]"
       style="font-family: 'Albert Sans', sans-serif;">
@@ -56,4 +58,5 @@
           style="font-family: 'Albert Sans', sans-serif;">
     ENVIAR
   </button>
+  </div>
 </section>

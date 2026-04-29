@@ -1,22 +1,26 @@
 ---
 // Proyecto Intro – apartment render with location/area/price overlay
 ---
-<section class="relative w-[1280px] h-[979px] mx-auto overflow-hidden">
+<section class="relative w-full min-w-[1280px] h-[979px] overflow-hidden">
+  <!-- Apartment render bleeds full-width across the viewport -->
   <img
     src="/sections/proyecto-intro/apartment.png"
     alt="Render apartamento VECTA 98"
-    class="absolute -left-[267px] top-0 w-[1469px] h-[979px] object-cover"
+    class="absolute inset-0 w-full h-full object-cover"
   />
 
-  <!-- Right-side info card text (Group 11 in Figma) -->
-  <div class="absolute right-[88px] top-[231px] w-[300px] text-vecta-dark text-right" style="font-family: 'Albert Sans', sans-serif;">
-    <p class="text-[32px] leading-[0.959]">Bogotá, Colombia</p>
+  <!-- Inner 1280px canvas keeps Figma absolute positions intact for the overlay text -->
+  <div class="relative w-[1280px] h-full mx-auto">
+    <!-- Right-side info card text (Group 11 in Figma) -->
+    <div class="absolute right-[88px] top-[231px] w-[300px] text-vecta-dark text-right" style="font-family: 'Albert Sans', sans-serif;">
+      <p class="text-[32px] leading-[0.959]">Bogotá, Colombia</p>
 
-    <p class="mt-[50px] text-[32px] leading-[0.959]">Aptos desde</p>
-    <p class="mt-[12px] text-[64px] font-medium leading-[0.959]">40 mts²</p>
+      <p class="mt-[50px] text-[32px] leading-[0.959]">Aptos desde</p>
+      <p class="mt-[12px] text-[64px] font-medium leading-[0.959]">40 mts²</p>
 
-    <p class="mt-[55px] text-[32px] leading-[0.959]">Desde</p>
-    <p class="mt-[10px] text-[60px] font-medium leading-[0.959]">$790</p>
-    <p class="text-[60px] font-medium leading-[0.959]">millones</p>
+      <p class="mt-[55px] text-[32px] leading-[0.959]">Desde</p>
+      <p class="mt-[10px] text-[60px] font-medium leading-[0.959]">$790</p>
+      <p class="text-[60px] font-medium leading-[0.959]">millones</p>
+    </div>
   </div>
 </section>

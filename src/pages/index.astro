@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
 import Hero from '../sections/Hero.astro';
 import ProyectoIntro from '../sections/ProyectoIntro.astro';
 import AboutUs from '../sections/AboutUs.astro';
@@ -14,22 +15,87 @@ import Formulario from '../sections/Formulario.astro';
 ---
 
 <Layout title="VECTA 98">
+	<!-- Single, fixed nav that stays visible while the user scrolls between blocks.
+	     data-nav-theme is updated by the script below as the user scrolls so the
+	     nav text/lines flip dark over light-background sections (2, 3, 4, 11). -->
+	<header id="site-nav" data-nav-theme="light"
+	        class="fixed top-0 left-0 right-0 z-50 h-[130px] pointer-events-none">
+		<div class="relative w-[1280px] h-full mx-auto pointer-events-auto">
+			<Header active="HOME" variant="light" />
+		</div>
+	</header>
+
 	<main class="bg-vecta-bg">
 		<!-- Hero spans the full viewport width -->
 		<Hero />
 
-		<!-- Remaining sections stay anchored to the 1280px Figma canvas -->
-		<div class="min-w-[1280px] w-[1280px] mx-auto">
-			<ProyectoIntro />
-			<AboutUs />
-			<AboutCards />
-			<AboutAmenidades />
-			<Espacios />
-			<Tipologias />
-			<Ubicacion />
-			<Galeria />
-			<Preguntas />
-			<Formulario />
-		</div>
+		<!-- Full-bleed apartment render -->
+		<ProyectoIntro />
+
+		<!-- AboutUs lime card grows with the viewport (side strips reduced ~75%) -->
+		<AboutUs />
+
+		<!-- Same adaptive width treatment as AboutUs -->
+		<AboutCards />
+		<AboutAmenidades />
+
+		<!-- Full-bleed dark spaces carousel -->
+		<Espacios />
+
+		<!-- Full-bleed blocks 7–10 -->
+		<Tipologias />
+		<Ubicacion />
+		<Galeria />
+		<Preguntas />
+
+		<!-- Full-bleed contact form -->
+		<Formulario />
 	</main>
 </Layout>
+
+<style is:global>
+	/* Smooth color transitions when the nav flips between light/dark themes */
+	#site-nav .bg-white,
+	#site-nav .bg-white\/70,
+	#site-nav .text-white,
+	#site-nav .border-white {
+		transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+	}
+
+	/* Dark theme overrides — applied when the section under the nav line has a light bg */
+	#site-nav[data-nav-theme="dark"] .text-white { color: #22291d; }
+	#site-nav[data-nav-theme="dark"] .bg-white { background-color: #22291d; }
+	#site-nav[data-nav-theme="dark"] .border-white { border-color: #22291d; }
+	#site-nav[data-nav-theme="dark"] .bg-white\/70 { background-color: rgb(34 41 29 / 0.7); }
+</style>
+
+<script>
+	const nav = document.getElementById('site-nav');
+	const sections = Array.from(document.querySelectorAll('main > section'));
+	// Sections 2, 3, 4 and the last one have light/lime backgrounds → need dark nav text
+	const lightBgSections = new Set([
+		sections[1],
+		sections[2],
+		sections[3],
+		sections[sections.length - 1],
+	].filter(Boolean));
+
+	const NAV_LINE_Y = 65; // y-coordinate inside the nav where text/lines sit
+
+	function updateNavTheme() {
+		if (!nav) return;
+		let theme = 'light';
+		for (const section of sections) {
+			const rect = section.getBoundingClientRect();
+			if (rect.top <= NAV_LINE_Y && rect.bottom > NAV_LINE_Y) {
+				theme = lightBgSections.has(section) ? 'dark' : 'light';
+				break;
+			}
+		}
+		if (nav.dataset.navTheme !== theme) nav.dataset.navTheme = theme;
+	}
+
+	window.addEventListener('scroll', updateNavTheme, { passive: true });
+	window.addEventListener('resize', updateNavTheme);
+	updateNavTheme();
+</script>

@@ -4,7 +4,7 @@
 // The Figma MCP design-context exposes Rectangle 6 as an empty div; the photo is only visible in
 // rendered screenshots. Export it manually from Figma if you want pixel-perfect parity, then
 // replace `/sections/hero/hero-bg.jpg` (or .png) below.
-import Header from "../components/Header.astro";
+// Header lives globally in index.astro (fixed/sticky) — not rendered here.
 ---
 <section class="relative w-full h-[832px] overflow-hidden bg-[#0d0e0c]">
   <!-- Hero background: B&W building photo (Rectangle 6 in Figma).
@@ -23,8 +23,6 @@ import Header from "../components/Header.astro";
 
   <!-- Inner 1280px canvas keeps Figma absolute positions intact -->
   <div class="relative w-[1280px] h-full mx-auto">
-    <Header active="HOME" variant="light" />
-
     <!-- Vertical separators (Vector 25 left, Vector 26 right) -->
     <!-- Vector 25: x=102, y=163, h=417 -->
     <div class="absolute left-[102px] top-[163px] w-px h-[417px] bg-white/40"></div>

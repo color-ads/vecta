@@ -1,12 +1,16 @@
 ---
 // About Us – yellow card with manifesto text + image of man on phone
 ---
-<section class="relative w-[1280px] h-[860px] mx-auto bg-vecta-bg">
-  <!-- Lime rounded card -->
-  <div class="absolute left-1/2 -translate-x-1/2 top-[24px] w-[1231px] h-[812px] rounded-[10px] bg-vecta-lime"></div>
+<section class="relative w-full min-w-[1280px] h-[822px] bg-vecta-bg overflow-hidden">
+  <!-- Lime rounded card grows with viewport. White side strips reduced ~75%
+       relative to a 1280-capped layout (two halvings).
+       width = (3·100vw + 1270px) / 4  →  side gap = (100vw - 1270px) / 8 -->
+  <div class="absolute top-[5px] left-1/2 -translate-x-1/2 h-[812px] rounded-[10px] bg-vecta-lime"
+       style="width: calc(75vw + 317.5px); min-width: 1270px;"></div>
 
-  <!-- Right photo card (Rectangle 10) -->
-  <div class="absolute left-[705px] top-[24px] w-[551px] h-[812px] rounded-r-[10px] overflow-hidden">
+  <!-- Right photo card (Rectangle 10) — anchored to the lime card's right edge -->
+  <div class="absolute top-[5px] w-[551px] h-[812px] rounded-r-[10px] overflow-hidden"
+       style="right: calc((100vw - 1270px) / 8);">
     <img
       src="/sections/about-us/man-phone.png"
       alt="Persona observando proyecto VECTA 98"
@@ -14,24 +18,27 @@
     />
   </div>
 
-  <!-- Title -->
-  <h2 class="absolute left-[74px] top-[245px] w-[639px] text-vecta-dark font-semibold text-[60px] leading-[0.959]"
-      style="font-family: 'Albert Sans', sans-serif;">
-    Aquí no vendemos sueños inmobiliarios.
-  </h2>
+  <!-- Inner 1280px canvas keeps Figma absolute positions intact for text content -->
+  <div class="relative w-[1280px] h-full mx-auto">
+    <!-- Title -->
+    <h2 class="absolute left-[74px] top-[245px] w-[639px] text-vecta-dark font-semibold text-[60px] leading-[0.959]"
+        style="font-family: 'Albert Sans', sans-serif;">
+      Aquí no vendemos sueños inmobiliarios.
+    </h2>
 
-  <!-- Vertical accent lines -->
-  <div class="absolute left-[80px] top-[207px] w-[495px] h-px bg-vecta-dark"></div>
-  <div class="absolute left-[74px] top-[673px] w-[495px] h-px bg-vecta-dark"></div>
-  <div class="absolute left-[74px] top-[691px] w-[292px] h-px bg-vecta-dark"></div>
+    <!-- Vertical accent lines -->
+    <div class="absolute left-[80px] top-[207px] w-[495px] h-px bg-vecta-dark"></div>
+    <div class="absolute left-[74px] top-[673px] w-[495px] h-px bg-vecta-dark"></div>
+    <div class="absolute left-[74px] top-[691px] w-[292px] h-px bg-vecta-dark"></div>
 
-  <!-- Body -->
-  <div class="absolute left-[74px] top-[392px] w-[475px] text-vecta-dark text-[32px] leading-[0.959] space-y-[1em]"
-       style="font-family: 'Albert Sans', sans-serif;">
-    <p>El mercado está lleno de promesas, renders perfectos. Discursos aspiracionales. Rentabilidades sin contexto.</p>
-    <p>
-      <span class="font-bold">VECTA 98</span> parte de una lógica distinta: No se construyó para emocionar,
-      <span class="font-bold">sino para funcionar.</span>
-    </p>
+    <!-- Body -->
+    <div class="absolute left-[74px] top-[392px] w-[475px] text-vecta-dark text-[32px] leading-[0.959] space-y-[1em]"
+         style="font-family: 'Albert Sans', sans-serif;">
+      <p>El mercado está lleno de promesas, renders perfectos. Discursos aspiracionales. Rentabilidades sin contexto.</p>
+      <p>
+        <span class="font-bold">VECTA 98</span> parte de una lógica distinta: No se construyó para emocionar,
+        <span class="font-bold">sino para funcionar.</span>
+      </p>
+    </div>
   </div>
 </section>

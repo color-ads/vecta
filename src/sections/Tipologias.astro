@@ -2,7 +2,8 @@
 // Tipologias - building image with 5 typology callouts and big "Tipologias" title
 import VectaLogo from "../components/VectaLogo.astro";
 ---
-<section class="relative w-[1280px] h-[2085px] mx-auto overflow-hidden bg-black">
+<section class="relative w-full min-w-[1280px] h-[2085px] overflow-hidden bg-black">
+  <!-- Background image bleeds full-width across the viewport -->
   <img
     src="/sections/tipologias/tipologias-bg.png"
     alt="Edificio VECTA 98 con tipologías"
@@ -10,51 +11,54 @@ import VectaLogo from "../components/VectaLogo.astro";
   />
   <div class="absolute inset-0 bg-black/30"></div>
 
-  <!-- Big title -->
-  <h2 class="absolute right-[120px] top-[101px] text-white font-medium text-[128px] leading-[0.959]"
-      style="font-family: 'Albert Sans', sans-serif;">
-    Tipologias
-  </h2>
+  <!-- Inner 1280px canvas keeps Figma absolute positions intact -->
+  <div class="relative w-[1280px] h-full mx-auto">
+    <!-- Big title -->
+    <h2 class="absolute right-[120px] top-[101px] text-white font-medium text-[128px] leading-[0.959]"
+        style="font-family: 'Albert Sans', sans-serif;">
+      Tipologias
+    </h2>
 
-  <!-- Logo -->
-  <div class="absolute left-[732px] top-[290px] w-[448px] h-[103px]">
-    <VectaLogo color="#ffffff" className="w-full h-full" />
-  </div>
-  <div class="absolute left-[663px] top-[257px] w-[495px] h-px bg-white"></div>
+    <!-- Logo -->
+    <div class="absolute left-[732px] top-[290px] w-[448px] h-[103px]">
+      <VectaLogo color="#ffffff" className="w-full h-full" />
+    </div>
+    <div class="absolute left-[663px] top-[257px] w-[495px] h-px bg-white"></div>
 
-  <!-- Typology callouts -->
-  <!-- Tipología 1 - top left (20 mts²) -->
-  <div class="absolute left-[57px] top-[400px] text-white" style="font-family: 'Albert Sans', sans-serif;">
-    <p class="text-[32px] leading-[0.959]">Tipología 1</p>
-    <p class="mt-[8px] text-[64px] font-medium leading-[0.959]">20 mts²</p>
-    <div class="absolute left-[129px] top-[105px] w-px h-[105px] bg-white"></div>
-  </div>
+    <!-- Typology callouts -->
+    <!-- Tipología 1 - top left (20 mts²) -->
+    <div class="absolute left-[57px] top-[400px] text-white" style="font-family: 'Albert Sans', sans-serif;">
+      <p class="text-[32px] leading-[0.959]">Tipología 1</p>
+      <p class="mt-[8px] text-[64px] font-medium leading-[0.959]">20 mts²</p>
+      <div class="absolute left-[129px] top-[105px] w-px h-[105px] bg-white"></div>
+    </div>
 
-  <!-- Tipología 3 - top right (35 mts²) -->
-  <div class="absolute left-[846px] top-[618px] text-white" style="font-family: 'Albert Sans', sans-serif;">
-    <p class="text-[32px] leading-[0.959]">Tipología 3</p>
-    <p class="mt-[8px] text-[64px] font-medium leading-[0.959]">35 mts²</p>
-    <div class="absolute left-[118px] top-[105px] w-px h-[105px] bg-white"></div>
-  </div>
+    <!-- Tipología 3 - top right (35 mts²) -->
+    <div class="absolute left-[846px] top-[618px] text-white" style="font-family: 'Albert Sans', sans-serif;">
+      <p class="text-[32px] leading-[0.959]">Tipología 3</p>
+      <p class="mt-[8px] text-[64px] font-medium leading-[0.959]">35 mts²</p>
+      <div class="absolute left-[118px] top-[105px] w-px h-[105px] bg-white"></div>
+    </div>
 
-  <!-- Tipología 3 - mid right (18 mts²) -->
-  <div class="absolute left-[1058px] top-[1000px] text-center text-white" style="font-family: 'Albert Sans', sans-serif;">
-    <p class="text-[30px] leading-[0.959]">Tipología 3</p>
-    <p class="mt-[8px] text-[60px] font-medium leading-[0.959]">18 mts²</p>
-    <div class="absolute left-[84px] top-[100px] w-px h-[90px] bg-white"></div>
-  </div>
+    <!-- Tipología 3 - mid right (18 mts²) -->
+    <div class="absolute left-[1058px] top-[1000px] text-center text-white" style="font-family: 'Albert Sans', sans-serif;">
+      <p class="text-[30px] leading-[0.959]">Tipología 3</p>
+      <p class="mt-[8px] text-[60px] font-medium leading-[0.959]">18 mts²</p>
+      <div class="absolute left-[84px] top-[100px] w-px h-[90px] bg-white"></div>
+    </div>
 
-  <!-- Tipología 2 - bottom left (40 mts²) -->
-  <div class="absolute left-[108px] top-[1560px] text-white" style="font-family: 'Albert Sans', sans-serif;">
-    <p class="text-[32px] leading-[0.959]">Tipología 2</p>
-    <p class="mt-[8px] text-[64px] font-medium leading-[0.959]">40 mts²</p>
-    <div class="absolute left-[119px] top-[-105px] w-px h-[105px] bg-white"></div>
-  </div>
+    <!-- Tipología 2 - bottom left (40 mts²) -->
+    <div class="absolute left-[108px] top-[1560px] text-white" style="font-family: 'Albert Sans', sans-serif;">
+      <p class="text-[32px] leading-[0.959]">Tipología 2</p>
+      <p class="mt-[8px] text-[64px] font-medium leading-[0.959]">40 mts²</p>
+      <div class="absolute left-[119px] top-[-105px] w-px h-[105px] bg-white"></div>
+    </div>
 
-  <!-- Tipología 5 - bottom right (25 mts²) -->
-  <div class="absolute left-[860px] top-[1772px] text-white" style="font-family: 'Albert Sans', sans-serif;">
-    <p class="text-[32px] leading-[0.959]">Tipología 5</p>
-    <p class="mt-[8px] text-[64px] font-medium leading-[0.959]">25 mts²</p>
-    <div class="absolute left-[119px] top-[-67px] w-px h-[67px] bg-white"></div>
+    <!-- Tipología 5 - bottom right (25 mts²) -->
+    <div class="absolute left-[860px] top-[1772px] text-white" style="font-family: 'Albert Sans', sans-serif;">
+      <p class="text-[32px] leading-[0.959]">Tipología 5</p>
+      <p class="mt-[8px] text-[64px] font-medium leading-[0.959]">25 mts²</p>
+      <div class="absolute left-[119px] top-[-67px] w-px h-[67px] bg-white"></div>
+    </div>
   </div>
 </section>
