@@ -1,22 +1,23 @@
 ---
 // Galería - 3 image grid (1 large left + 2 stacked right)
 ---
-<section class="relative w-full min-w-[1280px] h-[829px] overflow-hidden bg-vecta-bg">
+<section class="relative w-full min-w-[1280px] min-h-screen overflow-hidden bg-vecta-bg">
   <!-- Images bleed to viewport edges. Seam between left and right columns
-       sits at the original Figma split (canvas-x=631, i.e. 9px before center). -->
+       sits at the original Figma split (canvas-x=631, i.e. 9px before center).
+       Right column split keeps original Figma ratio: 363/829 ≈ 43.78%. -->
 
   <!-- Large left image: viewport left edge → 9px before viewport center -->
-  <div class="absolute left-0 top-0 h-[829px] overflow-hidden" style="width: calc(50vw - 9px); min-width: 631px;">
+  <div class="absolute left-0 inset-y-0 overflow-hidden" style="width: calc(50vw - 9px); min-width: 631px;">
     <img src="/sections/galeria/gallery-1.png" alt="Vista exterior VECTA 98" class="w-full h-full object-cover" />
   </div>
 
   <!-- Top right image: 9px before viewport center → viewport right edge -->
-  <div class="absolute top-0 h-[363px] overflow-hidden" style="left: calc(50vw - 9px); right: 0; min-width: 649px;">
+  <div class="absolute top-0 overflow-hidden" style="left: calc(50vw - 9px); right: 0; height: 43.78%; min-width: 649px;">
     <img src="/sections/galeria/gallery-2.png" alt="Detalle arquitectónico" class="w-full h-full object-cover" />
   </div>
 
   <!-- Bottom right image -->
-  <div class="absolute top-[363px] h-[466px] overflow-hidden" style="left: calc(50vw - 9px); right: 0; min-width: 649px;">
+  <div class="absolute bottom-0 overflow-hidden" style="left: calc(50vw - 9px); right: 0; top: 43.78%; min-width: 649px;">
     <img src="/sections/galeria/gallery-3.png" alt="Espacio interior" class="w-full h-full object-cover" />
   </div>
 </section>

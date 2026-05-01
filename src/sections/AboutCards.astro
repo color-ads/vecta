@@ -8,13 +8,13 @@ const cards = [
   { number: "4.", title: "Coherencia a largo plazo", description: "Una lógica estructurada diseñado para sostener valor en el tiempo." }
 ];
 ---
-<section class="relative w-full min-w-[1280px] h-[832px] bg-vecta-bg overflow-hidden">
+<section class="relative w-full min-w-[1280px] min-h-screen bg-vecta-bg overflow-hidden flex items-center justify-center">
   <!-- Lime panel grows with viewport (~75% reduction in side strips, matches AboutUs) -->
-  <div class="absolute top-0 left-1/2 -translate-x-1/2 h-full bg-vecta-lime"
-       style="width: calc(75vw + 317.5px); min-width: 1270px;"></div>
+  <div class="absolute left-1/2 -translate-x-1/2 bg-vecta-lime"
+       style="top: calc((100vw - 1270px) / 8); bottom: calc((100vw - 1270px) / 8); width: calc(75vw + 317.5px); min-width: 1270px;"></div>
 
   <!-- Inner 1280px canvas keeps Figma absolute positions intact -->
-  <div class="relative w-[1280px] h-full mx-auto">
+  <div class="relative w-[1280px] h-[832px] mx-auto">
     <!-- 4 cards -->
     <div class="absolute left-[84px] top-[237px] flex gap-[10px]">
       {cards.map((c) => (

@@ -1,8 +1,7 @@
 ---
 // Tipologias - building image with 5 typology callouts and big "Tipologias" title
-import VectaLogo from "../components/VectaLogo.astro";
 ---
-<section class="relative w-full min-w-[1280px] h-[2085px] overflow-hidden bg-black">
+<section id="tipologias" class="relative w-full min-w-[1280px] h-[2085px] overflow-hidden bg-black">
   <!-- Background image bleeds full-width across the viewport -->
   <img
     src="/sections/tipologias/tipologias-bg.png"
@@ -19,9 +18,10 @@ import VectaLogo from "../components/VectaLogo.astro";
       Tipologias
     </h2>
 
-    <!-- Logo -->
+    <!-- Logo — same SVG asset as Hero (`/sections/hero/vecta-logo.svg`),
+         sized to the Tipologias canvas position (448×103). -->
     <div class="absolute left-[732px] top-[290px] w-[448px] h-[103px]">
-      <VectaLogo color="#ffffff" className="w-full h-full" />
+      <img src="/sections/hero/vecta-logo.svg" alt="VECTA 98" class="w-full h-full object-contain" />
     </div>
     <div class="absolute left-[663px] top-[257px] w-[495px] h-px bg-white"></div>
 

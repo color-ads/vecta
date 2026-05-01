@@ -3,9 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Hero from '../sections/Hero.astro';
 import ProyectoIntro from '../sections/ProyectoIntro.astro';
-import AboutUs from '../sections/AboutUs.astro';
-import AboutCards from '../sections/AboutCards.astro';
-import AboutAmenidades from '../sections/AboutAmenidades.astro';
+import AboutCarousel from '../sections/AboutCarousel.astro';
 import Espacios from '../sections/Espacios.astro';
 import Tipologias from '../sections/Tipologias.astro';
 import Ubicacion from '../sections/Ubicacion.astro';
@@ -21,7 +19,7 @@ import Formulario from '../sections/Formulario.astro';
 	<header id="site-nav" data-nav-theme="light"
 	        class="fixed top-0 left-0 right-0 z-50 h-[130px] pointer-events-none">
 		<div class="relative w-[1280px] h-full mx-auto pointer-events-auto">
-			<Header active="HOME" variant="light" />
+			<Header variant="light" />
 		</div>
 	</header>
 
@@ -32,12 +30,9 @@ import Formulario from '../sections/Formulario.astro';
 		<!-- Full-bleed apartment render -->
 		<ProyectoIntro />
 
-		<!-- AboutUs lime card grows with the viewport (side strips reduced ~75%) -->
-		<AboutUs />
-
-		<!-- Same adaptive width treatment as AboutUs -->
-		<AboutCards />
-		<AboutAmenidades />
+		<!-- About vertical carousel — 3 slides (manifesto, 4 cards, amenidades grid)
+		     consolidated into a single viewport with up/down nav arrows. -->
+		<AboutCarousel />
 
 		<!-- Full-bleed dark spaces carousel -->
 		<Espacios />
@@ -67,20 +62,38 @@ import Formulario from '../sections/Formulario.astro';
 	#site-nav[data-nav-theme="dark"] .bg-white { background-color: #22291d; }
 	#site-nav[data-nav-theme="dark"] .border-white { border-color: #22291d; }
 	#site-nav[data-nav-theme="dark"] .bg-white\/70 { background-color: rgb(34 41 29 / 0.7); }
+
+	/* Lime theme — applied when AboutCarousel is on slide 3 (black amenidades card) */
+	#site-nav[data-nav-theme="lime"] .text-white { color: #EAFC9D; }
+	#site-nav[data-nav-theme="lime"] .bg-white { background-color: #EAFC9D; }
+	#site-nav[data-nav-theme="lime"] .border-white { border-color: #EAFC9D; }
+	#site-nav[data-nav-theme="lime"] .bg-white\/70 { background-color: rgb(234 252 157 / 0.7); }
+
+	/* Black theme — applied on section 2 (ProyectoIntro). Full black, overrides
+	   lime accents and hover so the entire nav is monochrome black. */
+	#site-nav[data-nav-theme="black"] .text-white,
+	#site-nav[data-nav-theme="black"] .text-vecta-lime,
+	#site-nav[data-nav-theme="black"] .text-vecta-lime-text { color: #000; }
+	#site-nav[data-nav-theme="black"] .bg-white { background-color: #000; }
+	#site-nav[data-nav-theme="black"] .border-white,
+	#site-nav[data-nav-theme="black"] .border-vecta-lime-text { border-color: #000; }
+	#site-nav[data-nav-theme="black"] .bg-white\/70 { background-color: rgb(0 0 0 / 0.7); }
+	#site-nav[data-nav-theme="black"] .hover\:text-vecta-lime:hover { color: #000; }
 </style>
 
 <script>
 	const nav = document.getElementById('site-nav');
 	const sections = Array.from(document.querySelectorAll('main > section'));
-	// Sections 2, 3, 4 and the last one have light/lime backgrounds → need dark nav text
+	// Sections 2, 3 and the last one have light/lime backgrounds → need dark nav text.
+	// (Indices shifted after AboutUs/Cards/Amenidades were consolidated into AboutCarousel.)
 	const lightBgSections = new Set([
 		sections[1],
 		sections[2],
-		sections[3],
 		sections[sections.length - 1],
 	].filter(Boolean));
 
 	const NAV_LINE_Y = 65; // y-coordinate inside the nav where text/lines sit
+	const aboutSection = document.getElementById('about-carousel');
 
 	function updateNavTheme() {
 		if (!nav) return;
@@ -89,6 +102,14 @@ import Formulario from '../sections/Formulario.astro';
 			const rect = section.getBoundingClientRect();
 			if (rect.top <= NAV_LINE_Y && rect.bottom > NAV_LINE_Y) {
 				theme = lightBgSections.has(section) ? 'dark' : 'light';
+				// Section 2 (ProyectoIntro) → full black nav (monochrome, overrides lime accents).
+				if (section === sections[1]) {
+					theme = 'black';
+				}
+				// AboutCarousel slide 3 sits on a black card → flip nav to lime so it stays visible.
+				if (section === aboutSection && (section as HTMLElement).dataset.activeSlide === '2') {
+					theme = 'lime';
+				}
 				break;
 			}
 		}
@@ -97,5 +118,50 @@ import Formulario from '../sections/Formulario.astro';
 
 	window.addEventListener('scroll', updateNavTheme, { passive: true });
 	window.addEventListener('resize', updateNavTheme);
+	// Re-evaluate when AboutCarousel changes its active slide (custom event from
+	// AboutCarousel.astro). Lets the nav flip to lime without waiting for scroll.
+	document.addEventListener('about-slide-change', updateNavTheme);
 	updateNavTheme();
+
+	// Caret up/down nav buttons — step between blocks. When the active block is
+	// AboutCarousel, "blocks" includes its 3 internal slides, so the carets walk
+	// the slides before advancing/retreating to the neighbouring section.
+	function currentSectionIndex() {
+		for (let i = 0; i < sections.length; i++) {
+			const rect = (sections[i] as HTMLElement).getBoundingClientRect();
+			if (rect.top <= NAV_LINE_Y && rect.bottom > NAV_LINE_Y) return i;
+		}
+		return 0;
+	}
+	function scrollToSection(section: HTMLElement) {
+		// Block-snap: align the section's top with the viewport top so the block
+		// fills the screen edge-to-edge. The fixed nav floats over the top
+		// 130px — every section's content is positioned below that line by design.
+		const targetY = section.getBoundingClientRect().top + window.scrollY;
+		window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+	}
+	function goToSection(i: number) {
+		if (i < 0 || i >= sections.length) return;
+		scrollToSection(sections[i] as HTMLElement);
+	}
+	const ABOUT_SLIDE_COUNT = 3;
+	function goCaret(direction: 1 | -1) {
+		const idx = currentSectionIndex();
+		const section = sections[idx] as HTMLElement | undefined;
+		if (section && section === aboutSection) {
+			const current = Number(section.dataset.activeSlide ?? '0');
+			const next = current + direction;
+			if (next >= 0 && next < ABOUT_SLIDE_COUNT) {
+				// Stay inside AboutCarousel and swap the active slide.
+				const dot = document.querySelector<HTMLButtonElement>(`[data-about-dot="${next}"]`);
+				dot?.click();
+				// Re-anchor the carousel to the top so the slide reads as the active block.
+				scrollToSection(section);
+				return;
+			}
+		}
+		goToSection(idx + direction);
+	}
+	document.querySelector('[data-caret="down"]')?.addEventListener('click', () => goCaret(1));
+	document.querySelector('[data-caret="up"]')?.addEventListener('click', () => goCaret(-1));
 </script>

@@ -6,23 +6,28 @@
 // replace `/sections/hero/hero-bg.jpg` (or .png) below.
 // Header lives globally in index.astro (fixed/sticky) — not rendered here.
 ---
-<section class="relative w-full h-[832px] overflow-hidden bg-[#0d0e0c]">
-  <!-- Hero background: B&W building photo (Rectangle 6 in Figma).
-       Falls back to a deep neutral gradient if hero-bg image isn't present. -->
-  <picture class="absolute inset-0 block">
-    <img
-      src="/sections/hero/hero-bg.jpg"
-      alt=""
-      class="w-full h-full object-cover object-center"
-      onerror="this.style.display='none'"
-    />
-  </picture>
-  <div class="absolute inset-0 bg-gradient-to-b from-[#3d3d3d] via-[#1f201d] to-[#0a0c0a]"></div>
-  <div class="absolute inset-0 mix-blend-overlay opacity-60"
-       style="background-image: repeating-linear-gradient(90deg, transparent 0 36px, rgba(0,0,0,0.18) 36px 38px), linear-gradient(180deg, rgba(255,255,255,0.05), transparent 70%);"></div>
+<section id="hero" class="relative w-full min-h-screen overflow-hidden bg-[#0d0e0c] flex items-center justify-center">
+  <!-- Hero background video: autoplay muted loop, full-bleed. The deep neutral
+       gradient and scanline overlay below it provide a fallback if the video
+       fails to load and add the same vignette/grain feel as before. -->
+  <video
+    src="/herobg.mp4"
+    autoplay
+    muted
+    loop
+    playsinline
+    preload="auto"
+    class="absolute inset-0 w-full h-full object-cover object-center"
+    aria-hidden="true"
+  ></video>
+  <!-- Gradient + scanline overlay sits on top of the video for the original
+       moody look (kept subtle so the video stays readable). -->
+  <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 pointer-events-none"></div>
+  <div class="absolute inset-0 mix-blend-overlay opacity-30 pointer-events-none"
+       style="background-image: linear-gradient(180deg, rgba(255,255,255,0.05), transparent 70%);"></div>
 
   <!-- Inner 1280px canvas keeps Figma absolute positions intact -->
-  <div class="relative w-[1280px] h-full mx-auto">
+  <div class="relative w-[1280px] h-[832px] mx-auto">
     <!-- Vertical separators (Vector 25 left, Vector 26 right) -->
     <!-- Vector 25: x=102, y=163, h=417 -->
     <div class="absolute left-[102px] top-[163px] w-px h-[417px] bg-white/40"></div>

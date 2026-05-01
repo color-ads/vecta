@@ -1,0 +1,249 @@
+---
+// About vertical carousel — 3 stacked slides (manifesto, 4 numbered cards,
+// amenidades grid). Up/down arrows in the top-left swap the active slide.
+// Replaces the previous AboutUs / AboutCards / AboutAmenidades sections, which
+// each took a full viewport — now they share one viewport.
+const cards = [
+  { number: "1.", title: "Claridad", description: "Aquí todo se explica. Sin discursos inflados ni promesas ambiguas." },
+  { number: "2.", title: "Arquitectura funcional", description: "Cada espacio tiene un propósito real de uso." },
+  { number: "3.", title: "Ciudad activa", description: "Ubicación con dinámica real, no aspiracional." },
+  { number: "4.", title: "Coherencia a largo plazo", description: "Una lógica estructurada diseñado para sostener valor en el tiempo." }
+];
+
+const items = [
+  { title: "Ubicación estratégica", description: "Cercanía a zonas corporativas, vías principales y servicios clave." },
+  { title: "Alta demanda potencial", description: "Zona con flujo constante de personas y actividad económica." },
+  { title: "Eficiencia en el diseño", description: "Espacios optimizados para maximizar uso y ocupación." },
+  { title: "Amenidades funcionales", description: "No decorativas, sino pensadas para complementar la operación." },
+  { title: "Bajo ruido comercial", description: "Una marca que prioriza la información sobre la persuasión." }
+];
+---
+<section id="about-carousel" data-active-slide="0" class="relative w-full min-w-[1280px] min-h-screen bg-vecta-bg overflow-hidden">
+  <!-- Slide indicator dots — clickable, centered along the left strip. Only
+       navigation control for this carousel. z-50 keeps them above slides and
+       any pointer-events: auto contention. -->
+  <div class="absolute left-[60px] top-1/2 -translate-y-1/2 flex flex-col gap-[14px] z-50">
+    {[0, 1, 2].map((i) => (
+      <button data-about-dot={i} aria-label={`Ir al slide ${i + 1}`} type="button"
+              class={`w-[14px] h-[14px] rounded-full border-2 border-vecta-dark cursor-pointer transition-all hover:scale-125 ${i === 0 ? 'bg-vecta-dark' : 'bg-transparent'}`}></button>
+    ))}
+  </div>
+
+  <!-- ============================================================
+       SLIDE 1 — Manifesto on lime card (formerly AboutUs.astro)
+       ============================================================ -->
+  <div data-about-slide="manifesto"
+       class="absolute inset-0 transition-opacity duration-500 flex items-center justify-center"
+       style="opacity: 1;">
+    <!-- Lime rounded card grows with viewport. White side strips reduced ~75%
+         relative to a 1280-capped layout. -->
+    <div class="absolute rounded-[10px] bg-vecta-lime"
+         style="top: calc((100vw - 1270px) / 8); bottom: calc((100vw - 1270px) / 8); right: calc((100vw - 1270px) / 8); width: calc(75vw + 317.5px); min-width: 1270px;"></div>
+
+    <!-- Right photo card — anchored to the lime card's right edge -->
+    <div class="absolute w-[551px] rounded-r-[10px] overflow-hidden"
+         style="top: calc((100vw - 1270px) / 8); bottom: calc((100vw - 1270px) / 8); right: calc((100vw - 1270px) / 8);">
+      <img
+        src="/sections/about-us/man-phone.png"
+        alt="Persona observando proyecto VECTA 98"
+        class="w-full h-full object-cover"
+      />
+    </div>
+
+    <!-- Inner 1280px canvas keeps Figma absolute positions intact for text -->
+    <div class="relative w-[1280px] h-[812px] mx-auto">
+      <h2 class="absolute left-[74px] top-[245px] w-[639px] text-vecta-dark font-semibold text-[60px] leading-[0.959]"
+          style="font-family: 'Albert Sans', sans-serif;">
+        Aquí no vendemos sueños inmobiliarios.
+      </h2>
+      <div class="absolute left-[80px] top-[207px] w-[495px] h-px bg-vecta-dark"></div>
+      <div class="absolute left-[74px] top-[673px] w-[495px] h-px bg-vecta-dark"></div>
+      <div class="absolute left-[74px] top-[691px] w-[292px] h-px bg-vecta-dark"></div>
+      <div class="absolute left-[74px] top-[392px] w-[475px] text-vecta-dark text-[32px] leading-[0.959] space-y-[1em]"
+           style="font-family: 'Albert Sans', sans-serif;">
+        <p>El mercado está lleno de promesas, renders perfectos. Discursos aspiracionales. Rentabilidades sin contexto.</p>
+        <p>
+          <span class="font-bold">VECTA 98</span> parte de una lógica distinta: No se construyó para emocionar,
+          <span class="font-bold">sino para funcionar.</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 2 — 4 numbered cards on lime (formerly AboutCards.astro)
+       ============================================================ -->
+  <div data-about-slide="cards"
+       class="absolute inset-0 transition-opacity duration-500 flex items-center justify-center"
+       style="opacity: 0;">
+    <!-- Lime card with overflow-hidden + the geometric figures nested inside.
+         Anything bleeding past the lime card's rounded edges gets clipped, so
+         the strokes never leak onto the bg-vecta-bg side strips. -->
+    <div class="absolute left-1/2 -translate-x-1/2 bg-vecta-lime overflow-hidden"
+         style="top: calc((100vw - 1270px) / 8); bottom: calc((100vw - 1270px) / 8); width: calc(75vw + 317.5px); min-width: 1270px;">
+      <!-- Geometric figure background (Figma 2021:189 "Group 11"):
+           - Rectangle 2 (outer)  — 724.78×724.78 rotated -45° → 1025 diamond
+           - Rectangle 3 (inner)  — 506.53×506.53 axis-aligned
+           - Ellipse 1            — 506.53×506.53 circle inscribed in the square
+           All three concentric, centered horizontally on the lime card and
+           shifted +37% down from its mid (50% + 37% = 87% on the y-axis).
+           Clipped by the lime card's overflow-hidden. -->
+      <div class="absolute pointer-events-none"
+           style="width: 724.78px; height: 724.78px;
+                  left: calc(50% - 362.39px); top: calc(87% - 362.39px);
+                  border: 1px solid #22291D;
+                  transform: rotate(-45deg);"></div>
+      <div class="absolute pointer-events-none rounded-full"
+           style="width: 506.53px; height: 506.53px;
+                  left: calc(50% - 253.265px); top: calc(87% - 253.265px);
+                  border: 1px solid #22291D;"></div>
+      <div class="absolute pointer-events-none"
+           style="width: 506.53px; height: 506.53px;
+                  left: calc(50% - 253.265px); top: calc(87% - 253.265px);
+                  border: 1px solid #22291D;"></div>
+    </div>
+
+    <div class="relative w-[1280px] h-[832px] mx-auto">
+      <div class="absolute left-[84px] top-[237px] flex gap-[10px]">
+        {cards.map((c) => (
+          <article class="relative w-[271px] h-[436px] rounded-[10px] bg-[#0a0a0a] text-white">
+            <span class="absolute left-[24px] top-[11px] text-[105px] leading-none font-bold text-white" style="font-family: 'Albert Sans', sans-serif;">{c.number}</span>
+            <div class="absolute right-[20px] top-[22px] w-[55px] h-[55px] rounded-full bg-white flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="none">
+                <path d="M10.4954 17.4921V20.9905C10.4954 22.9226 8.92908 24.4889 6.99696 24.4889C5.06483 24.4889 3.49854 22.9226 3.49854 20.9905C3.49854 19.0584 5.06483 17.4921 6.99696 17.4921H10.4954ZM10.4954 17.4921H17.4922M10.4954 17.4921V10.4953M17.4922 17.4921V20.9905C17.4922 22.9226 19.0585 24.4889 20.9906 24.4889C22.9228 24.4889 24.4891 22.9226 24.4891 20.9905C24.4891 19.0584 22.9228 17.4921 20.9906 17.4921H17.4922ZM17.4922 17.4921V10.4953M17.4922 10.4953H10.4954M17.4922 10.4953V6.99683C17.4922 5.06471 19.0585 3.49841 20.9906 3.49841C22.9228 3.49841 24.4891 5.06471 24.4891 6.99683C24.4891 8.92896 22.9228 10.4953 20.9906 10.4953H17.4922ZM10.4954 10.4953V6.99683C10.4954 5.06471 8.92908 3.49841 6.99696 3.49841C5.06483 3.49841 3.49854 5.06471 3.49854 6.99683C3.49854 8.92896 5.06483 10.4953 6.99696 10.4953H10.4954Z" stroke="#151515" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <!-- Title is bottom-anchored with a small gap above the line so 1-line
+                 (Claridad, Ciudad activa) and 2-line (Arquitectura funcional,
+                 Coherencia a largo plazo) titles all sit ~13px above the line
+                 (≈ 3% of the 436px card height). -->
+            <h3 class="absolute left-[24px] bottom-[127px] w-[217px] text-[36px] font-semibold leading-[0.95]" style="font-family: 'Albert Sans', sans-serif;">{c.title}</h3>
+            <span class="absolute left-[24px] top-[322px] w-[126px] h-px bg-white"></span>
+            <p class="absolute left-[24px] top-[343px] w-[218px] text-[18px] leading-[1.3] font-bold" style="font-family: 'Albert Sans', sans-serif;">{c.description}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 3 — Amenidades grid on black (formerly AboutAmenidades.astro)
+       ============================================================ -->
+  <div data-about-slide="amenidades"
+       class="absolute inset-0 transition-opacity duration-500 flex items-center justify-center"
+       style="opacity: 0;">
+    <div class="absolute left-1/2 -translate-x-1/2 bg-[#0a0a0a] overflow-hidden"
+         style="top: calc((100vw - 1270px) / 8); bottom: calc((100vw - 1270px) / 8); width: calc(75vw + 317.5px); min-width: 1270px;">
+      <div class="absolute -left-[207px] -top-[157px] w-[620px] h-[620px] rounded-full border border-vecta-lime-text/40"></div>
+    </div>
+
+    <div class="relative w-[1280px] h-[832px] mx-auto">
+      <h2 class="absolute left-[68px] top-[103px] w-[639px] text-vecta-lime-text font-semibold text-[60px] leading-[0.959]"
+          style="font-family: 'Albert Sans', sans-serif;">
+        Aquí no vendemos sueños inmobiliarios.
+      </h2>
+
+      <!-- Cross-grid lines (1px solid #FFF) -->
+      <div class="absolute left-[412px] top-[1px] w-px h-[815px] bg-white"></div>
+      <div class="absolute left-[851px] top-[1px] w-px h-[815px] bg-white"></div>
+      <div class="absolute left-[413px] top-[327px] w-[856px] h-px bg-white"></div>
+      <div class="absolute left-[413px] top-[548px] w-[856px] h-px bg-white"></div>
+
+      <!-- Dots at line intersections (white) -->
+      <span class="absolute left-[406px] top-[321px] w-[12px] h-[12px] rounded-full bg-white"></span>
+      <span class="absolute left-[406px] top-[542px] w-[12px] h-[12px] rounded-full bg-white"></span>
+      <span class="absolute left-[845px] top-[321px] w-[12px] h-[12px] rounded-full bg-white"></span>
+      <span class="absolute left-[845px] top-[542px] w-[12px] h-[12px] rounded-full bg-white"></span>
+
+      <div class="absolute left-[908px] top-[91px] w-[280px]" style="font-family: 'Albert Sans', sans-serif;">
+        <h3 class="text-vecta-lime-text font-semibold text-[28px] leading-[0.959]">{items[0].title}</h3>
+        <p class="mt-[28px] text-white text-[18px] leading-[1.35] font-semibold">{items[0].description}</p>
+      </div>
+      <div class="absolute left-[502px] top-[354px] w-[260px]" style="font-family: 'Albert Sans', sans-serif;">
+        <h3 class="text-vecta-lime-text font-semibold text-[28px] leading-[0.959]">{items[1].title}</h3>
+        <p class="mt-[28px] text-white text-[18px] leading-[1.35] font-semibold">{items[1].description}</p>
+      </div>
+      <div class="absolute left-[908px] top-[354px] w-[260px]" style="font-family: 'Albert Sans', sans-serif;">
+        <h3 class="text-vecta-lime-text font-semibold text-[28px] leading-[0.959]">{items[2].title}</h3>
+        <p class="mt-[28px] text-white text-[18px] leading-[1.35] font-semibold">{items[2].description}</p>
+      </div>
+      <div class="absolute left-[68px] top-[598px] w-[300px]" style="font-family: 'Albert Sans', sans-serif;">
+        <h3 class="text-vecta-lime-text font-semibold text-[28px] leading-[0.959]">{items[3].title}</h3>
+        <p class="mt-[28px] text-white text-[18px] leading-[1.35] font-semibold">{items[3].description}</p>
+      </div>
+      <div class="absolute left-[502px] top-[598px] w-[260px]" style="font-family: 'Albert Sans', sans-serif;">
+        <h3 class="text-vecta-lime-text font-semibold text-[28px] leading-[0.959]">{items[4].title}</h3>
+        <p class="mt-[28px] text-white text-[18px] leading-[1.35] font-semibold">{items[4].description}</p>
+      </div>
+
+      <div class="absolute right-[80px] bottom-[90px] flex flex-col items-center gap-[8px]">
+        <!-- actualcorp logo: outer "a" mark + inner counter/eye nested inside.
+             Inner 29×27 SVG offset from geometric center by +14% right / +11%
+             down of the outer 90×90 (≈ +12.6 px right, +9.9 px down):
+               x = (90 - 29) / 2 + 0.14·90 = 30.5 + 12.6 = 43.1
+               y = (90 - 27) / 2 + 0.11·90 = 31.5 + 9.9  = 41.4 -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="90" height="90" viewBox="0 0 90 90" fill="none">
+          <path d="M65.338 0.207339C76.8727 -1.82185 77.5324 11.5197 79.3628 19.4294C77.7054 16.6523 75.4046 13.0969 72.6029 11.3261C62.2186 4.76404 42.4457 9.62051 35.4325 19.3492C31.6563 24.5876 31.6736 31.7141 32.7026 37.62L42.9649 35.8498C41.8329 29.9249 42.6738 24.4495 48.3566 21.2755C54.1861 18.0189 64.7149 16.338 68.7607 23.1667C70.1371 25.492 70.1392 28.5987 69.4204 31.1272C68.8808 31.631 68.2435 32.1308 67.5533 32.4601C57.0611 37.4694 41.391 38.735 35.9429 50.548C33.9834 54.7967 34.2772 60.8272 35.9464 65.0815C41.0286 78.0343 54.6137 78.9007 66.1728 74.2183C71.764 71.8957 75.9055 68.6264 78.5179 62.9531C80.7963 67.3155 84.3554 69.9255 89.3236 68.03C87.2773 77.006 82.3967 76.635 74.7449 78.271L60.7831 81.2603L35.4681 86.529C31.2655 87.3824 27.0731 88.278 22.8473 89.0271C18.3471 89.8248 14.3436 87.7078 12.958 83.2522C11.8215 79.5964 11.1107 75.8043 10.2942 72.0632C8.81716 65.338 7.38109 58.6037 5.98613 51.8609L2.16227 34.0275C0.914527 28.225 -1.91203 20.6621 1.98736 15.6785C4.35905 12.6476 8.80698 12.1286 12.3684 11.2881C17.7267 10.0231 23.1393 8.99751 28.5086 7.83231L53.1313 2.64588C56.7699 1.89962 61.791 0.687904 65.338 0.207339Z" fill="white"/>
+          <svg x="43.1" y="41.4" width="29" height="27" viewBox="0 0 29 27" fill="none">
+            <path d="M26.9093 0L27.286 0.145698C27.5711 0.897258 27.7136 1.49659 27.8215 2.28794C28.526 7.40214 29.483 12.3929 26.7159 17.1028C22.3973 24.4564 11.3981 28.9237 3.67298 24.3607C2.60198 23.6032 1.72033 22.6074 1.09727 21.4514C0.0384793 19.4587 -0.348387 16.7212 0.358151 14.5245C2.17438 8.87649 10.83 6.67711 15.7452 4.63812C19.4795 3.08889 23.3318 1.90124 26.9093 0Z" fill="white"/>
+          </svg>
+        </svg>
+        <span class="text-white text-[42px] font-bold leading-none" style="font-family: 'Albert Sans', sans-serif;">actualcorp</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function initAboutCarousel() {
+    const slides = document.querySelectorAll<HTMLElement>('[data-about-slide]');
+    const dots = document.querySelectorAll<HTMLButtonElement>('[data-about-dot]');
+    const total = slides.length;
+    if (!total) return;
+    let active = 0;
+
+    // Slide 3 (amenidades) sits on a black card — dots flip to vecta-lime so
+    // they remain visible against the dark background.
+    const ACCENT_DEFAULT = '#22291D'; // vecta-dark — for slides 1 & 2 (lime cards)
+    const ACCENT_DARK_SLIDE = '#EAFC9D'; // vecta-lime — for slide 3 (black card)
+
+    const sectionEl = document.getElementById('about-carousel');
+
+    function show(i: number) {
+      active = (i + total) % total;
+      const accent = active === 2 ? ACCENT_DARK_SLIDE : ACCENT_DEFAULT;
+
+      slides.forEach((s, idx) => {
+        s.style.opacity = idx === active ? '1' : '0';
+        s.style.pointerEvents = idx === active ? 'auto' : 'none';
+      });
+      dots.forEach((d, idx) => {
+        d.style.borderColor = accent;
+        d.style.backgroundColor = idx === active ? accent : 'transparent';
+      });
+      // Mirror active slide on the section so the global nav theme handler
+      // can react (slide 3 → lime nav over the dark amenidades card).
+      if (sectionEl) sectionEl.dataset.activeSlide = String(active);
+      document.dispatchEvent(new CustomEvent('about-slide-change'));
+    }
+
+    dots.forEach((d, idx) => {
+      d.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        show(idx);
+      });
+    });
+
+    // Apply initial styling consistently (slide 0, default accent).
+    show(0);
+  }
+
+  // Run after DOM ready (Astro deferred scripts run post-parse, but this
+  // guards against any edge case where elements aren't yet queryable).
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAboutCarousel);
+  } else {
+    initAboutCarousel();
+  }
+</script>

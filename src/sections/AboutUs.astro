@@ -1,16 +1,16 @@
 ---
 // About Us – yellow card with manifesto text + image of man on phone
 ---
-<section class="relative w-full min-w-[1280px] h-[822px] bg-vecta-bg overflow-hidden">
+<section class="relative w-full min-w-[1280px] min-h-screen bg-vecta-bg overflow-hidden flex items-center justify-center">
   <!-- Lime rounded card grows with viewport. White side strips reduced ~75%
        relative to a 1280-capped layout (two halvings).
        width = (3·100vw + 1270px) / 4  →  side gap = (100vw - 1270px) / 8 -->
-  <div class="absolute top-[5px] left-1/2 -translate-x-1/2 h-[812px] rounded-[10px] bg-vecta-lime"
-       style="width: calc(75vw + 317.5px); min-width: 1270px;"></div>
+  <div class="absolute rounded-[10px] bg-vecta-lime"
+       style="top: calc((100vw - 1270px) / 8); bottom: calc((100vw - 1270px) / 8); right: calc((100vw - 1270px) / 8); width: calc(75vw + 317.5px); min-width: 1270px;"></div>
 
   <!-- Right photo card (Rectangle 10) — anchored to the lime card's right edge -->
-  <div class="absolute top-[5px] w-[551px] h-[812px] rounded-r-[10px] overflow-hidden"
-       style="right: calc((100vw - 1270px) / 8);">
+  <div class="absolute w-[551px] rounded-r-[10px] overflow-hidden"
+       style="top: calc((100vw - 1270px) / 8); bottom: calc((100vw - 1270px) / 8); right: calc((100vw - 1270px) / 8);">
     <img
       src="/sections/about-us/man-phone.png"
       alt="Persona observando proyecto VECTA 98"
@@ -19,7 +19,7 @@
   </div>
 
   <!-- Inner 1280px canvas keeps Figma absolute positions intact for text content -->
-  <div class="relative w-[1280px] h-full mx-auto">
+  <div class="relative w-[1280px] h-[812px] mx-auto">
     <!-- Title -->
     <h2 class="absolute left-[74px] top-[245px] w-[639px] text-vecta-dark font-semibold text-[60px] leading-[0.959]"
         style="font-family: 'Albert Sans', sans-serif;">

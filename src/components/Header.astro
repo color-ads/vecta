@@ -14,19 +14,23 @@ interface Props {
   active?: "HOME" | "ABOUT US" | "ESPACIOS" | "TIPOLOGÍAS" | "INVERSIÓN";
   variant?: "light" | "dark";
 }
-const { active = "HOME", variant = "light" } = Astro.props;
+const { active, variant = "light" } = Astro.props;
 const stroke = variant === "light" ? "bg-white/70" : "bg-vecta-dark/70";
 const inactive = variant === "light" ? "text-white" : "text-vecta-dark";
 const burger = variant === "light" ? "bg-white" : "bg-vecta-dark";
-const upBorder = variant === "light" ? "border-white text-white" : "border-vecta-dark text-vecta-dark";
+// Caret circle buttons (up/down). Both default to white lines in the light
+// variant (Hero) until pressed. Pressed state is toggled via JS below.
+const caretBorder = variant === "light" ? "border-white text-white" : "border-vecta-dark text-vecta-dark";
 
-// Frame 18 sits at canvas x=318 inside the 1280px hero. Items are absolutely positioned within it.
+// Frame 18 sits at canvas x=318 inside the 1280px hero. Items are absolutely
+// positioned within it. Each maps to a section id so the nav scroll-jumps to
+// the right block; smooth-scroll + scroll-padding-top live in Layout.astro.
 const navItems = [
-  { label: "HOME", x: 0, w: 55 },
-  { label: "ABOUT US", x: 105, w: 90 },
-  { label: "ESPACIOS", x: 245, w: 87 },
-  { label: "TIPOLOGÍAS", x: 382, w: 111 },
-  { label: "INVERSIÓN", x: 543, w: 102 },
+  { label: "HOME",       x: 0,   w: 55,  href: "#hero" },
+  { label: "ABOUT US",   x: 105, w: 90,  href: "#about-carousel" },
+  { label: "ESPACIOS",   x: 245, w: 87,  href: "#espacios" },
+  { label: "TIPOLOGÍAS", x: 382, w: 111, href: "#tipologias" },
+  { label: "INVERSIÓN",  x: 543, w: 102, href: "#inversion" },
 ] as const;
 
 // Dividers absolute x within the 1280px canvas
@@ -42,21 +46,29 @@ const dividers = [388, 534, 684, 842];
   <div class={`absolute top-[60px] w-px h-[34px] ${stroke} z-30`} style={`left:${x}px`}></div>
 ))}
 
-<!-- Frame 18 nav items (Albert Sans / Afacad Regular 22px) -->
+<!-- Frame 18 nav items (Albert Sans / Afacad Regular 22px). Default = white in
+     light variant / vecta-dark in dark variant. Hover and active both use
+     vecta-lime (#EAFC9D) — the project's yellow accent. Anchors with native
+     hash navigation; smooth scroll handled at the html level. -->
 <nav class="absolute left-[318px] top-[66px] w-[645px] h-[21px] z-30" style="font-family: 'Afacad', sans-serif;">
   {navItems.map((item) => (
-    <span
-      class={`absolute top-0 text-[22px] leading-[0.959] whitespace-nowrap ${active === item.label ? "text-vecta-lime-text" : inactive}`}
+    <a
+      href={item.href}
+      class={`absolute top-0 text-[22px] leading-[0.959] whitespace-nowrap cursor-pointer transition-colors ${active === item.label ? "text-vecta-lime" : `${inactive} hover:text-vecta-lime`}`}
       style={`left:${item.x}px;width:${item.w}px;`}
     >
       {item.label}
-    </span>
+    </a>
   ))}
 </nav>
 
-<!-- Hamburger menu (Menu / Hamburger_MD) at x=1196, y=55, 43x43 -->
+<!-- Hamburger menu (Menu / Hamburger_MD) at x=1196, y=55, 43x43.
+     Mobile-only: hidden on devices with a precise pointer (desktop mouse),
+     visible on touch devices. The viewport=1280 meta in Layout.astro freezes
+     viewport-width at 1280, so we use (pointer: coarse) instead of width
+     breakpoints to differentiate mobile vs desktop. -->
 <button
-  class="absolute left-[1196px] top-[55px] w-[43px] h-[43px] flex flex-col items-center justify-center gap-[6px] z-30"
+  class="mobile-hamburger absolute left-[1196px] top-[55px] w-[43px] h-[43px] flex-col items-center justify-center gap-[6px] z-30"
   aria-label="Abrir menú"
 >
   <span class={`block w-[28px] h-[2px] ${burger}`}></span>
@@ -64,10 +76,21 @@ const dividers = [388, 534, 684, 842];
   <span class={`block w-[28px] h-[2px] ${burger}`}></span>
 </button>
 
-<!-- Caret Up + Caret Down circle buttons -->
+<style>
+  /* Hide hamburger on desktop (mouse pointer); show on touch devices. */
+  .mobile-hamburger { display: none; }
+  @media (pointer: coarse), (hover: none) {
+    .mobile-hamburger { display: flex; }
+  }
+</style>
+
+<!-- Caret Up + Caret Down circle buttons. Default state (not pressed) uses
+     white lines in the light variant; pressing toggles a "is-pressed" class
+     handled by the script in Layout.astro / index.astro. -->
 <button
   aria-label="Subir"
-  class={`absolute left-[50px] top-[36px] w-[36px] h-[36px] rounded-full border ${upBorder} flex items-center justify-center z-30`}
+  data-caret="up"
+  class={`caret-btn absolute left-[50px] top-[36px] w-[36px] h-[36px] rounded-full border ${caretBorder} flex items-center justify-center z-30 cursor-pointer transition-colors`}
 >
   <svg viewBox="0 0 24 24" class="w-[14px] h-[14px]" fill="none" stroke="currentColor" stroke-width="2">
     <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
@@ -75,7 +98,8 @@ const dividers = [388, 534, 684, 842];
 </button>
 <button
   aria-label="Bajar"
-  class="absolute left-[50px] top-[83px] w-[36px] h-[36px] rounded-full border border-vecta-lime-text text-vecta-lime-text flex items-center justify-center z-30"
+  data-caret="down"
+  class={`caret-btn absolute left-[50px] top-[83px] w-[36px] h-[36px] rounded-full border ${caretBorder} flex items-center justify-center z-30 cursor-pointer transition-colors`}
 >
   <svg viewBox="0 0 24 24" class="w-[14px] h-[14px]" fill="none" stroke="currentColor" stroke-width="2">
     <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>

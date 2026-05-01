@@ -8,18 +8,18 @@ const items = [
   { title: "Bajo ruido comercial", description: "Una marca que prioriza la información sobre la persuasión." }
 ];
 ---
-<section class="relative w-full min-w-[1280px] h-[832px] bg-vecta-bg overflow-hidden">
+<section class="relative w-full min-w-[1280px] min-h-screen bg-vecta-bg overflow-hidden flex items-center justify-center">
   <!-- Dark panel grows with viewport (~75% reduction in side strips, matches AboutUs).
        Decorative circle lives inside the panel so it clips at the panel's edges
        (preserves the original Figma cropping behavior). -->
-  <div class="absolute top-0 left-1/2 -translate-x-1/2 h-full bg-[#0a0a0a] overflow-hidden"
-       style="width: calc(75vw + 317.5px); min-width: 1270px;">
+  <div class="absolute left-1/2 -translate-x-1/2 bg-[#0a0a0a] overflow-hidden"
+       style="top: calc((100vw - 1270px) / 8); bottom: calc((100vw - 1270px) / 8); width: calc(75vw + 317.5px); min-width: 1270px;">
     <!-- Decorative circle (clips at dark panel left/top edges) -->
     <div class="absolute -left-[207px] -top-[157px] w-[620px] h-[620px] rounded-full border border-vecta-lime-text/40"></div>
   </div>
 
   <!-- Inner 1280px canvas keeps Figma absolute positions intact -->
-  <div class="relative w-[1280px] h-full mx-auto">
+  <div class="relative w-[1280px] h-[832px] mx-auto">
     <!-- Title -->
     <h2 class="absolute left-[68px] top-[103px] w-[639px] text-vecta-lime-text font-semibold text-[60px] leading-[0.959]"
         style="font-family: 'Albert Sans', sans-serif;">

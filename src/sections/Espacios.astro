@@ -1,40 +1,125 @@
 ---
-// Espacios - dark image with carousel of spaces (GIMNASIO, COWORKING, LOUNGE, RESTAURANTE, LOOBY)
+// Espacios — dark image carousel of 5 spaces. All slides share the same Figma
+// "Group 11" geometric overlay (Rectangle 2 rotated -45° + Ellipse 1 + Rectangle 3),
+// the same subtitle "Espacio con alta activación", and the same dark overlay
+// rgba(56,48,28,0.44). Only the background photo and the title text change.
+// Source slides: 2069:152 GIMNASIO, 2069:100 COWORKING, 2069:131 LOUNGE,
+// 2069:173 RESTAURANTE, 2069:194 LOOBY.
+const slides = [
+  { id: 'gimnasio',    title: 'GIMNASIO',    bg: '/sections/espacios/gimnasio.png' },
+  { id: 'coworking',   title: 'COWORKING',   bg: '/sections/espacios/coworking.png' },
+  { id: 'lounge',      title: 'LOUNGE',      bg: '/sections/espacios/lounge.png' },
+  { id: 'restaurante', title: 'RESTAURANTE', bg: '/sections/espacios/restaurante.png' },
+  { id: 'looby',       title: 'LOOBY',       bg: '/sections/espacios/looby.png' },
+];
 ---
-<section class="relative w-full min-w-[1280px] h-[832px] overflow-hidden bg-black">
-  <!-- Background image bleeds full-width across the viewport -->
-  <img
-    src="/sections/espacios/espacios-bg.png"
-    alt="Espacio gimnasio VECTA 98"
-    class="absolute inset-0 w-full h-full object-cover"
-  />
+<section id="espacios" class="relative w-full min-w-[1280px] min-h-screen overflow-hidden bg-black flex items-center justify-center">
+  <!-- Stack all 5 background photos full-bleed; only the active one is visible
+       (controlled by the script below via inline opacity). -->
+  {slides.map((slide, i) => (
+    <img
+      src={slide.bg}
+      alt={`Espacio ${slide.title}`}
+      class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
+      data-espacios-slide={slide.id}
+      style={`opacity: ${i === 0 ? 1 : 0};`}
+    />
+  ))}
+  <!-- Warm dark overlay matching Figma rgba(56,48,28,0.44) -->
   <div class="absolute inset-0 bg-[rgba(56,48,28,0.44)]"></div>
 
   <!-- Inner 1280px canvas keeps Figma absolute positions intact -->
-  <div class="relative w-[1280px] h-full mx-auto">
-    <!-- Decorative diamond/circle frame (Group 11) -->
-    <svg class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" width="900" height="700" viewBox="0 0 900 700" fill="none">
-      <rect x="125" y="80" width="650" height="540" stroke="white" stroke-opacity="0.6" stroke-width="1"/>
-      <circle cx="450" cy="350" r="270" stroke="white" stroke-opacity="0.6" stroke-width="1"/>
-      <path d="M450 80 L775 350 L450 620 L125 350 Z" stroke="white" stroke-opacity="0.6" stroke-width="1" fill="none"/>
-    </svg>
+  <div class="relative w-[1280px] h-[832px] mx-auto">
+    <!-- Geometric figure from GYM ESPACIOS (Figma 2069:154 "Group 11").
+         Three concentric layers centered at (640, 444.5) — 28.5px below the
+         canvas center, matching `top: calc(50% + 28.5px)` in the Figma source.
+         All borders are 1px white 50% opacity. -->
+    <!-- Rectangle 2 (2069:155) — outer 887.419×887.419 rotated -45°
+         (rotated bounding box is the 1255×1255 diamond) -->
+    <div class="absolute pointer-events-none"
+         style="width: 887.419px; height: 887.419px;
+                top: 0.7905px; left: 196.2905px;
+                border: 1px solid rgba(255, 255, 255, 0.5);
+                transform: rotate(-45deg);"></div>
+    <!-- Ellipse 1 (2069:157) — circle 620.185×620.185 -->
+    <div class="absolute pointer-events-none rounded-full"
+         style="width: 620.185px; height: 620.185px;
+                top: 134.4075px; left: 329.9075px;
+                border: 1px solid rgba(255, 255, 255, 0.5);"></div>
+    <!-- Rectangle 3 (2069:156) — inner 620.185×620.185 axis-aligned -->
+    <div class="absolute pointer-events-none"
+         style="width: 620.185px; height: 620.185px;
+                top: 134.4075px; left: 329.9075px;
+                border: 1px solid rgba(255, 255, 255, 0.5);"></div>
 
-    <!-- Title centered -->
-    <div class="absolute left-1/2 top-[383px] -translate-x-1/2 text-center text-white" style="font-family: 'Albert Sans', sans-serif;">
-      <h2 class="text-[64px] font-medium leading-[0.959]">GIMNASIO</h2>
-      <p class="mt-[16px] text-[32px] leading-[0.959]">Espacio altamente equipado</p>
+    <!-- Title + subtitle stack (title text swapped by JS, subtitle is constant) -->
+    <div class="absolute left-1/2 top-[399px] -translate-x-1/2 text-center text-white whitespace-nowrap"
+         style="font-family: 'Albert Sans', sans-serif;">
+      <h2 data-espacios-title class="text-[64px] font-medium leading-[0.959]">GIMNASIO</h2>
+      <p class="text-[32px] font-normal leading-[0.959]">Espacio con alta activación</p>
     </div>
 
-    <!-- Arrows -->
-    <button class="absolute left-[153px] top-[378px] w-[76px] h-[76px] rounded-full border border-white text-white flex items-center justify-center" aria-label="Anterior">
-      <svg viewBox="0 0 24 24" class="w-[24px] h-[24px]" fill="none" stroke="currentColor" stroke-width="1.6">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+    <!-- Arrow buttons (Figma 2021:201, 2021:203). The SVG includes the circle
+         outline + chevron — no extra border or background on the <button>.
+         Prev mirrors the same SVG via scaleX(-1). -->
+    <button data-espacios-prev
+            class="absolute left-[153px] top-[378px] w-[76px] h-[76px] cursor-pointer hover:opacity-70 transition-opacity"
+            aria-label="Anterior">
+      <svg xmlns="http://www.w3.org/2000/svg" width="76" height="76" viewBox="0 0 76 76" fill="none" style="transform: scaleX(-1);">
+        <path d="M41.1667 47.5L50.6667 38M50.6667 38L41.1667 28.5M50.6667 38H25.3333M66.5 38C66.5 22.2599 53.7401 9.5 38 9.5C22.2599 9.5 9.5 22.2599 9.5 38C9.5 53.7401 22.2599 66.5 38 66.5C53.7401 66.5 66.5 53.7401 66.5 38Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </button>
-    <button class="absolute left-[1048px] top-[378px] w-[76px] h-[76px] rounded-full border border-white text-white flex items-center justify-center" aria-label="Siguiente">
-      <svg viewBox="0 0 24 24" class="w-[24px] h-[24px]" fill="none" stroke="currentColor" stroke-width="1.6">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+    <button data-espacios-next
+            class="absolute left-[1048px] top-[378px] w-[76px] h-[76px] cursor-pointer hover:opacity-70 transition-opacity"
+            aria-label="Siguiente">
+      <svg xmlns="http://www.w3.org/2000/svg" width="76" height="76" viewBox="0 0 76 76" fill="none">
+        <path d="M41.1667 47.5L50.6667 38M50.6667 38L41.1667 28.5M50.6667 38H25.3333M66.5 38C66.5 22.2599 53.7401 9.5 38 9.5C22.2599 9.5 9.5 22.2599 9.5 38C9.5 53.7401 22.2599 66.5 38 66.5C53.7401 66.5 66.5 53.7401 66.5 38Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </button>
   </div>
 </section>
+
+<script>
+  const titles = ['GIMNASIO', 'COWORKING', 'LOUNGE', 'RESTAURANTE', 'LOOBY'];
+  let active = 0;
+
+  const titleEl = document.querySelector('[data-espacios-title]');
+  const slideImgs = document.querySelectorAll<HTMLImageElement>('[data-espacios-slide]');
+  const prev = document.querySelector('[data-espacios-prev]');
+  const next = document.querySelector('[data-espacios-next]');
+
+  // Auto-rotation: advance every AUTO_MS. Manual click pauses; after RESUME_MS
+  // of no interaction the auto-rotation kicks back in from the current slide.
+  const AUTO_MS = 5000;
+  const RESUME_MS = 10000;
+  let autoTimer: number | null = null;
+  let resumeTimer: number | null = null;
+
+  function show(i: number) {
+    active = (i + titles.length) % titles.length;
+    if (titleEl) titleEl.textContent = titles[active];
+    slideImgs.forEach((img, idx) => {
+      img.style.opacity = idx === active ? '1' : '0';
+    });
+  }
+
+  function startAuto() {
+    stopAuto();
+    autoTimer = window.setInterval(() => show(active + 1), AUTO_MS);
+  }
+
+  function stopAuto() {
+    if (autoTimer !== null) { clearInterval(autoTimer); autoTimer = null; }
+    if (resumeTimer !== null) { clearTimeout(resumeTimer); resumeTimer = null; }
+  }
+
+  function pauseThenResume() {
+    stopAuto();
+    resumeTimer = window.setTimeout(startAuto, RESUME_MS);
+  }
+
+  prev?.addEventListener('click', () => { show(active - 1); pauseThenResume(); });
+  next?.addEventListener('click', () => { show(active + 1); pauseThenResume(); });
+
+  startAuto();
+</script>
