@@ -6,11 +6,11 @@
 // Source slides: 2069:152 GIMNASIO, 2069:100 COWORKING, 2069:131 LOUNGE,
 // 2069:173 RESTAURANTE, 2069:194 LOOBY.
 const slides = [
-  { id: 'gimnasio',    title: 'GIMNASIO',    bg: '/sections/espacios/gimnasio.png' },
-  { id: 'coworking',   title: 'COWORKING',   bg: '/sections/espacios/coworking.png' },
-  { id: 'lounge',      title: 'LOUNGE',      bg: '/sections/espacios/lounge.png' },
-  { id: 'restaurante', title: 'RESTAURANTE', bg: '/sections/espacios/restaurante.png' },
-  { id: 'looby',       title: 'LOOBY',       bg: '/sections/espacios/looby.png' },
+  { id: 'gimnasio',    title: 'GIMNASIO',    bg: '/sections/espacios/gimnasio.webp' },
+  { id: 'coworking',   title: 'COWORKING',   bg: '/sections/espacios/coworking.webp' },
+  { id: 'lounge',      title: 'LOUNGE',      bg: '/sections/espacios/lounge.webp' },
+  { id: 'restaurante', title: 'RESTAURANTE', bg: '/sections/espacios/restaurante.webp' },
+  { id: 'looby',       title: 'LOOBY',       bg: '/sections/espacios/looby.webp' },
 ];
 ---
 <section id="espacios" class="relative w-full min-w-[1280px] min-h-screen overflow-hidden bg-black flex items-center justify-center">
@@ -22,6 +22,8 @@ const slides = [
       alt={`Espacio ${slide.title}`}
       class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
       data-espacios-slide={slide.id}
+      loading="lazy"
+      decoding="async"
       style={`opacity: ${i === 0 ? 1 : 0};`}
     />
   ))}

@@ -37,29 +37,33 @@ const SEP_TOPS = [461, 525, 589];
 // underneath. Each row/separator gets a `mobile:!top-[Xpx]` class with
 // !important so it overrides the inline desktop `top` style. The literal
 // class strings live here so Tailwind picks them up at build time.
+// All values are shifted +150px so the cluster sits centered inside the
+// 1920px-tall mobile slide.
 const ROW_MOBILE_CLASSES = [
-  'mobile:!top-[280px]',
-  'mobile:!top-[360px]',
-  'mobile:!top-[440px]',
-  'mobile:!top-[520px]',
+  'mobile:!top-[430px]',
+  'mobile:!top-[510px]',
+  'mobile:!top-[590px]',
+  'mobile:!top-[670px]',
 ];
 const SEP_MOBILE_CLASSES = [
-  'mobile:!top-[330px]',
-  'mobile:!top-[410px]',
-  'mobile:!top-[490px]',
+  'mobile:!top-[480px]',
+  'mobile:!top-[560px]',
+  'mobile:!top-[640px]',
 ];
 ---
-<section class="relative w-full min-w-[1280px] min-h-screen h-[832px] overflow-hidden bg-vecta-bg mobile:h-[1600px] mobile:min-h-0">
+<section class="relative w-full min-w-[1280px] min-h-screen h-[832px] overflow-hidden bg-vecta-bg mobile:h-[1920px] mobile:min-h-0">
   <!-- Inner 1280px canvas -->
-  <div class="relative w-[1280px] min-h-screen h-[832px] mx-auto mobile:h-[1600px] mobile:min-h-0">
+  <div class="relative w-[1280px] min-h-screen h-[832px] mx-auto mobile:h-[1920px] mobile:min-h-0">
     <!-- Floor plan image (desktop: right side; mobile: full-width below the
          specs table). -->
     <div class="absolute left-[544px] top-[94px] w-[686px] h-[702px] overflow-hidden
-                mobile:left-[190px] mobile:top-[640px] mobile:w-[900px] mobile:h-[900px]">
+                mobile:left-[190px] mobile:top-[790px] mobile:w-[900px] mobile:h-[900px]">
       <img
-        src="/sections/tipologia-abierta/floor-plan.png"
+        src="/sections/tipologia-abierta/floor-plan.webp"
         alt="Plano de tipología 3 — VECTA 98"
         class="block w-full h-full object-contain"
+        loading="lazy"
+        decoding="async"
       />
     </div>
 
@@ -68,7 +72,7 @@ const SEP_MOBILE_CLASSES = [
     <h2
       data-tipologia-title
       class="absolute left-[92px] top-[272px] w-[311px] text-vecta-dark font-semibold text-[100px] leading-[0.959] font-display
-             mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[80px] mobile:w-auto mobile:text-[140px] mobile:text-center">
+             mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[230px] mobile:w-auto mobile:text-[140px] mobile:text-center">
       Tipo {tipo}
     </h2>
 

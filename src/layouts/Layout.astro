@@ -15,8 +15,32 @@ const { title = 'VECTA 98' } = Astro.props;
 		<meta name="viewport" content="width=1280" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
+
+		<!-- Critical preconnects: font CDN + Google Maps (used by Ubicacion). -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link rel="dns-prefetch" href="https://www.google.com" />
+
+		<!-- Hero assets — preload so first paint has the logo + background video
+		     ready without waiting for the parser to discover them. -->
+		<link rel="preload" as="image" href="/sections/hero/vecta-logo.svg" />
+		<link rel="preload" as="video" href="/herobg.mp4" type="video/mp4" />
+
+		<!-- Fonts loaded via <link> (instead of CSS @import) so they don't
+		     block CSS parsing. The print/onload trick lets the stylesheet
+		     download async and apply once ready; <noscript> covers no-JS. -->
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Afacad:wght@400&family=Albert+Sans:wght@400;500;600;700&display=swap"
+			media="print"
+			onload="this.media='all'"
+		/>
+		<noscript>
+			<link
+				rel="stylesheet"
+				href="https://fonts.googleapis.com/css2?family=Afacad:wght@400&family=Albert+Sans:wght@400;500;600;700&display=swap"
+			/>
+		</noscript>
 	</head>
 	<body class="bg-vecta-bg text-vecta-dark antialiased">
 		<slot />

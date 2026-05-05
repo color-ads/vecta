@@ -36,9 +36,11 @@ const { tipo = "3", mts = "35" } = Astro.props;
 <section class="relative w-full min-w-[1280px] min-h-screen h-[832px] overflow-hidden bg-black">
   <!-- Bedroom photo + dark overlay -->
   <img
-    src="/sections/tipologia-abierta/bedroom-bg.jpg"
+    src="/sections/tipologia-abierta/bedroom-bg.webp"
     alt="Habitación VECTA 98 — Tipo 3"
     class="absolute inset-0 w-full h-full object-cover"
+    loading="lazy"
+    decoding="async"
   />
   <div class="absolute inset-0" style="background-color: rgba(56,48,28,0.44);"></div>
 

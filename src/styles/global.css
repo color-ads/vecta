@@ -1,4 +1,6 @@
-@import url("https://fonts.googleapis.com/css2?family=Afacad:wght@400&family=Albert+Sans:wght@400;500;600;700&display=swap");
+/* Fonts are loaded via <link rel="stylesheet"> in Layout.astro (with the
+   print/onload async trick) instead of `@import url(...)` here, since
+   `@import` blocks CSS parsing until the remote sheet finishes downloading. */
 @import "tailwindcss";
 
 @theme {
