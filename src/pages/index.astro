@@ -102,6 +102,13 @@ import Formulario from '../sections/Formulario.astro';
 		color: #22291d !important;
 		border-color: #22291d !important;
 	}
+	/* Top/bottom horizontal rules + vertical dividers between nav items: flip
+	   to black on desktop so they read over both the lime panel and the map. */
+	#site-nav[data-nav-theme="ubicacion"] [data-nav-rule="top"],
+	#site-nav[data-nav-theme="ubicacion"] [data-nav-rule="bottom"],
+	#site-nav[data-nav-theme="ubicacion"] [data-nav-divider] {
+		background-color: #000 !important;
+	}
 	/* Mobile hamburger lines flip to dark over the lime panel that fills the
 	   top half of the section in mobile. */
 	#site-nav[data-nav-theme="ubicacion"] .burger-line {

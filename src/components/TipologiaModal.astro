@@ -80,16 +80,31 @@ import TipologiaAbierta2 from './TipologiaAbierta2.astro';
     document.body.style.overflow = 'hidden';
     modal.addEventListener('scroll', updateModalNavTheme, { passive: true });
     updateModalNavTheme();
+    // Push a history entry so the browser back button closes this modal.
+    try {
+      history.pushState({ tipologiaModal: true }, '');
+    } catch {}
   }
 
-  function close() {
-    if (!modal) return;
+  function close({ fromPopstate = false }: { fromPopstate?: boolean } = {}) {
+    if (!modal || modal.hasAttribute('hidden')) return;
     modal.setAttribute('hidden', '');
     document.body.style.overflow = '';
     modal.removeEventListener('scroll', updateModalNavTheme);
     // Restore whatever theme the page-level switcher had before opening.
     if (siteNav) siteNav.setAttribute('data-nav-theme', savedTheme || 'light');
+    // If we closed manually (button / Escape / backdrop / nav link), drop
+    // the history entry we pushed on open so the next back navigates to
+    // the page state before the modal — not to a ghost modal-open state.
+    if (!fromPopstate && history.state && (history.state as any).tipologiaModal) {
+      history.replaceState({}, '');
+    }
   }
+
+  // Browser back closes the modal instead of leaving the page.
+  window.addEventListener('popstate', () => {
+    if (modal && !modal.hasAttribute('hidden')) close({ fromPopstate: true });
+  });
 
   // Click on any polygon trigger opens the modal with that polygon's tipo + mts.
   document.querySelectorAll<HTMLElement>('[data-tipologia-polygon]').forEach((el) => {

@@ -11,15 +11,54 @@
        gradient and scanline overlay below it provide a fallback if the video
        fails to load and add the same vignette/grain feel as before. -->
   <video
+    id="hero-video"
     src="/herobg.mp4"
     autoplay
     muted
     loop
     playsinline
     preload="auto"
-    class="absolute inset-0 w-full h-full object-cover object-center"
+    disablepictureinpicture
+    disableremoteplayback
+    x-webkit-airplay="deny"
+    class="hero-video absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
     aria-hidden="true"
+    tabindex="-1"
   ></video>
+  <style>
+    /* Hide Safari's fallback play button overlay (shown e.g. in Low Power Mode)
+       and any default media controls so the video stays a pure background. */
+    .hero-video::-webkit-media-controls,
+    .hero-video::-webkit-media-controls-panel,
+    .hero-video::-webkit-media-controls-start-playback-button,
+    .hero-video::-webkit-media-controls-overlay-play-button,
+    .hero-video::-webkit-media-controls-play-button {
+      display: none !important;
+      -webkit-appearance: none !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+  </style>
+  <script is:inline>
+    (() => {
+      const v = document.getElementById('hero-video');
+      if (!v) return;
+      v.muted = true;
+      v.defaultMuted = true;
+      v.setAttribute('muted', '');
+      v.setAttribute('playsinline', '');
+      const tryPlay = () => {
+        const p = v.play();
+        if (p && typeof p.catch === 'function') p.catch(() => {});
+      };
+      tryPlay();
+      const events = ['loadedmetadata', 'canplay', 'visibilitychange', 'pageshow'];
+      events.forEach((e) => document.addEventListener(e, tryPlay, { passive: true }));
+      ['touchstart', 'click', 'scroll', 'keydown'].forEach((e) =>
+        document.addEventListener(e, tryPlay, { once: true, passive: true })
+      );
+    })();
+  </script>
   <!-- Gradient + scanline overlay sits on top of the video for the original
        moody look (kept subtle so the video stays readable). -->
   <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 pointer-events-none"></div>

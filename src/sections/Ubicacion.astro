@@ -4,12 +4,18 @@
 // stack: lime card on top (50vh), map below (50vh).
 ---
 <section class="relative w-full min-w-[1280px] min-h-screen overflow-hidden bg-vecta-night flex items-center justify-center mobile:block mobile:h-screen mobile:min-h-screen">
-  <!-- Map image bleeds full-width across the viewport -->
-  <img
-    src="/sections/ubicacion/map-bg.png"
-    alt="Mapa de ubicación Carrera 15 con calle 98"
-    class="absolute inset-0 w-full h-full object-cover mobile:inset-auto mobile:top-[50vh] mobile:left-0 mobile:right-0 mobile:w-full mobile:h-[50vh]"
-  />
+  <!-- Google Maps embed (free, no API key — uses the public `output=embed`
+       endpoint). Bleeds full-width on desktop so the lime panel covers the
+       left half; on mobile it occupies the bottom 50vh. The transform on
+       click is animated by the pin script below for a smooth zoom feel. -->
+  <iframe
+    src="https://www.google.com/maps?q=Carrera+15+%23+98,+Bogot%C3%A1,+Colombia&z=16&hl=es&output=embed"
+    title="Mapa de ubicación Carrera 15 con calle 98"
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"
+    style="transform-origin: center center; will-change: transform, opacity;"
+    class="absolute inset-0 w-full h-full border-0 mobile:inset-auto mobile:top-[50vh] mobile:left-0 mobile:right-0 mobile:w-full mobile:h-[50vh]"
+  ></iframe>
 
   <!-- Lime panel bleeds from the viewport's left edge to the original
        Figma right edge (canvas-x=639, i.e. 1px before viewport center). -->
@@ -23,24 +29,32 @@
          and below the title block, plus a vertical rule with two dots at the
          intersections. The vertical/dot column sits at Figma x=149 in the
          639-wide lime panel (i.e. 170.5 px left of the panel centerline). -->
-    <div class="absolute left-0 right-0 h-px bg-vecta-dark top-[153px]"></div>
-    <div class="absolute left-0 right-0 h-px bg-vecta-dark top-[380px]"></div>
-    <div class="absolute w-px bg-vecta-dark top-[106px] h-[728px] left-[calc(50%-171px)]"></div>
-    <div class="absolute w-[12px] h-[12px] rounded-full bg-vecta-dark top-[147px] left-[calc(50%-177px)]"></div>
-    <div class="absolute w-[12px] h-[12px] rounded-full bg-vecta-dark top-[374px] left-[calc(50%-177px)]"></div>
+    <div class="absolute left-0 right-0 h-px bg-vecta-dark top-[153px] mobile:top-[12vh]"></div>
+    <div class="absolute left-0 right-0 h-px bg-vecta-dark top-[380px] mobile:top-[26vh]"></div>
+    <!-- Vertical bracket + dots are hidden on mobile (would create an
+         asymmetrical left margin once the content is centered). -->
+    <div class="absolute w-px bg-vecta-dark top-[106px] h-[728px] left-[calc(50%-171px)] mobile:hidden"></div>
+    <div class="absolute w-[12px] h-[12px] rounded-full bg-vecta-dark top-[147px] left-[calc(50%-177px)] mobile:hidden"></div>
+    <div class="absolute w-[12px] h-[12px] rounded-full bg-vecta-dark top-[374px] left-[calc(50%-177px)] mobile:hidden"></div>
 
     <!-- All text is left-aligned at Figma x=184 (35 px right of the vertical
          bracket line at x=149). 184 - 319.5 = -135.5 px from the 639-wide
-         panel centerline, so we anchor everything via calc(50% - 135.5px). -->
-    <h2 class="absolute top-[186px] w-[395px] text-vecta-dark font-semibold text-[60px] leading-[0.959] font-display left-[calc(50%-135.5px)]">
+         panel centerline, so we anchor everything via calc(50% - 135.5px).
+         On mobile (vertical bracket hidden) we re-center each element on the
+         panel midline AND retime the vertical tops in vh so the cluster
+         centers vertically inside the 50vh lime card. -->
+    <h2 class="absolute top-[186px] w-[395px] text-vecta-dark font-semibold text-[60px] leading-[0.959] font-display left-[calc(50%-135.5px)]
+               mobile:top-[14vh] mobile:left-1/2 mobile:-translate-x-1/2 mobile:text-center">
       Ubicación que funciona
     </h2>
 
-    <p class="absolute top-[317px] text-vecta-dark text-[32px] leading-[0.959] font-display left-[calc(50%-135.5px)]">
+    <p class="absolute top-[317px] text-vecta-dark text-[32px] leading-[0.959] font-display left-[calc(50%-135.5px)]
+              mobile:top-[22vh] mobile:left-1/2 mobile:-translate-x-1/2 mobile:text-center">
       Carrera 15 con calle 98.
     </p>
 
-    <div class="absolute top-[450px] w-[374px] text-vecta-dark text-[32px] leading-[0.959] space-y-[1.2em] font-display left-[calc(50%-135.5px)]">
+    <div class="absolute top-[450px] w-[374px] text-vecta-dark text-[32px] leading-[0.959] space-y-[1.2em] font-display left-[calc(50%-135.5px)]
+                mobile:top-[30vh] mobile:left-1/2 mobile:-translate-x-1/2 mobile:text-center">
       <p>Una zona con movimiento constante, conectividad y actividad real.</p>
       <p>
         No es una promesa de valorización futura.<br/>
@@ -49,14 +63,70 @@
     </div>
 
     <!-- Decorative horizontal line -->
-    <div class="absolute top-[590px] w-[292px] h-px bg-vecta-dark left-[calc(50%-135.5px)]"></div>
+    <div class="absolute top-[590px] w-[292px] h-px bg-vecta-dark left-[calc(50%-135.5px)]
+                mobile:top-[38vh] mobile:left-1/2 mobile:-translate-x-1/2"></div>
   </div>
 
   <!-- Inner 1280px canvas for elements anchored to the design canvas -->
   <div class="relative w-[1280px] h-[832px] mx-auto mobile:absolute mobile:top-0 mobile:left-1/2 mobile:-translate-x-1/2 mobile:h-screen">
-    <!-- Map pin -->
-    <div class="absolute left-[860px] top-[330px] w-[40px] h-[40px] rounded-full bg-vecta-lime border-4 border-vecta-dark flex items-center justify-center mobile:left-1/2 mobile:top-[75vh] mobile:-translate-x-1/2 mobile:-translate-y-1/2">
-      <div class="w-[10px] h-[10px] rounded-full bg-vecta-dark"></div>
-    </div>
+    <!-- Map pin — clickable, zooms the map iframe in/out on each click. -->
+    <button
+      id="ubicacion-map-pin"
+      type="button"
+      aria-label="Acercar mapa"
+      data-zoomed="false"
+      class="absolute left-[860px] top-[330px] w-[40px] h-[40px] rounded-full bg-vecta-lime border-4 border-vecta-dark flex items-center justify-center cursor-pointer transition-transform duration-200 ease-out hover:scale-110 active:scale-95 mobile:left-1/2 mobile:top-[75vh] mobile:-translate-x-1/2 mobile:-translate-y-1/2 mobile:hover:scale-100">
+      <div class="w-[10px] h-[10px] rounded-full bg-vecta-dark pointer-events-none"></div>
+    </button>
   </div>
 </section>
+
+<script>
+  const pin = document.getElementById('ubicacion-map-pin');
+  const iframe = document.querySelector<HTMLIFrameElement>(
+    'iframe[title="Mapa de ubicación Carrera 15 con calle 98"]'
+  );
+  const ADDRESS = 'Carrera+15+%23+98,+Bogot%C3%A1,+Colombia';
+  const ZOOM_OUT = 16;
+  const ZOOM_IN = 19;
+
+  const ZOOM_DURATION = 700;
+
+  pin?.addEventListener('click', () => {
+    if (!iframe || pin.dataset.animating === 'true') return;
+    pin.dataset.animating = 'true';
+
+    const zoomed = pin.dataset.zoomed === 'true';
+    const nextZoom = zoomed ? ZOOM_OUT : ZOOM_IN;
+    const targetScale = zoomed ? 0.72 : 1.4;
+
+    // Anchor the visual zoom on the pin so it feels like the map is moving
+    // toward (or away from) the marker, not just rescaling from the center.
+    const iframeRect = iframe.getBoundingClientRect();
+    const pinRect = pin.getBoundingClientRect();
+    const originX = ((pinRect.left + pinRect.width / 2) - iframeRect.left) / iframeRect.width * 100;
+    const originY = ((pinRect.top + pinRect.height / 2) - iframeRect.top) / iframeRect.height * 100;
+
+    iframe.style.transformOrigin = `${originX}% ${originY}%`;
+    iframe.style.transition = `transform ${ZOOM_DURATION}ms cubic-bezier(0.22, 1, 0.36, 1), opacity 200ms ease`;
+    iframe.style.transform = `scale(${targetScale})`;
+
+    pin.dataset.zoomed = String(!zoomed);
+    pin.setAttribute('aria-label', !zoomed ? 'Alejar mapa' : 'Acercar mapa');
+
+    setTimeout(() => {
+      // Brief fade hides the moment we swap the iframe src to the new zoom
+      // level (the embed reload is otherwise a hard cut).
+      iframe.style.opacity = '0';
+      const onLoad = () => {
+        iframe.style.transition = 'opacity 250ms ease';
+        iframe.style.transform = 'scale(1)';
+        iframe.style.opacity = '1';
+        pin.dataset.animating = 'false';
+        iframe.removeEventListener('load', onLoad);
+      };
+      iframe.addEventListener('load', onLoad);
+      iframe.src = `https://www.google.com/maps?q=${ADDRESS}&z=${nextZoom}&hl=es&output=embed`;
+    }, ZOOM_DURATION);
+  });
+</script>

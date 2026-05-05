@@ -2,19 +2,33 @@
 // Tipologias - building image with 5 typology callouts and big "Tipologias" title.
 // Each of the 5 building polygon outlines is clickable; clicking opens the
 // TipologiaModal which holds the render + floor plan detail views.
+//
+// Mobile: the building image + callouts make no sense at narrow widths, so
+// we replace them with the actual tipología detail "pages" (render view +
+// floor-plan view) for each of the 5 tipologías, stacked vertically. The
+// scoped `data-tipologia-*` selectors inside TipologiaModal stay confined
+// to the modal, so these inline renders coexist without conflicts.
 import TipologiaModal from '../components/TipologiaModal.astro';
+import TipologiaAbierta2 from '../components/TipologiaAbierta2.astro';
+const tipologias = [
+  { tipo: '1', mts: '20' },
+  { tipo: '2', mts: '35' },
+  { tipo: '3', mts: '40' },
+  { tipo: '4', mts: '18' },
+  { tipo: '5', mts: '25' },
+];
 ---
-<section id="tipologias" class="relative w-full min-w-[1280px] h-[2085px] overflow-hidden bg-black mobile:h-screen">
-  <!-- Background image bleeds full-width across the viewport -->
+<section id="tipologias" class="relative w-full min-w-[1280px] h-[2085px] overflow-hidden bg-black mobile:h-auto">
+  <!-- Background image bleeds full-width across the viewport (desktop only) -->
   <img
     src="/sections/tipologias/tipologias-bg.png"
     alt="Edificio VECTA 98 con tipologías"
-    class="absolute inset-0 w-full h-full object-cover"
+    class="absolute inset-0 w-full h-full object-cover mobile:hidden"
   />
-  <div class="absolute inset-0 bg-black/30"></div>
+  <div class="absolute inset-0 bg-black/30 mobile:hidden"></div>
 
-  <!-- Inner 1280px canvas keeps Figma absolute positions intact -->
-  <div class="relative w-[1280px] h-full mx-auto">
+  <!-- Inner 1280px canvas keeps Figma absolute positions intact (desktop only) -->
+  <div class="relative w-[1280px] h-full mx-auto mobile:hidden">
     <!-- Big title -->
     <h2 class="absolute right-[120px] top-[101px] text-white font-medium text-[128px] leading-[0.959] font-display">
       Tipologias
@@ -34,22 +48,22 @@ import TipologiaModal from '../components/TipologiaModal.astro';
       </div>
     </div>
 
-    <!-- Vector 36 — Tipología 3 / 35 mts² (Figma 2050:31) -->
-    <div data-tipologia-polygon data-tipo="3" data-mts="35" role="button" tabindex="0" aria-label="Ver detalle de Tipología 3 (35 mts²)" class="cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60 mobile:hidden absolute left-[753px] top-[788px] w-[332px] h-[350px]">
+    <!-- Vector 36 — Tipología 2 / 35 mts² (Figma 2050:31) -->
+    <div data-tipologia-polygon data-tipo="2" data-mts="35" role="button" tabindex="0" aria-label="Ver detalle de Tipología 2 (35 mts²)" class="cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60 mobile:hidden absolute left-[753px] top-[788px] w-[332px] h-[350px]">
       <div class="absolute top-[-72.42%] right-[-76.17%] bottom-[-72.27%] left-[-76.06%]">
         <img src="/sections/tipologias/vector-36.svg" alt="" class="block max-w-none w-full h-full" />
       </div>
     </div>
 
-    <!-- Vector 37 — Tipología 3 / 18 mts² (Figma 2050:32) -->
-    <div data-tipologia-polygon data-tipo="3" data-mts="18" role="button" tabindex="0" aria-label="Ver detalle de Tipología 3 (18 mts²)" class="cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60 mobile:hidden absolute left-[1130px] top-[1170px] w-[238px] h-[169px]">
+    <!-- Vector 37 — Tipología 4 / 18 mts² (Figma 2050:32) -->
+    <div data-tipologia-polygon data-tipo="4" data-mts="18" role="button" tabindex="0" aria-label="Ver detalle de Tipología 4 (18 mts²)" class="cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60 mobile:hidden absolute left-[1130px] top-[1170px] w-[238px] h-[169px]">
       <div class="absolute top-[-149.72%] right-[-6.08%] bottom-[-149.69%] left-[-106.10%]">
         <img src="/sections/tipologias/vector-37.svg" alt="" class="block max-w-none w-full h-full" />
       </div>
     </div>
 
-    <!-- Vector 38 — Tipología 2 / 40 mts² (Figma 2051:33) -->
-    <div data-tipologia-polygon data-tipo="2" data-mts="40" role="button" tabindex="0" aria-label="Ver detalle de Tipología 2 (40 mts²)" class="cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60 mobile:hidden absolute left-[207px] top-[1096px] w-[359px] h-[305px]">
+    <!-- Vector 38 — Tipología 3 / 40 mts² (Figma 2051:33) -->
+    <div data-tipologia-polygon data-tipo="3" data-mts="40" role="button" tabindex="0" aria-label="Ver detalle de Tipología 3 (40 mts²)" class="cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60 mobile:hidden absolute left-[207px] top-[1096px] w-[359px] h-[305px]">
       <div class="absolute top-[-82.92%] right-[-70.47%] bottom-[-82.98%] left-[-27.58%]">
         <img src="/sections/tipologias/vector-38.svg" alt="" class="block max-w-none w-full h-full" />
       </div>
@@ -72,27 +86,27 @@ import TipologiaModal from '../components/TipologiaModal.astro';
       </svg>
     </div>
 
-    <!-- Tipología 3 - top right (35 mts²) -->
+    <!-- Tipología 2 - top right (35 mts²) -->
     <div class="absolute left-[846px] top-[601px] text-white font-display">
-      <p class="text-[32px] leading-[0.959] mobile:text-[44px]">Tipología 3</p>
+      <p class="text-[32px] leading-[0.959] mobile:text-[44px]">Tipología 2</p>
       <p class="mt-[8px] text-[64px] font-medium leading-[0.959] mobile:text-[88px]">35 mts²</p>
       <svg class="absolute left-[103px] top-[105px]" xmlns="http://www.w3.org/2000/svg" width="30" height="107" viewBox="0 0 30 107" fill="none">
         <path d="M16.1421 0.585786C15.3611 -0.195262 14.0947 -0.195262 13.3137 0.585786L0.58577 13.3137C-0.195279 14.0948 -0.195279 15.3611 0.58577 16.1421C1.36682 16.9232 2.63315 16.9232 3.4142 16.1421L14.7279 4.82843L26.0416 16.1421C26.8227 16.9232 28.089 16.9232 28.87 16.1421C29.6511 15.3611 29.6511 14.0948 28.87 13.3137L16.1421 0.585786ZM14.7279 107H16.7279V2H14.7279H12.7279V107H14.7279Z" fill="white"/>
       </svg>
     </div>
 
-    <!-- Tipología 3 - mid right (18 mts²) -->
+    <!-- Tipología 4 - mid right (18 mts²) -->
     <div class="absolute left-[1070px] top-[1000px] text-center text-white font-display">
-      <p class="text-[30px] leading-[0.959] mobile:text-[44px]">Tipología 3</p>
+      <p class="text-[30px] leading-[0.959] mobile:text-[44px]">Tipología 4</p>
       <p class="mt-[8px] text-[60px] font-medium leading-[0.959] mobile:text-[88px]">18 mts²</p>
       <svg class="absolute left-[69px] top-[100px]" xmlns="http://www.w3.org/2000/svg" width="30" height="107" viewBox="0 0 30 107" fill="none">
         <path d="M16.1421 0.585786C15.3611 -0.195262 14.0947 -0.195262 13.3137 0.585786L0.58577 13.3137C-0.195279 14.0948 -0.195279 15.3611 0.58577 16.1421C1.36682 16.9232 2.63315 16.9232 3.4142 16.1421L14.7279 4.82843L26.0416 16.1421C26.8227 16.9232 28.089 16.9232 28.87 16.1421C29.6511 15.3611 29.6511 14.0948 28.87 13.3137L16.1421 0.585786ZM14.7279 107H16.7279V2H14.7279H12.7279V107H14.7279Z" fill="white"/>
       </svg>
     </div>
 
-    <!-- Tipología 2 - bottom left (40 mts²) -->
+    <!-- Tipología 3 - bottom left (40 mts²) -->
     <div class="absolute left-[202px] top-[1509px] text-white font-display">
-      <p class="text-[32px] leading-[0.959] mobile:text-[44px]">Tipología 2</p>
+      <p class="text-[32px] leading-[0.959] mobile:text-[44px]">Tipología 3</p>
       <p class="mt-[8px] text-[64px] font-medium leading-[0.959] mobile:text-[88px]">40 mts²</p>
       <svg class="absolute left-[104px] top-[-75px]" xmlns="http://www.w3.org/2000/svg" width="30" height="71" viewBox="0 0 30 71" fill="none">
         <path d="M13.3138 70.4142C14.0949 71.1953 15.3612 71.1953 16.1422 70.4142L28.8702 57.6863C29.6512 56.9052 29.6512 55.6389 28.8702 54.8579C28.0891 54.0768 26.8228 54.0768 26.0417 54.8579L14.728 66.1716L3.41432 54.8579C2.63327 54.0768 1.36694 54.0768 0.585892 54.8579C-0.195157 55.6389 -0.195157 56.9052 0.585892 57.6863L13.3138 70.4142ZM16.728 2V0H12.728V2H14.728H16.728ZM14.728 69H16.728V2H14.728H12.728V69H14.728Z" fill="white"/>
@@ -109,6 +123,140 @@ import TipologiaModal from '../components/TipologiaModal.astro';
     </div>
   </div>
 
+  <!-- Mobile-only: horizontal auto-advancing carousel. Each of the 5 slides
+       holds BOTH views for one tipología (render on top, floor plan below)
+       so a single carousel step shows the full page for that tipología. -->
+  <div data-tipologia-carousel-mobile class="hidden mobile:block relative z-10 overflow-hidden w-[1280px] mx-auto">
+    <div data-tipologia-track class="flex will-change-transform [transition:transform_700ms_cubic-bezier(0.65,0,0.35,1)]">
+      {tipologias.map((t) => (
+        <div class="w-[1280px] flex-shrink-0">
+          <TipologiaAbierta2 tipo={t.tipo} mts={t.mts} />
+        </div>
+      ))}
+    </div>
+
+    <!-- Pagination dots: one per tipología (5 total). White outline by
+         default, filled lime on the active slide. Click jumps to the slide
+         and resets the auto-advance timer. -->
+    <div class="absolute bottom-[36px] left-1/2 -translate-x-1/2 flex gap-[20px] z-20">
+      {tipologias.map((_, i) => (
+        <button
+          type="button"
+          data-tipologia-dot={i}
+          aria-label={`Ir a la tipología ${i + 1} de ${tipologias.length}`}
+          class="w-[20px] h-[20px] rounded-full border-2 border-white bg-transparent transition-colors data-[active=true]:bg-vecta-lime data-[active=true]:border-vecta-lime cursor-pointer"
+        ></button>
+      ))}
+    </div>
+  </div>
+
 </section>
+
+<script>
+  // Auto-advancing carousel for the mobile tipología pages. Disabled on
+  // desktop (where the static building image is shown instead). Pauses
+  // briefly on user interaction and stops when scrolled out of view.
+  const isMobile = matchMedia(
+    '(pointer: coarse), (hover: none), (max-width: 1280px)',
+  ).matches;
+  if (isMobile) {
+    const carousel = document.querySelector<HTMLElement>('[data-tipologia-carousel-mobile]');
+    const track = document.querySelector<HTMLElement>('[data-tipologia-track]');
+    const dots = Array.from(
+      document.querySelectorAll<HTMLButtonElement>('[data-tipologia-dot]'),
+    );
+    if (carousel && track && dots.length > 0) {
+      const SLIDE_W = 1280;
+      const SLIDE_MS = 5000;
+      const RESUME_DELAY = 4000;
+      const total = dots.length;
+      let idx = 0;
+      let timer: ReturnType<typeof setInterval> | null = null;
+      let resume: ReturnType<typeof setTimeout> | null = null;
+      let visible = true;
+
+      function paint() {
+        track!.style.transform = `translateX(-${idx * SLIDE_W}px)`;
+        dots.forEach((d, i) => d.setAttribute('data-active', String(i === idx)));
+      }
+      function goto(n: number) {
+        idx = ((n % total) + total) % total;
+        paint();
+      }
+      function start() {
+        stop();
+        if (!visible) return;
+        timer = setInterval(() => goto(idx + 1), SLIDE_MS);
+      }
+      function stop() {
+        if (timer) {
+          clearInterval(timer);
+          timer = null;
+        }
+      }
+      function pauseAndResume() {
+        stop();
+        if (resume) clearTimeout(resume);
+        resume = setTimeout(start, RESUME_DELAY);
+      }
+
+      dots.forEach((d, i) =>
+        d.addEventListener('click', () => {
+          goto(i);
+          pauseAndResume();
+        }),
+      );
+
+      // Swipe navigation: track the touch start, compute the delta on
+      // touchend, and advance/retreat one slide if the gesture is
+      // predominantly horizontal and crosses the threshold.
+      const SWIPE_THRESHOLD = 60;
+      let touchStartX = 0;
+      let touchStartY = 0;
+      carousel.addEventListener(
+        'touchstart',
+        (e) => {
+          pauseAndResume();
+          const t = e.touches[0];
+          if (!t) return;
+          touchStartX = t.clientX;
+          touchStartY = t.clientY;
+        },
+        { passive: true },
+      );
+      carousel.addEventListener(
+        'touchend',
+        (e) => {
+          const t = e.changedTouches[0];
+          if (!t) return;
+          const dx = t.clientX - touchStartX;
+          const dy = t.clientY - touchStartY;
+          if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > SWIPE_THRESHOLD) {
+            goto(idx + (dx < 0 ? 1 : -1));
+          }
+        },
+        { passive: true },
+      );
+
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              visible = e.isIntersecting;
+              if (visible) start();
+              else stop();
+            });
+          },
+          { threshold: 0.2 },
+        );
+        io.observe(carousel);
+      } else {
+        start();
+      }
+
+      paint();
+    }
+  }
+</script>
 
 <TipologiaModal />
