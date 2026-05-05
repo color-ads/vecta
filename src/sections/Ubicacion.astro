@@ -1,51 +1,46 @@
 ---
-// Ubicación - lime card on left + map image on right
+// Ubicación - lime card on left + map image on right.
+// Mobile (touch / ≤1280) collapses the desktop split-screen into a vertical
+// stack: lime card on top (50vh), map below (50vh).
 ---
-<section class="relative w-full min-w-[1280px] min-h-screen overflow-hidden bg-vecta-night flex items-center justify-center">
+<section class="relative w-full min-w-[1280px] min-h-screen overflow-hidden bg-vecta-night flex items-center justify-center mobile:block mobile:h-screen mobile:min-h-screen">
   <!-- Map image bleeds full-width across the viewport -->
   <img
     src="/sections/ubicacion/map-bg.png"
     alt="Mapa de ubicación Carrera 15 con calle 98"
-    class="absolute inset-0 w-full h-full object-cover"
+    class="absolute inset-0 w-full h-full object-cover mobile:inset-auto mobile:top-[50vh] mobile:left-0 mobile:right-0 mobile:w-full mobile:h-[50vh]"
   />
 
   <!-- Lime panel bleeds from the viewport's left edge to the original
        Figma right edge (canvas-x=639, i.e. 1px before viewport center). -->
-  <div class="absolute left-0 inset-y-0 bg-vecta-lime"
-       style="width: calc(50vw - 1px); min-width: 639px;"></div>
+  <div class="absolute left-0 inset-y-0 bg-vecta-lime w-[calc(50vw-1px)] min-w-[639px] mobile:inset-auto mobile:top-0 mobile:left-0 mobile:right-0 mobile:w-full mobile:min-w-[1280px] mobile:h-[50vh]"></div>
 
   <!-- Lime-panel text wrapper: mirrors the lime panel width so text stays
        centered in it regardless of viewport width. -->
-  <div class="absolute left-0 inset-y-0" style="width: calc(50vw - 1px); min-width: 639px;">
+  <div class="absolute left-0 inset-y-0 w-[calc(50vw-1px)] min-w-[639px] mobile:inset-auto mobile:top-0 mobile:left-1/2 mobile:-translate-x-1/2 mobile:w-[639px] mobile:min-w-0 mobile:h-[50vh]">
     <!-- Decorative bracket around the heading + subtitle (Figma 2075:350,
          2075:351, 2075:352, 2075:353): two full-panel horizontal rules above
          and below the title block, plus a vertical rule with two dots at the
          intersections. The vertical/dot column sits at Figma x=149 in the
          639-wide lime panel (i.e. 170.5 px left of the panel centerline). -->
-    <div class="absolute left-0 right-0 h-px bg-vecta-dark" style="top: 153px;"></div>
-    <div class="absolute left-0 right-0 h-px bg-vecta-dark" style="top: 380px;"></div>
-    <div class="absolute w-px bg-vecta-dark"
-         style="top: 106px; height: 728px; left: calc(50% - 171px);"></div>
-    <div class="absolute w-[12px] h-[12px] rounded-full bg-vecta-dark"
-         style="top: 147px; left: calc(50% - 177px);"></div>
-    <div class="absolute w-[12px] h-[12px] rounded-full bg-vecta-dark"
-         style="top: 374px; left: calc(50% - 177px);"></div>
+    <div class="absolute left-0 right-0 h-px bg-vecta-dark top-[153px]"></div>
+    <div class="absolute left-0 right-0 h-px bg-vecta-dark top-[380px]"></div>
+    <div class="absolute w-px bg-vecta-dark top-[106px] h-[728px] left-[calc(50%-171px)]"></div>
+    <div class="absolute w-[12px] h-[12px] rounded-full bg-vecta-dark top-[147px] left-[calc(50%-177px)]"></div>
+    <div class="absolute w-[12px] h-[12px] rounded-full bg-vecta-dark top-[374px] left-[calc(50%-177px)]"></div>
 
     <!-- All text is left-aligned at Figma x=184 (35 px right of the vertical
          bracket line at x=149). 184 - 319.5 = -135.5 px from the 639-wide
          panel centerline, so we anchor everything via calc(50% - 135.5px). -->
-    <h2 class="absolute top-[186px] w-[395px] text-vecta-dark font-semibold text-[60px] leading-[0.959]"
-        style="font-family: 'Albert Sans', sans-serif; left: calc(50% - 135.5px);">
+    <h2 class="absolute top-[186px] w-[395px] text-vecta-dark font-semibold text-[60px] leading-[0.959] font-display left-[calc(50%-135.5px)]">
       Ubicación que funciona
     </h2>
 
-    <p class="absolute top-[317px] text-vecta-dark text-[32px] leading-[0.959]"
-       style="font-family: 'Albert Sans', sans-serif; left: calc(50% - 135.5px);">
+    <p class="absolute top-[317px] text-vecta-dark text-[32px] leading-[0.959] font-display left-[calc(50%-135.5px)]">
       Carrera 15 con calle 98.
     </p>
 
-    <div class="absolute top-[450px] w-[374px] text-vecta-dark text-[32px] leading-[0.959] space-y-[1.2em]"
-         style="font-family: 'Albert Sans', sans-serif; left: calc(50% - 135.5px);">
+    <div class="absolute top-[450px] w-[374px] text-vecta-dark text-[32px] leading-[0.959] space-y-[1.2em] font-display left-[calc(50%-135.5px)]">
       <p>Una zona con movimiento constante, conectividad y actividad real.</p>
       <p>
         No es una promesa de valorización futura.<br/>
@@ -54,14 +49,13 @@
     </div>
 
     <!-- Decorative horizontal line -->
-    <div class="absolute top-[590px] w-[292px] h-px bg-vecta-dark"
-         style="left: calc(50% - 135.5px);"></div>
+    <div class="absolute top-[590px] w-[292px] h-px bg-vecta-dark left-[calc(50%-135.5px)]"></div>
   </div>
 
   <!-- Inner 1280px canvas for elements anchored to the design canvas -->
-  <div class="relative w-[1280px] h-[832px] mx-auto">
+  <div class="relative w-[1280px] h-[832px] mx-auto mobile:absolute mobile:top-0 mobile:left-1/2 mobile:-translate-x-1/2 mobile:h-screen">
     <!-- Map pin -->
-    <div class="absolute left-[860px] top-[330px] w-[40px] h-[40px] rounded-full bg-vecta-lime border-4 border-vecta-dark flex items-center justify-center">
+    <div class="absolute left-[860px] top-[330px] w-[40px] h-[40px] rounded-full bg-vecta-lime border-4 border-vecta-dark flex items-center justify-center mobile:left-1/2 mobile:top-[75vh] mobile:-translate-x-1/2 mobile:-translate-y-1/2">
       <div class="w-[10px] h-[10px] rounded-full bg-vecta-dark"></div>
     </div>
   </div>

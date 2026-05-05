@@ -17,7 +17,7 @@ import Formulario from '../sections/Formulario.astro';
 	     data-nav-theme is updated by the script below as the user scrolls so the
 	     nav text/lines flip dark over light-background sections (2, 3, 4, 11). -->
 	<header id="site-nav" data-nav-theme="light"
-	        class="fixed top-0 left-0 right-0 z-50 h-[130px] pointer-events-none">
+	        class="fixed top-0 left-0 right-0 z-[120] h-[130px] pointer-events-none">
 		<div class="relative w-[1280px] h-full mx-auto pointer-events-auto">
 			<Header variant="light" />
 		</div>
@@ -79,6 +79,34 @@ import Formulario from '../sections/Formulario.astro';
 	#site-nav[data-nav-theme="black"] .border-vecta-lime-text { border-color: #000; }
 	#site-nav[data-nav-theme="black"] .bg-white\/70 { background-color: rgb(0 0 0 / 0.7); }
 	#site-nav[data-nav-theme="black"] .hover\:text-vecta-lime:hover { color: #000; }
+
+	/* About theme — block 3 (AboutCarousel slides 1 & 2). Dark base like `dark`,
+	   but the INVERSIÓN link + the divider to its left + the top/bottom rules
+	   stay white so that cluster reads inverted against the rest. */
+	#site-nav[data-nav-theme="about"] .text-white { color: #22291d; }
+	#site-nav[data-nav-theme="about"] .bg-white { background-color: #22291d; }
+	#site-nav[data-nav-theme="about"] .border-white { border-color: #22291d; }
+	#site-nav[data-nav-theme="about"] .bg-white\/70 { background-color: rgb(34 41 29 / 0.7); }
+	/* Only the INVERSIÓN nav link stays white — every line/divider follows the
+	   dark base of the `about` theme. */
+	#site-nav[data-nav-theme="about"] a[href="#inversion"] { color: #fff !important; }
+
+	/* Ubicacion theme — block 6. Light base (white lines/text), but the first
+	   three nav items (HOME, ABOUT US, ESPACIOS) flip to dark so they read
+	   over the lime panel that occupies the left half of the section. */
+	#site-nav[data-nav-theme="ubicacion"] a[href="#hero"],
+	#site-nav[data-nav-theme="ubicacion"] a[href="#about-carousel"],
+	#site-nav[data-nav-theme="ubicacion"] a[href="#espacios"] { color: #22291d !important; }
+	/* Caret up/down circle buttons also flip to dark over the lime panel. */
+	#site-nav[data-nav-theme="ubicacion"] .caret-btn {
+		color: #22291d !important;
+		border-color: #22291d !important;
+	}
+	/* Mobile hamburger lines flip to dark over the lime panel that fills the
+	   top half of the section in mobile. */
+	#site-nav[data-nav-theme="ubicacion"] .burger-line {
+		background-color: #22291d !important;
+	}
 </style>
 
 <script>
@@ -94,6 +122,9 @@ import Formulario from '../sections/Formulario.astro';
 
 	const NAV_LINE_Y = 65; // y-coordinate inside the nav where text/lines sit
 	const aboutSection = document.getElementById('about-carousel');
+	// Block order: 0 Hero, 1 ProyectoIntro, 2 AboutCarousel, 3 Espacios,
+	// 4 Tipologias, 5 Ubicacion, 6 Galeria, 7 Preguntas, 8 Formulario.
+	const ubicacionSection = sections[5];
 
 	function updateNavTheme() {
 		if (!nav) return;
@@ -105,6 +136,20 @@ import Formulario from '../sections/Formulario.astro';
 				// Section 2 (ProyectoIntro) → full black nav (monochrome, overrides lime accents).
 				if (section === sections[1]) {
 					theme = 'black';
+				}
+				// AboutCarousel (block 3) → `about` theme: dark base + INVERSIÓN cluster white.
+				if (section === aboutSection) {
+					theme = 'about';
+				}
+				// Ubicacion (block 6) → `ubicacion` theme: light base, but HOME / ABOUT US /
+				// ESPACIOS flip to dark so they read over the lime panel on the left.
+				if (section === ubicacionSection) {
+					theme = 'ubicacion';
+				}
+				// AboutCarousel slide 2 (numbered cards) → use the plain `dark` theme so
+				// every nav link — INVERSIÓN included — reads in dark over the lime card.
+				if (section === aboutSection && (section as HTMLElement).dataset.activeSlide === '1') {
+					theme = 'dark';
 				}
 				// AboutCarousel slide 3 sits on a black card → flip nav to lime so it stays visible.
 				if (section === aboutSection && (section as HTMLElement).dataset.activeSlide === '2') {

@@ -1,0 +1,130 @@
+---
+// TipologiaModal — Full-screen overlay shown when the user clicks any of the
+// polygon outlines in Tipologias.astro. Both detail views are stacked
+// vertically: TipologiaAbierta (render + description) on top, TipologiaAbierta2
+// (floor plan + specs) below — the user scrolls inside the modal to see the
+// second view.
+import TipologiaAbierta from './TipologiaAbierta.astro';
+import TipologiaAbierta2 from './TipologiaAbierta2.astro';
+---
+<div
+  data-tipologia-modal
+  hidden
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="tipologia-modal-title"
+  class="fixed inset-0 z-[100] bg-black/80 overflow-y-auto overscroll-contain">
+
+  <!-- Close button (fixed top right of viewport, sits above the global nav). -->
+  <button
+    data-tipologia-close
+    aria-label="Cerrar"
+    type="button"
+    class="fixed top-[24px] right-[24px] z-[130] w-[48px] h-[48px] rounded-full bg-white text-vecta-dark flex items-center justify-center text-[28px] leading-none hover:bg-vecta-lime transition-colors cursor-pointer">
+    ×
+  </button>
+
+  <h2 id="tipologia-modal-title" class="sr-only">Detalle de tipología</h2>
+
+  <!-- Both views stacked vertically — TipologiaAbierta first, then TipologiaAbierta2 -->
+  <div class="flex flex-col">
+    <div data-tipologia-view-key="render">
+      <TipologiaAbierta />
+    </div>
+    <div data-tipologia-view-key="plano">
+      <TipologiaAbierta2 />
+    </div>
+  </div>
+</div>
+
+<script>
+  const modal = document.querySelector<HTMLElement>('[data-tipologia-modal]');
+  const closeBtn = document.querySelector<HTMLButtonElement>('[data-tipologia-close]');
+  const siteNav = document.getElementById('site-nav');
+  const planoView = modal?.querySelector<HTMLElement>('[data-tipologia-view-key="plano"]');
+
+  // Same y-coordinate the page-level theme switcher uses in index.astro.
+  const NAV_LINE_Y = 65;
+
+  // Theme that was active before the modal opened — restore on close.
+  let savedTheme = '';
+
+  function updateModalNavTheme() {
+    if (!siteNav || !planoView) return;
+    const rect = planoView.getBoundingClientRect();
+    // When the floor-plan view's top has crossed the nav line, switch to dark
+    // (its bg is light gray). Otherwise stay on light (the render view's bg
+    // is dark).
+    const onPlano = rect.top <= NAV_LINE_Y;
+    siteNav.setAttribute('data-nav-theme', onPlano ? 'dark' : 'light');
+  }
+
+  function setTipo(tipo: string, mts: string) {
+    // Scoped to the modal so other in-page TipologiaAbierta instances (e.g.
+    // the mobile carousel slides) keep their own static tipo/mts.
+    if (!modal) return;
+    modal.querySelectorAll<HTMLElement>('[data-tipologia-title]').forEach((el) => {
+      el.textContent = `Tipo ${tipo}`;
+    });
+    modal.querySelectorAll<HTMLElement>('[data-tipologia-mts]').forEach((el) => {
+      el.textContent = `${mts} mts²`;
+    });
+  }
+
+  function open(tipo: string, mts: string) {
+    if (!modal) return;
+    if (siteNav) savedTheme = siteNav.getAttribute('data-nav-theme') || 'light';
+    setTipo(tipo, mts);
+    modal.removeAttribute('hidden');
+    modal.scrollTop = 0; // always start at the top (render view)
+    document.body.style.overflow = 'hidden';
+    modal.addEventListener('scroll', updateModalNavTheme, { passive: true });
+    updateModalNavTheme();
+  }
+
+  function close() {
+    if (!modal) return;
+    modal.setAttribute('hidden', '');
+    document.body.style.overflow = '';
+    modal.removeEventListener('scroll', updateModalNavTheme);
+    // Restore whatever theme the page-level switcher had before opening.
+    if (siteNav) siteNav.setAttribute('data-nav-theme', savedTheme || 'light');
+  }
+
+  // Click on any polygon trigger opens the modal with that polygon's tipo + mts.
+  document.querySelectorAll<HTMLElement>('[data-tipologia-polygon]').forEach((el) => {
+    const tipo = el.dataset.tipo || '3';
+    const mts = el.dataset.mts || '35';
+    const handler = () => open(tipo, mts);
+    el.addEventListener('click', handler);
+    el.addEventListener('keydown', (e) => {
+      const key = (e as KeyboardEvent).key;
+      if (key === 'Enter' || key === ' ') {
+        e.preventDefault();
+        handler();
+      }
+    });
+  });
+
+  closeBtn?.addEventListener('click', close);
+
+  // Close on Escape key.
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal && !modal.hasAttribute('hidden')) close();
+  });
+
+  // Close when clicking the dimmed backdrop (modal element itself).
+  modal?.addEventListener('click', (e) => {
+    if (e.target === modal) close();
+  });
+
+  // Any in-page nav link (#site-nav links + mobile drawer links) should close
+  // the modal so its hash-scroll lands cleanly on the target section.
+  document.querySelectorAll<HTMLAnchorElement>(
+    '#site-nav a[href^="#"], [data-mobile-menu] a[href^="#"]',
+  ).forEach((link) => {
+    link.addEventListener('click', () => {
+      if (modal && !modal.hasAttribute('hidden')) close();
+    });
+  });
+</script>

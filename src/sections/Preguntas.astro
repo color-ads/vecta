@@ -12,37 +12,30 @@ const items = [
 ];
 const CLOSED_TOPS = [313, 386, 459, 532, 605];
 ---
-<section class="relative w-full min-w-[1280px] min-h-screen overflow-hidden bg-vecta-night">
-  <div class="relative w-[1280px] h-[832px] mx-auto">
+<section class="relative w-full min-w-[1280px] min-h-screen overflow-hidden bg-vecta-night mobile:block mobile:h-screen mobile:min-h-screen">
+  <div class="relative w-[1280px] h-[832px] mx-auto mobile:h-screen">
     <!-- Title -->
-    <h2 class="absolute text-vecta-lime font-semibold text-[60px] leading-[0.959]"
-        style="font-family: 'Albert Sans', sans-serif; left: 68px; top: 103px; width: 639px;">
+    <h2 class="absolute text-vecta-lime font-semibold text-[60px] leading-[0.959] font-display left-[68px] top-[103px] w-[639px]
+               mobile:text-[80px] mobile:left-0 mobile:right-0 mobile:w-full mobile:text-center">
       Algunas preguntas<br/>frecuentes
     </h2>
 
-    <!-- Decorative large lime ring -->
-    <div class="absolute rounded-full border border-vecta-lime/40 pointer-events-none"
-         style="width: 620.185px; height: 620.185px;
-                left: calc(50% + 151.09px - 310.0925px);
-                top: calc(50% + 455.09px - 310.0925px);"></div>
+    <!-- Decorative large lime ring (hidden on mobile) -->
+    <div class="absolute rounded-full border border-vecta-lime/40 pointer-events-none w-[620.185px] h-[620.185px]
+                left-[calc(50%+151.09px-310.0925px)] top-[calc(50%+455.09px-310.0925px)] mobile:hidden"></div>
 
-    <!-- Cross-grid (1px solid #FFF) -->
-    <div class="absolute w-px bg-white pointer-events-none"
-         style="left: 759px; top: -26px; height: 815px;"></div>
-    <div class="absolute h-px bg-white pointer-events-none"
-         style="left: -179px; top: 279px; width: 1528px;"></div>
-    <div class="absolute h-px bg-white pointer-events-none"
-         style="left: 759px; top: 500px; width: 563px;"></div>
+    <!-- Cross-grid (1px solid #FFF) — hidden on mobile -->
+    <div class="absolute w-px bg-white pointer-events-none left-[759px] top-[-26px] h-[815px] mobile:hidden"></div>
+    <div class="absolute h-px bg-white pointer-events-none left-[-179px] top-[279px] w-[1528px] mobile:hidden"></div>
+    <div class="absolute h-px bg-white pointer-events-none left-[759px] top-[500px] w-[563px] mobile:hidden"></div>
 
-    <!-- Dots -->
-    <span class="absolute rounded-full bg-white pointer-events-none"
-          style="left: 752px; top: 273px; width: 13px; height: 12px;"></span>
-    <span class="absolute rounded-full bg-white pointer-events-none"
-          style="left: 752px; top: 494px; width: 13px; height: 12px;"></span>
+    <!-- Dots — hidden on mobile -->
+    <span class="absolute rounded-full bg-white pointer-events-none left-[752px] top-[273px] w-[13px] h-[12px] mobile:hidden"></span>
+    <span class="absolute rounded-full bg-white pointer-events-none left-[752px] top-[494px] w-[13px] h-[12px] mobile:hidden"></span>
 
-    <!-- Building fascade -->
-    <div class="absolute pointer-events-none"
-         style="left: 604px; top: -42px; width: 829px; height: 1037px;">
+    <!-- Building fascade — repositions on mobile to occupy the bottom half. -->
+    <div class="absolute pointer-events-none left-[604px] top-[-42px] w-[829px] h-[1037px]
+                mobile:left-0 mobile:top-[50vh] mobile:w-[1280px] mobile:h-[50vh]">
       <img src="/sections/preguntas/fachada.png" alt="Fachada VECTA 98"
            class="w-full h-full object-cover" />
     </div>
@@ -50,25 +43,27 @@ const CLOSED_TOPS = [313, 386, 459, 532, 605];
     <!-- Carets — clickable, rotate when open. transition: top 300ms for the
          layout shift; transform 300ms for the chevron rotation. -->
     {items.map((item, idx) => (
-      <button class="faq-row absolute w-[36px] h-[36px] rounded-full border-2 border-vecta-lime text-vecta-lime flex items-center justify-center cursor-pointer hover:bg-vecta-lime/10 z-10"
+      <button class="absolute w-[36px] h-[36px] rounded-full border-2 border-vecta-lime text-vecta-lime flex items-center justify-center cursor-pointer hover:bg-vecta-lime/10 z-10 left-[32px] [transition:top_0.3s_ease,background-color_0.2s_ease]"
               data-faq-caret={idx}
-              style={`left: 32px; top: ${CLOSED_TOPS[idx] + 2}px; transition: top 0.3s ease, background-color 0.2s ease;`}
+              style={`top: ${CLOSED_TOPS[idx] + 2}px;`}
               aria-label={`Toggle: ${item.q}`}
               aria-expanded="false"
               type="button">
-        <svg viewBox="0 0 24 24" class="w-[14px] h-[14px]" fill="none" stroke="currentColor" stroke-width="2.5"
-             data-faq-icon={idx}
-             style="transition: transform 0.3s ease;">
+        <svg viewBox="0 0 24 24" class="w-[14px] h-[14px] [transition:transform_0.3s_ease]" fill="none" stroke="currentColor" stroke-width="2.5"
+             data-faq-icon={idx}>
           <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
         </svg>
       </button>
     ))}
 
-    <!-- Question texts -->
+    <!-- Question texts. Inline style only carries the JS-managed `top` value.
+         Static dimensions/typography live as Tailwind classes so the mobile
+         variant can override them. -->
     {items.map((item, idx) => (
-      <p class="faq-row absolute text-vecta-lime font-semibold leading-[1.09]"
+      <p class="absolute text-vecta-lime font-semibold leading-[1.09] font-display left-[81px] w-[600px] text-[32px] tracking-[-0.352px] [transition:top_0.3s_ease]
+                mobile:!text-[56px] mobile:!w-[1100px]"
          data-faq-question={idx}
-         style={`font-family: 'Albert Sans', sans-serif; left: 81px; top: ${CLOSED_TOPS[idx]}px; width: 600px; font-size: 32px; letter-spacing: -0.352px; transition: top 0.3s ease;`}>
+         style={`top: ${CLOSED_TOPS[idx]}px;`}>
         {item.q}
       </p>
     ))}
@@ -76,29 +71,35 @@ const CLOSED_TOPS = [313, 386, 459, 532, 605];
     <!-- Answer panels — opacity 0 by default, transitions on opacity (fade) and
          on top (follow layout shift). pointer-events: none always (decorative). -->
     {items.map((item, idx) => (
-      <p class="faq-row absolute text-white font-semibold leading-[1.09] pointer-events-none"
+      <p class="absolute text-white font-semibold leading-[1.09] pointer-events-none font-display left-[81px] w-[602px] text-[20px] tracking-[-0.22px] opacity-0 [transition:opacity_0.2s_ease,top_0.3s_ease]
+                mobile:!text-[40px] mobile:!w-[1100px]"
          data-faq-answer={idx}
-         style={`font-family: 'Albert Sans', sans-serif; left: 81px; top: ${CLOSED_TOPS[idx] + 51}px; width: 602px; font-size: 20px; letter-spacing: -0.22px; opacity: 0; transition: opacity 0.2s ease, top 0.3s ease;`}>
+         style={`top: ${CLOSED_TOPS[idx] + 51}px;`}>
         {item.a}
       </p>
     ))}
 
     <!-- Per-item separator lines -->
     {items.map((item, idx) => (
-      <div class="faq-row absolute h-px bg-white pointer-events-none"
+      <div class="absolute h-px bg-white pointer-events-none left-[-49px] w-[495px] opacity-0 [transition:opacity_0.2s_ease,top_0.3s_ease]"
            data-faq-line={idx}
-           style={`left: -49px; top: ${CLOSED_TOPS[idx] + 96}px; width: 495px; opacity: 0; transition: opacity 0.2s ease, top 0.3s ease;`}></div>
+           style={`top: ${CLOSED_TOPS[idx] + 96}px;`}></div>
     ))}
   </div>
 </section>
 
 <script>
   const total = 5;
-  const CLOSED_TOPS = [313, 386, 459, 532, 605];
-  const OPEN_SHIFT = 46;
-  const CARET_OFFSET = 2;
-  const ANSWER_OFFSET = 51;
-  const LINE_OFFSET = 96;
+  // Mobile (touch / ≤1280) uses larger spacing because the question/answer
+  // fonts are bumped up — keeps an open answer from overlapping the next row.
+  const isMobile = matchMedia('(pointer: coarse), (hover: none), (max-width: 1280px)').matches;
+  const CLOSED_TOPS = isMobile
+    ? [313, 423, 533, 643, 753]
+    : [313, 386, 459, 532, 605];
+  const OPEN_SHIFT     = isMobile ? 180 : 46;
+  const CARET_OFFSET   = isMobile ? 8   : 2;
+  const ANSWER_OFFSET  = isMobile ? 130 : 51;
+  const LINE_OFFSET    = isMobile ? 260 : 96;
   const FADE_MS = 200;
   const SHIFT_MS = 300;
 
@@ -167,4 +168,8 @@ const CLOSED_TOPS = [313, 386, 459, 532, 605];
       setOpen(idx);
     });
   });
+
+  // Initial pass — overrides the SSR'd inline tops so the mobile layout uses
+  // the bigger row spacing computed above.
+  applyPositions();
 </script>

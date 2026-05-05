@@ -11,6 +11,12 @@
   --font-nav: "Afacad", system-ui, sans-serif;
 }
 
+/* Custom variant — applied on touch devices and when the layout viewport is
+   ≤1280px. With <meta viewport content="width=1280"> mobile devices always
+   match this breakpoint, while desktop only hits it if the window is narrow.
+   Use it as `mobile:text-[40px]` etc. */
+@custom-variant mobile (@media (pointer: coarse), (hover: none), (max-width: 1280px));
+
 html, body {
   background-color: var(--color-vecta-bg);
   color: var(--color-vecta-dark);

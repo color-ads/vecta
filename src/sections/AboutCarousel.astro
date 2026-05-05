@@ -20,9 +20,9 @@ const items = [
 ---
 <section id="about-carousel" data-active-slide="0" class="relative w-full min-w-[1280px] min-h-screen bg-vecta-bg overflow-hidden">
   <!-- Slide indicator dots — clickable, centered along the left strip. Only
-       navigation control for this carousel. z-50 keeps them above slides and
-       any pointer-events: auto contention. -->
-  <div class="absolute left-[60px] top-1/2 -translate-y-1/2 flex flex-col gap-[14px] z-50">
+       navigation control for this carousel on desktop. Hidden on mobile, where
+       slides auto-advance every 5s instead. -->
+  <div class="absolute left-[60px] top-1/2 -translate-y-1/2 flex flex-col gap-[14px] z-50 mobile:hidden">
     {[0, 1, 2].map((i) => (
       <button data-about-dot={i} aria-label={`Ir al slide ${i + 1}`} type="button"
               class={`w-[14px] h-[14px] rounded-full border-2 border-vecta-dark cursor-pointer transition-all hover:scale-125 ${i === 0 ? 'bg-vecta-dark' : 'bg-transparent'}`}></button>
@@ -52,15 +52,13 @@ const items = [
 
     <!-- Inner 1280px canvas keeps Figma absolute positions intact for text -->
     <div class="relative w-[1280px] h-[812px] mx-auto">
-      <h2 class="absolute left-[74px] top-[245px] w-[639px] text-vecta-dark font-semibold text-[60px] leading-[0.959]"
-          style="font-family: 'Albert Sans', sans-serif;">
+      <h2 class="absolute left-[74px] top-[245px] w-[639px] text-vecta-dark font-semibold text-[60px] leading-[0.959] font-display">
         Aquí no vendemos sueños inmobiliarios.
       </h2>
       <div class="absolute left-[80px] top-[207px] w-[495px] h-px bg-vecta-dark"></div>
       <div class="absolute left-[74px] top-[673px] w-[495px] h-px bg-vecta-dark"></div>
       <div class="absolute left-[74px] top-[691px] w-[292px] h-px bg-vecta-dark"></div>
-      <div class="absolute left-[74px] top-[392px] w-[475px] text-vecta-dark text-[32px] leading-[0.959] space-y-[1em]"
-           style="font-family: 'Albert Sans', sans-serif;">
+      <div class="absolute left-[74px] top-[392px] w-[475px] text-vecta-dark text-[32px] leading-[0.959] space-y-[1em] font-display">
         <p>El mercado está lleno de promesas, renders perfectos. Discursos aspiracionales. Rentabilidades sin contexto.</p>
         <p>
           <span class="font-bold">VECTA 98</span> parte de una lógica distinta: No se construyó para emocionar,
@@ -103,13 +101,13 @@ const items = [
                   border: 1px solid #22291D;"></div>
     </div>
 
-    <div class="relative w-[1280px] h-[832px] mx-auto">
-      <div class="absolute left-[84px] top-[237px] flex gap-[10px]">
+    <div class="relative w-[1280px] h-[832px] mx-auto mobile:h-auto mobile:min-h-screen">
+      <div class="absolute left-[84px] top-[237px] flex gap-[10px] mobile:grid mobile:grid-cols-[600px_600px] mobile:gap-[20px] mobile:left-1/2 mobile:top-1/2 mobile:-translate-x-1/2 mobile:-translate-y-1/2 mobile:w-[1220px]">
         {cards.map((c) => (
-          <article class="relative w-[271px] h-[436px] rounded-[10px] bg-[#0a0a0a] text-white">
-            <span class="absolute left-[24px] top-[11px] text-[105px] leading-none font-bold text-white" style="font-family: 'Albert Sans', sans-serif;">{c.number}</span>
-            <div class="absolute right-[20px] top-[22px] w-[55px] h-[55px] rounded-full bg-white flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <article class="relative w-[271px] h-[436px] rounded-[10px] bg-[#0a0a0a] text-white mobile:w-[600px] mobile:h-[760px]">
+            <span class="absolute left-[24px] top-[11px] text-[105px] leading-none font-bold text-white font-display mobile:left-[36px] mobile:top-[18px] mobile:text-[180px]">{c.number}</span>
+            <div class="absolute right-[20px] top-[22px] w-[55px] h-[55px] rounded-full bg-white flex items-center justify-center mobile:right-[36px] mobile:top-[36px] mobile:w-[100px] mobile:h-[100px]">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" fill="none" class="w-[28px] h-[28px] mobile:w-[50px] mobile:h-[50px]">
                 <path d="M10.4954 17.4921V20.9905C10.4954 22.9226 8.92908 24.4889 6.99696 24.4889C5.06483 24.4889 3.49854 22.9226 3.49854 20.9905C3.49854 19.0584 5.06483 17.4921 6.99696 17.4921H10.4954ZM10.4954 17.4921H17.4922M10.4954 17.4921V10.4953M17.4922 17.4921V20.9905C17.4922 22.9226 19.0585 24.4889 20.9906 24.4889C22.9228 24.4889 24.4891 22.9226 24.4891 20.9905C24.4891 19.0584 22.9228 17.4921 20.9906 17.4921H17.4922ZM17.4922 17.4921V10.4953M17.4922 10.4953H10.4954M17.4922 10.4953V6.99683C17.4922 5.06471 19.0585 3.49841 20.9906 3.49841C22.9228 3.49841 24.4891 5.06471 24.4891 6.99683C24.4891 8.92896 22.9228 10.4953 20.9906 10.4953H17.4922ZM10.4954 10.4953V6.99683C10.4954 5.06471 8.92908 3.49841 6.99696 3.49841C5.06483 3.49841 3.49854 5.06471 3.49854 6.99683C3.49854 8.92896 5.06483 10.4953 6.99696 10.4953H10.4954Z" stroke="#151515" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </div>
@@ -117,9 +115,9 @@ const items = [
                  (Claridad, Ciudad activa) and 2-line (Arquitectura funcional,
                  Coherencia a largo plazo) titles all sit ~13px above the line
                  (≈ 3% of the 436px card height). -->
-            <h3 class="absolute left-[24px] bottom-[127px] w-[217px] text-[36px] font-semibold leading-[0.95]" style="font-family: 'Albert Sans', sans-serif;">{c.title}</h3>
-            <span class="absolute left-[24px] top-[322px] w-[126px] h-px bg-white"></span>
-            <p class="absolute left-[24px] top-[343px] w-[218px] text-[18px] leading-[1.3] font-bold" style="font-family: 'Albert Sans', sans-serif;">{c.description}</p>
+            <h3 class="absolute left-[24px] bottom-[127px] w-[217px] text-[36px] font-semibold leading-[0.95] font-display mobile:left-[36px] mobile:bottom-[240px] mobile:w-[460px] mobile:text-[56px]">{c.title}</h3>
+            <span class="absolute left-[24px] top-[322px] w-[126px] h-px bg-white mobile:left-[36px] mobile:top-[530px] mobile:w-[220px]"></span>
+            <p class="absolute left-[24px] top-[343px] w-[218px] text-[18px] leading-[1.3] font-bold font-display mobile:left-[36px] mobile:top-[565px] mobile:w-[480px] mobile:text-[28px]">{c.description}</p>
           </article>
         ))}
       </div>
@@ -130,7 +128,7 @@ const items = [
        SLIDE 3 — Amenidades grid on black (formerly AboutAmenidades.astro)
        ============================================================ -->
   <div data-about-slide="amenidades"
-       class="absolute inset-0 transition-opacity duration-500 flex items-center justify-center"
+       class="absolute inset-0 transition-opacity duration-500 flex items-center justify-center mobile:items-start mobile:pt-[208px]"
        style="opacity: 0;">
     <div class="absolute left-1/2 -translate-x-1/2 bg-[#0a0a0a] overflow-hidden"
          style="top: calc((100vw - 1270px) / 8); bottom: calc((100vw - 1270px) / 8); width: calc(75vw + 317.5px); min-width: 1270px;">
@@ -138,45 +136,54 @@ const items = [
     </div>
 
     <div class="relative w-[1280px] h-[832px] mx-auto">
-      <h2 class="absolute left-[68px] top-[103px] w-[639px] text-vecta-lime-text font-semibold text-[60px] leading-[0.959]"
-          style="font-family: 'Albert Sans', sans-serif;">
-        Aquí no vendemos sueños inmobiliarios.
+      <h2 class="absolute left-[68px] top-[103px] w-[639px] text-vecta-lime-text font-semibold text-[60px] leading-[0.959] font-display
+                 mobile:left-0 mobile:right-0 mobile:top-[5px] mobile:w-full mobile:text-center mobile:px-[40px] mobile:text-[100px] mobile:leading-[1.05]">
+        Aquí no vendemos<br class="hidden mobile:inline" /> sueños inmobiliarios.
       </h2>
 
-      <!-- Cross-grid lines (1px solid #FFF) -->
-      <div class="absolute left-[412px] top-[1px] w-px h-[815px] bg-white"></div>
-      <div class="absolute left-[851px] top-[1px] w-px h-[815px] bg-white"></div>
-      <div class="absolute left-[413px] top-[327px] w-[856px] h-px bg-white"></div>
-      <div class="absolute left-[413px] top-[548px] w-[856px] h-px bg-white"></div>
+      <!-- Wrapper for everything below the title — mobile shifts this whole
+           block down 160px (≈20% of slide height) so the title up top has air. -->
+      <div class="contents mobile:block mobile:translate-y-[160px]">
+      <!-- Cross-grid lines (1px solid #FFF) — hidden on mobile -->
+      <div class="absolute left-[412px] top-[1px] w-px h-[815px] bg-white mobile:hidden"></div>
+      <div class="absolute left-[851px] top-[1px] w-px h-[815px] bg-white mobile:hidden"></div>
+      <div class="absolute left-[413px] top-[327px] w-[856px] h-px bg-white mobile:hidden"></div>
+      <div class="absolute left-[413px] top-[548px] w-[856px] h-px bg-white mobile:hidden"></div>
 
-      <!-- Dots at line intersections (white) -->
-      <span class="absolute left-[406px] top-[321px] w-[12px] h-[12px] rounded-full bg-white"></span>
-      <span class="absolute left-[406px] top-[542px] w-[12px] h-[12px] rounded-full bg-white"></span>
-      <span class="absolute left-[845px] top-[321px] w-[12px] h-[12px] rounded-full bg-white"></span>
-      <span class="absolute left-[845px] top-[542px] w-[12px] h-[12px] rounded-full bg-white"></span>
+      <!-- Dots at line intersections (white) — hidden on mobile -->
+      <span class="absolute left-[406px] top-[321px] w-[12px] h-[12px] rounded-full bg-white mobile:hidden"></span>
+      <span class="absolute left-[406px] top-[542px] w-[12px] h-[12px] rounded-full bg-white mobile:hidden"></span>
+      <span class="absolute left-[845px] top-[321px] w-[12px] h-[12px] rounded-full bg-white mobile:hidden"></span>
+      <span class="absolute left-[845px] top-[542px] w-[12px] h-[12px] rounded-full bg-white mobile:hidden"></span>
 
-      <div class="absolute left-[908px] top-[91px] w-[280px]" style="font-family: 'Albert Sans', sans-serif;">
-        <h3 class="text-vecta-lime-text font-semibold text-[28px] leading-[0.959]">{items[0].title}</h3>
-        <p class="mt-[28px] text-white text-[18px] leading-[1.35] font-semibold">{items[0].description}</p>
+      <div class="absolute left-[908px] top-[91px] w-[280px] font-display
+                  mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[320px] mobile:w-[700px] mobile:text-center">
+        <h3 class="text-vecta-lime-text font-semibold text-[28px] leading-[0.959] mobile:text-[72px]">{items[0].title}</h3>
+        <p class="mt-[28px] text-white text-[18px] leading-[1.35] font-semibold mobile:text-[40px] mobile:mt-[36px]">{items[0].description}</p>
       </div>
-      <div class="absolute left-[502px] top-[354px] w-[260px]" style="font-family: 'Albert Sans', sans-serif;">
-        <h3 class="text-vecta-lime-text font-semibold text-[28px] leading-[0.959]">{items[1].title}</h3>
-        <p class="mt-[28px] text-white text-[18px] leading-[1.35] font-semibold">{items[1].description}</p>
+      <div class="absolute left-[502px] top-[354px] w-[260px] font-display
+                  mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[640px] mobile:w-[700px] mobile:text-center">
+        <h3 class="text-vecta-lime-text font-semibold text-[28px] leading-[0.959] mobile:text-[72px]">{items[1].title}</h3>
+        <p class="mt-[28px] text-white text-[18px] leading-[1.35] font-semibold mobile:text-[40px] mobile:mt-[36px]">{items[1].description}</p>
       </div>
-      <div class="absolute left-[908px] top-[354px] w-[260px]" style="font-family: 'Albert Sans', sans-serif;">
-        <h3 class="text-vecta-lime-text font-semibold text-[28px] leading-[0.959]">{items[2].title}</h3>
-        <p class="mt-[28px] text-white text-[18px] leading-[1.35] font-semibold">{items[2].description}</p>
+      <div class="absolute left-[908px] top-[354px] w-[260px] font-display
+                  mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[960px] mobile:w-[700px] mobile:text-center">
+        <h3 class="text-vecta-lime-text font-semibold text-[28px] leading-[0.959] mobile:text-[72px]">{items[2].title}</h3>
+        <p class="mt-[28px] text-white text-[18px] leading-[1.35] font-semibold mobile:text-[40px] mobile:mt-[36px]">{items[2].description}</p>
       </div>
-      <div class="absolute left-[68px] top-[598px] w-[300px]" style="font-family: 'Albert Sans', sans-serif;">
-        <h3 class="text-vecta-lime-text font-semibold text-[28px] leading-[0.959]">{items[3].title}</h3>
-        <p class="mt-[28px] text-white text-[18px] leading-[1.35] font-semibold">{items[3].description}</p>
+      <div class="absolute left-[68px] top-[598px] w-[300px] font-display
+                  mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[1280px] mobile:w-[700px] mobile:text-center">
+        <h3 class="text-vecta-lime-text font-semibold text-[28px] leading-[0.959] mobile:text-[72px]">{items[3].title}</h3>
+        <p class="mt-[28px] text-white text-[18px] leading-[1.35] font-semibold mobile:text-[40px] mobile:mt-[36px]">{items[3].description}</p>
       </div>
-      <div class="absolute left-[502px] top-[598px] w-[260px]" style="font-family: 'Albert Sans', sans-serif;">
-        <h3 class="text-vecta-lime-text font-semibold text-[28px] leading-[0.959]">{items[4].title}</h3>
-        <p class="mt-[28px] text-white text-[18px] leading-[1.35] font-semibold">{items[4].description}</p>
+      <div class="absolute left-[502px] top-[598px] w-[260px] font-display
+                  mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[1600px] mobile:w-[700px] mobile:text-center">
+        <h3 class="text-vecta-lime-text font-semibold text-[28px] leading-[0.959] mobile:text-[72px]">{items[4].title}</h3>
+        <p class="mt-[28px] text-white text-[18px] leading-[1.35] font-semibold mobile:text-[40px] mobile:mt-[36px]">{items[4].description}</p>
       </div>
 
-      <div class="absolute right-[80px] bottom-[90px] flex flex-col items-center gap-[8px]">
+      <div class="absolute right-[80px] bottom-[90px] flex flex-col items-center gap-[8px]
+                  mobile:right-auto mobile:bottom-auto mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[80px]">
         <!-- actualcorp logo: outer "a" mark + inner counter/eye nested inside.
              Inner 29×27 SVG offset from geometric center by +14% right / +11%
              down of the outer 90×90 (≈ +12.6 px right, +9.9 px down):
@@ -188,7 +195,8 @@ const items = [
             <path d="M26.9093 0L27.286 0.145698C27.5711 0.897258 27.7136 1.49659 27.8215 2.28794C28.526 7.40214 29.483 12.3929 26.7159 17.1028C22.3973 24.4564 11.3981 28.9237 3.67298 24.3607C2.60198 23.6032 1.72033 22.6074 1.09727 21.4514C0.0384793 19.4587 -0.348387 16.7212 0.358151 14.5245C2.17438 8.87649 10.83 6.67711 15.7452 4.63812C19.4795 3.08889 23.3318 1.90124 26.9093 0Z" fill="white"/>
           </svg>
         </svg>
-        <span class="text-white text-[42px] font-bold leading-none" style="font-family: 'Albert Sans', sans-serif;">actualcorp</span>
+        <span class="text-white text-[42px] font-bold leading-none font-display mobile:text-[64px]">actualcorp</span>
+      </div>
       </div>
     </div>
   </div>
@@ -232,11 +240,45 @@ const items = [
         e.preventDefault();
         e.stopPropagation();
         show(idx);
+        // Manual selection on desktop also pauses auto-rotate (if running).
+        pauseThenResume();
       });
     });
 
+    // ----- Mobile auto-rotation -----
+    // On touch / ≤1280px viewports the dots are hidden; instead we cycle
+    // through slides every AUTO_MS. Any user interaction with the section
+    // pauses the cycle for RESUME_MS, then resumes from the current slide.
+    const AUTO_MS = 5000;
+    const RESUME_MS = 10000;
+    const isMobile = window.matchMedia('(pointer: coarse), (hover: none), (max-width: 1280px)').matches;
+    let autoTimer: number | null = null;
+    let resumeTimer: number | null = null;
+
+    function startAuto() {
+      if (!isMobile) return;
+      stopAuto();
+      autoTimer = window.setInterval(() => show(active + 1), AUTO_MS);
+    }
+    function stopAuto() {
+      if (autoTimer !== null) { clearInterval(autoTimer); autoTimer = null; }
+      if (resumeTimer !== null) { clearTimeout(resumeTimer); resumeTimer = null; }
+    }
+    function pauseThenResume() {
+      if (!isMobile) return;
+      stopAuto();
+      resumeTimer = window.setTimeout(startAuto, RESUME_MS);
+    }
+
+    // Pause auto-rotate while the user is interacting with the section.
+    if (sectionEl && isMobile) {
+      sectionEl.addEventListener('touchstart', pauseThenResume, { passive: true });
+      sectionEl.addEventListener('pointerdown', pauseThenResume, { passive: true });
+    }
+
     // Apply initial styling consistently (slide 0, default accent).
     show(0);
+    startAuto();
   }
 
   // Run after DOM ready (Astro deferred scripts run post-parse, but this

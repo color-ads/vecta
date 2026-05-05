@@ -1,0 +1,78 @@
+---
+// TipologiaAbierta2 — Figma frame 2054:172 (1280x832)
+// Light gray background. Floor plan image on the right; on the left, the big
+// "Tipo 3" title and a 4-row specs table.
+//
+// Coordinates from Figma:
+//   bg color       : #f0f0f0
+//   floor plan img : x=544, y=94, w=686, h=702
+//   "Tipo 3"       : x=92,  y=272, 100px vecta-dark
+//   row 1: ÁREA TOTAL  | 35 mts²  — top:416
+//   row 2: CAMAS       | 2        — top:480
+//   row 3: SALA COMEDOR| 1        — top:544
+//   row 4: BAÑOS       | 2        — top:608
+//   separator rules between rows at top: 461.5, 525.5, 589.5 — x=88, w=390
+//
+// The site-wide fixed nav (rendered in src/pages/index.astro) sits on top of
+// this component when the modal opens, so no Header is rendered inside.
+//
+// Props:
+//   tipo  — the typology number (default "3")
+//   mts   — the area shown in the ÁREA TOTAL row (default "35")
+interface Props {
+  tipo?: string;
+  mts?: string;
+}
+const { tipo = "3", mts = "35" } = Astro.props;
+
+const rows = [
+  { label: "ÁREA TOTAL",   value: `${mts} mts²` },
+  { label: "CAMAS",        value: "2"           },
+  { label: "SALA COMEDOR", value: "1"           },
+  { label: "BAÑOS",        value: "2"           },
+];
+const ROW_TOPS = [416, 480, 544, 608];
+const SEP_TOPS = [461, 525, 589];
+---
+<section class="relative w-full min-w-[1280px] min-h-screen h-[832px] overflow-hidden bg-vecta-bg">
+  <!-- Inner 1280px canvas -->
+  <div class="relative w-[1280px] min-h-screen h-[832px] mx-auto">
+    <!-- Floor plan image -->
+    <div class="absolute left-[544px] top-[94px] w-[686px] h-[702px] overflow-hidden">
+      <img
+        src="/sections/tipologia-abierta/floor-plan.png"
+        alt="Plano de tipología 3 — VECTA 98"
+        class="block w-full h-full object-contain"
+      />
+    </div>
+
+    <!-- "Tipo N" big title (text is set by TipologiaModal at open time) -->
+    <h2
+      data-tipologia-title
+      class="absolute left-[92px] top-[272px] w-[311px] text-vecta-dark font-semibold text-[100px] leading-[0.959] font-display">
+      Tipo {tipo}
+    </h2>
+
+    <!-- Specs table (4 rows + 3 separators). The first row's value (ÁREA TOTAL)
+         is updated by the modal script — others are static. Istok Web is not
+         loaded by the project, so the system sans-serif fallback is used. -->
+    {rows.map((row, idx) => (
+      <Fragment>
+        <p
+          class="absolute left-[93px] w-[194px] text-vecta-dark text-[24px] leading-[1.008] font-['Istok_Web',sans-serif]"
+          style={`top: ${ROW_TOPS[idx]}px;`}>
+          {row.label}
+        </p>
+        <p
+          {...(row.label === "ÁREA TOTAL" ? { "data-tipologia-mts": true } : {})}
+          class="absolute left-[345px] w-[133px] text-vecta-dark text-[24px] leading-[1.008] text-center font-bold font-['Istok_Web',sans-serif]"
+          style={`top: ${ROW_TOPS[idx]}px;`}>
+          {row.value}
+        </p>
+      </Fragment>
+    ))}
+    {SEP_TOPS.map((y) => (
+      <div class="absolute left-[88px] w-[390px] h-px bg-vecta-dark/60" style={`top: ${y}px;`}></div>
+    ))}
+  </div>
+</section>

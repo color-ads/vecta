@@ -11,16 +11,17 @@
 
   <!-- Inner 1280px canvas keeps Figma absolute positions intact for the overlay text -->
   <div class="relative w-[1280px] h-full mx-auto">
-    <!-- Right-side info card text (Group 11 in Figma) -->
-    <div class="absolute right-[88px] top-[231px] w-[300px] text-vecta-dark text-right" style="font-family: 'Albert Sans', sans-serif;">
-      <p class="text-[32px] leading-[0.959]">Bogotá, Colombia</p>
+    <!-- Right-side info card text (Group 11 in Figma). Mobile widens the box
+         and bumps the text sizes so labels + figures read on small screens. -->
+    <div class="absolute right-[58px] top-[231px] w-[300px] text-vecta-dark text-right font-display mobile:w-[500px]">
+      <p class="text-[32px] leading-[0.959] mobile:text-[48px]">Bogotá, Colombia</p>
 
-      <p class="mt-[50px] text-[32px] leading-[0.959]">Aptos desde</p>
-      <p class="mt-[12px] text-[64px] font-medium leading-[0.959]">40 mts²</p>
+      <p class="mt-[50px] text-[32px] leading-[0.959] mobile:text-[48px]">Aptos desde</p>
+      <p class="mt-[12px] text-[64px] font-medium leading-[0.959] mobile:text-[88px]">40 mts²</p>
 
-      <p class="mt-[55px] text-[32px] leading-[0.959]">Desde</p>
-      <p class="mt-[10px] text-[60px] font-medium leading-[0.959]">$790</p>
-      <p class="text-[60px] font-medium leading-[0.959]">millones</p>
+      <p class="mt-[55px] text-[32px] leading-[0.959] mobile:text-[48px]">Desde</p>
+      <p class="mt-[10px] text-[60px] font-medium leading-[0.959] mobile:text-[88px]">$790</p>
+      <p class="text-[60px] font-medium leading-[0.959] mobile:text-[88px]">millones</p>
     </div>
   </div>
 </section>

@@ -1,62 +1,208 @@
 ---
-// Formulario - contact form on lime background
+// Formulario - contact form on lime background.
+// Mobile (touch / ≤1280) collapses the desktop split into a vertical stack:
+// title → form → comment label/box → consent → submit. All text scales up.
 ---
-<section class="relative w-full min-w-[1280px] min-h-screen overflow-hidden bg-vecta-lime flex items-center justify-center">
+<section class="relative w-full min-w-[1280px] min-h-screen overflow-hidden bg-vecta-lime flex items-center justify-center
+                mobile:block mobile:h-auto mobile:min-h-[1700px]">
   <!-- Inner 1280px canvas keeps Figma absolute positions intact -->
-  <div class="relative w-[1280px] h-[832px] mx-auto">
-  <!-- Title -->
-  <h2 class="absolute left-[168px] top-[148px] text-vecta-dark font-semibold text-[44px] leading-[0.959]"
-      style="font-family: 'Albert Sans', sans-serif;">
-    Quiero saber más
-  </h2>
+  <div class="relative w-[1280px] h-[832px] mx-auto mobile:h-[1700px]">
+    <!-- Title -->
+    <h2 class="absolute left-[168px] top-[148px] text-vecta-dark font-semibold text-[44px] leading-[0.959] font-display
+               mobile:left-0 mobile:right-0 mobile:top-[80px] mobile:w-full mobile:text-center mobile:text-[80px]">
+      Quiero saber más
+    </h2>
 
-  <p class="absolute left-[706px] top-[151px] text-vecta-dark text-[24px]"
-     style="font-family: 'Albert Sans', sans-serif;">
-    Deja tu comentario aquí:
-  </p>
-
-  <!-- Comment box -->
-  <div class="absolute left-[706px] top-[201px] w-[392px] h-[335px] rounded-[10px] border-2 border-vecta-dark bg-transparent"></div>
-
-  <form class="absolute left-[175px] top-[218px] w-[451px]" style="font-family: 'Albert Sans', sans-serif;">
-    <label class="block text-vecta-dark text-[20px] font-semibold mb-[6px]">Nombre:</label>
-    <input type="text" class="w-full h-[47px] rounded-[10px] border-2 border-vecta-dark bg-transparent px-[14px] text-vecta-dark mb-[15px]" />
-
-    <label class="block text-vecta-dark text-[20px] font-semibold mb-[6px]">Celular:</label>
-    <input type="tel" class="w-full h-[47px] rounded-[10px] border-2 border-vecta-dark bg-transparent px-[14px] text-vecta-dark mb-[15px]" />
-
-    <label class="block text-vecta-dark text-[20px] font-semibold mb-[6px]">Correo:</label>
-    <input type="email" class="w-full h-[47px] rounded-[10px] border-2 border-vecta-dark bg-transparent px-[14px] text-vecta-dark mb-[15px]" />
-
-    <p class="text-vecta-dark text-[20px] font-semibold mb-[8px]">Este proyecto se acomoda a ti para:</p>
-    <div class="flex items-center gap-[12px] mb-[14px]">
-      <span class="text-vecta-dark text-[20px]">Inversión:</span>
-      <span class="inline-block w-[22px] h-[23px] rounded-[5px] border-2 border-vecta-dark"></span>
-      <span class="ml-[44px] text-vecta-dark text-[20px]">Vivienda:</span>
-      <span class="inline-block w-[22px] h-[23px] rounded-[5px] border-2 border-vecta-dark"></span>
-    </div>
-
-    <p class="text-vecta-dark text-[20px] font-semibold mb-[8px]">Quieres ser contactado telefónicamente:</p>
-    <div class="flex items-center gap-[12px]">
-      <span class="text-vecta-dark text-[20px]">Sí:</span>
-      <span class="inline-block w-[22px] h-[23px] rounded-[5px] border-2 border-vecta-dark"></span>
-      <span class="ml-[44px] text-vecta-dark text-[20px]">No:</span>
-      <span class="inline-block w-[22px] h-[23px] rounded-[5px] border-2 border-vecta-dark"></span>
-    </div>
-  </form>
-
-  <!-- Consent + checkbox -->
-  <div class="absolute left-[706px] top-[549px] w-[395px] flex gap-[12px]">
-    <span class="mt-[3px] inline-block w-[18px] h-[18px] rounded-[3px] border-2 border-vecta-dark shrink-0"></span>
-    <p class="text-vecta-dark text-[14px] leading-[1.3]" style="font-family: 'Albert Sans', sans-serif;">
-      Autorizo a recibir información del proyecto a mi correo electrónico y autorizo el uso de mis datos según la política de tratamiento de datos personales.
+    <p class="absolute left-[706px] top-[151px] text-vecta-dark text-[24px] font-display
+              mobile:left-1/2 mobile:top-[1100px] mobile:-translate-x-1/2 mobile:text-[44px] mobile:whitespace-nowrap">
+      Deja tu comentario aquí:
     </p>
+
+    <!-- Comment box (associated to the form via the form="contactForm" attribute
+         so it submits even though it lives outside the <form> for layout) -->
+    <textarea
+      form="contactForm"
+      name="comentario"
+      maxlength="1000"
+      class="absolute left-[706px] top-[201px] w-[392px] h-[335px] rounded-[10px] border-2 border-vecta-dark bg-transparent p-[14px] text-vecta-dark text-[18px] resize-none focus:outline-none focus:ring-2 focus:ring-vecta-dark/40 font-display
+             mobile:left-1/2 mobile:top-[1170px] mobile:-translate-x-1/2 mobile:w-[1000px] mobile:h-[280px] mobile:text-[28px]"></textarea>
+
+    <form
+      id="contactForm"
+      novalidate
+      class="absolute left-[175px] top-[218px] w-[451px] font-display
+             mobile:left-1/2 mobile:top-[220px] mobile:-translate-x-1/2 mobile:w-[1000px]">
+      <label class="block text-vecta-dark text-[20px] font-semibold mb-[6px] mobile:text-[36px] mobile:mb-[12px]" for="form-nombre">Nombre:</label>
+      <input
+        id="form-nombre"
+        name="nombre"
+        type="text"
+        required
+        minlength="2"
+        maxlength="80"
+        autocomplete="name"
+        class="w-full h-[47px] rounded-[10px] border-2 border-vecta-dark bg-transparent px-[14px] text-vecta-dark mb-[15px] focus:outline-none focus:ring-2 focus:ring-vecta-dark/40 form-input-validate
+               mobile:h-[80px] mobile:text-[32px] mobile:mb-[24px]" />
+
+      <label class="block text-vecta-dark text-[20px] font-semibold mb-[6px] mobile:text-[36px] mobile:mb-[12px]" for="form-celular">Celular:</label>
+      <input
+        id="form-celular"
+        name="celular"
+        type="tel"
+        required
+        pattern="[0-9+\s\-]{7,20}"
+        inputmode="numeric"
+        autocomplete="tel"
+        class="w-full h-[47px] rounded-[10px] border-2 border-vecta-dark bg-transparent px-[14px] text-vecta-dark mb-[15px] focus:outline-none focus:ring-2 focus:ring-vecta-dark/40 form-input-validate
+               mobile:h-[80px] mobile:text-[32px] mobile:mb-[24px]" />
+
+      <label class="block text-vecta-dark text-[20px] font-semibold mb-[6px] mobile:text-[36px] mobile:mb-[12px]" for="form-correo">Correo:</label>
+      <input
+        id="form-correo"
+        name="correo"
+        type="email"
+        required
+        maxlength="120"
+        autocomplete="email"
+        class="w-full h-[47px] rounded-[10px] border-2 border-vecta-dark bg-transparent px-[14px] text-vecta-dark mb-[15px] focus:outline-none focus:ring-2 focus:ring-vecta-dark/40 form-input-validate
+               mobile:h-[80px] mobile:text-[32px] mobile:mb-[24px]" />
+
+      <p class="text-vecta-dark text-[20px] font-semibold mb-[8px] mobile:text-[36px] mobile:mb-[12px]">Este proyecto se acomoda a ti para:</p>
+      <div class="flex items-center gap-[12px] mb-[14px] mobile:gap-[18px] mobile:mb-[22px]">
+        <label class="flex items-center gap-[12px] cursor-pointer mobile:gap-[18px]">
+          <span class="text-vecta-dark text-[20px] mobile:text-[32px]">Inversión:</span>
+          <input
+            type="radio"
+            name="proposito"
+            value="inversion"
+            required
+            class="appearance-none inline-block w-[22px] h-[23px] rounded-[5px] border-2 border-vecta-dark cursor-pointer checked:bg-vecta-dark transition-colors
+                   mobile:w-[36px] mobile:h-[36px]" />
+        </label>
+        <label class="flex items-center gap-[12px] cursor-pointer ml-[44px] mobile:gap-[18px]">
+          <span class="text-vecta-dark text-[20px] mobile:text-[32px]">Vivienda:</span>
+          <input
+            type="radio"
+            name="proposito"
+            value="vivienda"
+            class="appearance-none inline-block w-[22px] h-[23px] rounded-[5px] border-2 border-vecta-dark cursor-pointer checked:bg-vecta-dark transition-colors
+                   mobile:w-[36px] mobile:h-[36px]" />
+        </label>
+      </div>
+
+      <p class="text-vecta-dark text-[20px] font-semibold mb-[8px] mobile:text-[36px] mobile:mb-[12px]">Quieres ser contactado telefónicamente:</p>
+      <div class="flex items-center gap-[12px] mobile:gap-[18px] mobile:mb-[22px]">
+        <label class="flex items-center gap-[12px] cursor-pointer mobile:gap-[18px]">
+          <span class="text-vecta-dark text-[20px] mobile:text-[32px]">Sí:</span>
+          <input
+            type="radio"
+            name="contactoTelefonico"
+            value="si"
+            required
+            class="appearance-none inline-block w-[22px] h-[23px] rounded-[5px] border-2 border-vecta-dark cursor-pointer checked:bg-vecta-dark transition-colors
+                   mobile:w-[36px] mobile:h-[36px]" />
+        </label>
+        <label class="flex items-center gap-[12px] cursor-pointer ml-[44px] mobile:gap-[18px]">
+          <span class="text-vecta-dark text-[20px] mobile:text-[32px]">No:</span>
+          <input
+            type="radio"
+            name="contactoTelefonico"
+            value="no"
+            class="appearance-none inline-block w-[22px] h-[23px] rounded-[5px] border-2 border-vecta-dark cursor-pointer checked:bg-vecta-dark transition-colors
+                   mobile:w-[36px] mobile:h-[36px]" />
+        </label>
+      </div>
+
+      <!-- Inline status / error region (visually anchored under the radios) -->
+      <p data-form-status class="mt-[14px] text-[16px] leading-[1.2] hidden" aria-live="polite"></p>
+    </form>
+
+    <!-- Consent + checkbox (associated to the form via form="contactForm") -->
+    <label class="absolute left-[706px] top-[549px] w-[395px] flex gap-[12px] cursor-pointer
+                  mobile:left-1/2 mobile:top-[1480px] mobile:-translate-x-1/2 mobile:w-[1000px] mobile:gap-[18px]">
+      <input
+        type="checkbox"
+        form="contactForm"
+        name="consent"
+        required
+        class="mt-[3px] appearance-none inline-block w-[18px] h-[18px] rounded-[3px] border-2 border-vecta-dark shrink-0 cursor-pointer checked:bg-vecta-dark transition-colors
+               mobile:mt-[4px] mobile:w-[28px] mobile:h-[28px]" />
+      <p class="text-vecta-dark text-[14px] leading-[1.3] font-display mobile:text-[24px]">
+        Autorizo a recibir información del proyecto a mi correo electrónico y autorizo el uso de mis datos según la política de tratamiento de datos personales.
+      </p>
+    </label>
+
+    <!-- Submit button -->
+    <button
+      type="submit"
+      form="contactForm"
+      class="absolute left-[875px] top-[640px] w-[214px] h-[47px] rounded-[10px] bg-vecta-dark text-white text-[28px] font-semibold flex items-center justify-center hover:bg-vecta-dark/90 transition-colors disabled:opacity-50 font-display
+             mobile:left-1/2 mobile:top-[1600px] mobile:-translate-x-1/2 mobile:w-[360px] mobile:h-[80px] mobile:text-[40px]">
+      ENVIAR
+    </button>
   </div>
 
-  <!-- Submit button -->
-  <button class="absolute left-[875px] top-[640px] w-[214px] h-[47px] rounded-[10px] bg-vecta-dark text-white text-[28px] font-semibold flex items-center justify-center"
-          style="font-family: 'Albert Sans', sans-serif;">
-    ENVIAR
-  </button>
-  </div>
+  <style>
+    /* Form validation visuals: only show red border *after* the user has
+       interacted (focus + blur, or first submit). `:user-invalid` is true only
+       once the field has been "touched" — empty required fields don't match
+       on initial load, so the inputs stay in their default vecta-dark color. */
+    .form-input-validate:user-invalid { border-color: #b91c1c; }
+  </style>
+
+  <script>
+    const form = document.getElementById('contactForm') as HTMLFormElement | null;
+    const status = document.querySelector<HTMLParagraphElement>('[data-form-status]');
+
+    function setStatus(message: string, kind: 'error' | 'success' | '' = '') {
+      if (!status) return;
+      status.textContent = message;
+      status.classList.remove('hidden', 'text-red-700', 'text-green-700');
+      if (!message) {
+        status.classList.add('hidden');
+        return;
+      }
+      status.classList.add(kind === 'error' ? 'text-red-700' : 'text-green-700');
+    }
+
+    function firstErrorMessage(formEl: HTMLFormElement): string | null {
+      // Native HTML5 validity — return the first invalid field's message.
+      for (const el of Array.from(formEl.elements) as HTMLInputElement[]) {
+        if (!el.willValidate) continue;
+        if (!el.checkValidity()) {
+          el.focus();
+          return el.validationMessage || 'Hay un campo inválido.';
+        }
+      }
+      return null;
+    }
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!form) return;
+
+      const error = firstErrorMessage(form);
+      if (error) {
+        setStatus(error, 'error');
+        return;
+      }
+
+      const data = Object.fromEntries(new FormData(form).entries());
+      setStatus('Enviando…', '');
+
+      try {
+        // Plug the real endpoint here (e.g. fetch('/api/contact', {...})).
+        // Until then, simulate success so the UX is testable.
+        await new Promise((r) => setTimeout(r, 400));
+        console.log('Formulario válido — payload:', data);
+        setStatus('¡Gracias! Recibimos tu información.', 'success');
+        form.reset();
+      } catch {
+        setStatus('No pudimos enviar el formulario. Intenta de nuevo.', 'error');
+      }
+    });
+
+    // Clear the status as the user starts editing again.
+    form?.addEventListener('input', () => setStatus(''));
+  </script>
 </section>

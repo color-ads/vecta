@@ -1,7 +1,10 @@
 ---
-// Tipologias - building image with 5 typology callouts and big "Tipologias" title
+// Tipologias - building image with 5 typology callouts and big "Tipologias" title.
+// Each of the 5 building polygon outlines is clickable; clicking opens the
+// TipologiaModal which holds the render + floor plan detail views.
+import TipologiaModal from '../components/TipologiaModal.astro';
 ---
-<section id="tipologias" class="relative w-full min-w-[1280px] h-[2085px] overflow-hidden bg-black">
+<section id="tipologias" class="relative w-full min-w-[1280px] h-[2085px] overflow-hidden bg-black mobile:h-screen">
   <!-- Background image bleeds full-width across the viewport -->
   <img
     src="/sections/tipologias/tipologias-bg.png"
@@ -13,8 +16,7 @@
   <!-- Inner 1280px canvas keeps Figma absolute positions intact -->
   <div class="relative w-[1280px] h-full mx-auto">
     <!-- Big title -->
-    <h2 class="absolute right-[120px] top-[101px] text-white font-medium text-[128px] leading-[0.959]"
-        style="font-family: 'Albert Sans', sans-serif;">
+    <h2 class="absolute right-[120px] top-[101px] text-white font-medium text-[128px] leading-[0.959] font-display">
       Tipologias
     </h2>
 
@@ -25,40 +27,88 @@
     </div>
     <div class="absolute left-[663px] top-[257px] w-[495px] h-px bg-white"></div>
 
+    <!-- Vector 35 — Tipología 1 / 20 mts² (Figma 2047:30) -->
+    <div data-tipologia-polygon data-tipo="1" data-mts="20" role="button" tabindex="0" aria-label="Ver detalle de Tipología 1 (20 mts²)" class="cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60 absolute left-[157px] top-[575px] w-[217px] h-[330px] mobile:hidden">
+      <div class="absolute top-[-76.92%] right-[-116.59%] bottom-[-77.02%] left-[-24.42%]">
+        <img src="/sections/tipologias/vector-35.svg" alt="" class="block max-w-none w-full h-full" />
+      </div>
+    </div>
+
+    <!-- Vector 36 — Tipología 3 / 35 mts² (Figma 2050:31) -->
+    <div data-tipologia-polygon data-tipo="3" data-mts="35" role="button" tabindex="0" aria-label="Ver detalle de Tipología 3 (35 mts²)" class="cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60 mobile:hidden absolute left-[753px] top-[788px] w-[332px] h-[350px]">
+      <div class="absolute top-[-72.42%] right-[-76.17%] bottom-[-72.27%] left-[-76.06%]">
+        <img src="/sections/tipologias/vector-36.svg" alt="" class="block max-w-none w-full h-full" />
+      </div>
+    </div>
+
+    <!-- Vector 37 — Tipología 3 / 18 mts² (Figma 2050:32) -->
+    <div data-tipologia-polygon data-tipo="3" data-mts="18" role="button" tabindex="0" aria-label="Ver detalle de Tipología 3 (18 mts²)" class="cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60 mobile:hidden absolute left-[1130px] top-[1170px] w-[238px] h-[169px]">
+      <div class="absolute top-[-149.72%] right-[-6.08%] bottom-[-149.69%] left-[-106.10%]">
+        <img src="/sections/tipologias/vector-37.svg" alt="" class="block max-w-none w-full h-full" />
+      </div>
+    </div>
+
+    <!-- Vector 38 — Tipología 2 / 40 mts² (Figma 2051:33) -->
+    <div data-tipologia-polygon data-tipo="2" data-mts="40" role="button" tabindex="0" aria-label="Ver detalle de Tipología 2 (40 mts²)" class="cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60 mobile:hidden absolute left-[207px] top-[1096px] w-[359px] h-[305px]">
+      <div class="absolute top-[-82.92%] right-[-70.47%] bottom-[-82.98%] left-[-27.58%]">
+        <img src="/sections/tipologias/vector-38.svg" alt="" class="block max-w-none w-full h-full" />
+      </div>
+    </div>
+
+    <!-- Vector 39 — Tipología 5 / 25 mts² (Figma 2051:34) -->
+    <div data-tipologia-polygon data-tipo="5" data-mts="25" role="button" tabindex="0" aria-label="Ver detalle de Tipología 5 (25 mts²)" class="cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60 mobile:hidden absolute left-[932px] top-[1488px] w-[288px] h-[155px]">
+      <div class="absolute top-[-163.00%] right-[-56.07%] bottom-[-163.46%] left-[-87.68%]">
+        <img src="/sections/tipologias/vector-39.svg" alt="" class="block max-w-none w-full h-full" />
+      </div>
+    </div>
+
     <!-- Typology callouts -->
     <!-- Tipología 1 - top left (20 mts²) -->
-    <div class="absolute left-[57px] top-[400px] text-white" style="font-family: 'Albert Sans', sans-serif;">
-      <p class="text-[32px] leading-[0.959]">Tipología 1</p>
-      <p class="mt-[8px] text-[64px] font-medium leading-[0.959]">20 mts²</p>
-      <div class="absolute left-[129px] top-[105px] w-px h-[105px] bg-white"></div>
+    <div class="absolute left-[57px] top-[400px] text-white font-display">
+      <p class="text-[32px] leading-[0.959] mobile:text-[44px]">Tipología 1</p>
+      <p class="mt-[8px] text-[64px] font-medium leading-[0.959] mobile:text-[88px]">20 mts²</p>
+      <svg class="absolute left-[114px] top-[105px]" xmlns="http://www.w3.org/2000/svg" width="30" height="107" viewBox="0 0 30 107" fill="none">
+        <path d="M16.1421 0.585786C15.3611 -0.195262 14.0947 -0.195262 13.3137 0.585786L0.58577 13.3137C-0.195279 14.0948 -0.195279 15.3611 0.58577 16.1421C1.36682 16.9232 2.63315 16.9232 3.4142 16.1421L14.7279 4.82843L26.0416 16.1421C26.8227 16.9232 28.089 16.9232 28.87 16.1421C29.6511 15.3611 29.6511 14.0948 28.87 13.3137L16.1421 0.585786ZM14.7279 107H16.7279V2H14.7279H12.7279V107H14.7279Z" fill="white"/>
+      </svg>
     </div>
 
     <!-- Tipología 3 - top right (35 mts²) -->
-    <div class="absolute left-[846px] top-[618px] text-white" style="font-family: 'Albert Sans', sans-serif;">
-      <p class="text-[32px] leading-[0.959]">Tipología 3</p>
-      <p class="mt-[8px] text-[64px] font-medium leading-[0.959]">35 mts²</p>
-      <div class="absolute left-[118px] top-[105px] w-px h-[105px] bg-white"></div>
+    <div class="absolute left-[846px] top-[601px] text-white font-display">
+      <p class="text-[32px] leading-[0.959] mobile:text-[44px]">Tipología 3</p>
+      <p class="mt-[8px] text-[64px] font-medium leading-[0.959] mobile:text-[88px]">35 mts²</p>
+      <svg class="absolute left-[103px] top-[105px]" xmlns="http://www.w3.org/2000/svg" width="30" height="107" viewBox="0 0 30 107" fill="none">
+        <path d="M16.1421 0.585786C15.3611 -0.195262 14.0947 -0.195262 13.3137 0.585786L0.58577 13.3137C-0.195279 14.0948 -0.195279 15.3611 0.58577 16.1421C1.36682 16.9232 2.63315 16.9232 3.4142 16.1421L14.7279 4.82843L26.0416 16.1421C26.8227 16.9232 28.089 16.9232 28.87 16.1421C29.6511 15.3611 29.6511 14.0948 28.87 13.3137L16.1421 0.585786ZM14.7279 107H16.7279V2H14.7279H12.7279V107H14.7279Z" fill="white"/>
+      </svg>
     </div>
 
     <!-- Tipología 3 - mid right (18 mts²) -->
-    <div class="absolute left-[1058px] top-[1000px] text-center text-white" style="font-family: 'Albert Sans', sans-serif;">
-      <p class="text-[30px] leading-[0.959]">Tipología 3</p>
-      <p class="mt-[8px] text-[60px] font-medium leading-[0.959]">18 mts²</p>
-      <div class="absolute left-[84px] top-[100px] w-px h-[90px] bg-white"></div>
+    <div class="absolute left-[1070px] top-[1000px] text-center text-white font-display">
+      <p class="text-[30px] leading-[0.959] mobile:text-[44px]">Tipología 3</p>
+      <p class="mt-[8px] text-[60px] font-medium leading-[0.959] mobile:text-[88px]">18 mts²</p>
+      <svg class="absolute left-[69px] top-[100px]" xmlns="http://www.w3.org/2000/svg" width="30" height="107" viewBox="0 0 30 107" fill="none">
+        <path d="M16.1421 0.585786C15.3611 -0.195262 14.0947 -0.195262 13.3137 0.585786L0.58577 13.3137C-0.195279 14.0948 -0.195279 15.3611 0.58577 16.1421C1.36682 16.9232 2.63315 16.9232 3.4142 16.1421L14.7279 4.82843L26.0416 16.1421C26.8227 16.9232 28.089 16.9232 28.87 16.1421C29.6511 15.3611 29.6511 14.0948 28.87 13.3137L16.1421 0.585786ZM14.7279 107H16.7279V2H14.7279H12.7279V107H14.7279Z" fill="white"/>
+      </svg>
     </div>
 
     <!-- Tipología 2 - bottom left (40 mts²) -->
-    <div class="absolute left-[108px] top-[1560px] text-white" style="font-family: 'Albert Sans', sans-serif;">
-      <p class="text-[32px] leading-[0.959]">Tipología 2</p>
-      <p class="mt-[8px] text-[64px] font-medium leading-[0.959]">40 mts²</p>
-      <div class="absolute left-[119px] top-[-105px] w-px h-[105px] bg-white"></div>
+    <div class="absolute left-[202px] top-[1509px] text-white font-display">
+      <p class="text-[32px] leading-[0.959] mobile:text-[44px]">Tipología 2</p>
+      <p class="mt-[8px] text-[64px] font-medium leading-[0.959] mobile:text-[88px]">40 mts²</p>
+      <svg class="absolute left-[104px] top-[-75px]" xmlns="http://www.w3.org/2000/svg" width="30" height="71" viewBox="0 0 30 71" fill="none">
+        <path d="M13.3138 70.4142C14.0949 71.1953 15.3612 71.1953 16.1422 70.4142L28.8702 57.6863C29.6512 56.9052 29.6512 55.6389 28.8702 54.8579C28.0891 54.0768 26.8228 54.0768 26.0417 54.8579L14.728 66.1716L3.41432 54.8579C2.63327 54.0768 1.36694 54.0768 0.585892 54.8579C-0.195157 55.6389 -0.195157 56.9052 0.585892 57.6863L13.3138 70.4142ZM16.728 2V0H12.728V2H14.728H16.728ZM14.728 69H16.728V2H14.728H12.728V69H14.728Z" fill="white"/>
+      </svg>
     </div>
 
     <!-- Tipología 5 - bottom right (25 mts²) -->
-    <div class="absolute left-[860px] top-[1772px] text-white" style="font-family: 'Albert Sans', sans-serif;">
-      <p class="text-[32px] leading-[0.959]">Tipología 5</p>
-      <p class="mt-[8px] text-[64px] font-medium leading-[0.959]">25 mts²</p>
-      <div class="absolute left-[119px] top-[-67px] w-px h-[67px] bg-white"></div>
+    <div class="absolute left-[953px] top-[1738px] text-white font-display">
+      <p class="text-[32px] leading-[0.959] mobile:text-[44px]">Tipología 5</p>
+      <p class="mt-[8px] text-[64px] font-medium leading-[0.959] mobile:text-[88px]">25 mts²</p>
+      <svg class="absolute left-[104px] top-[-75px]" xmlns="http://www.w3.org/2000/svg" width="30" height="71" viewBox="0 0 30 71" fill="none">
+        <path d="M13.3138 70.4142C14.0949 71.1953 15.3612 71.1953 16.1422 70.4142L28.8702 57.6863C29.6512 56.9052 29.6512 55.6389 28.8702 54.8579C28.0891 54.0768 26.8228 54.0768 26.0417 54.8579L14.728 66.1716L3.41432 54.8579C2.63327 54.0768 1.36694 54.0768 0.585892 54.8579C-0.195157 55.6389 -0.195157 56.9052 0.585892 57.6863L13.3138 70.4142ZM16.728 2V0H12.728V2H14.728H16.728ZM14.728 69H16.728V2H14.728H12.728V69H14.728Z" fill="white"/>
+      </svg>
     </div>
   </div>
+
 </section>
+
+<TipologiaModal />
