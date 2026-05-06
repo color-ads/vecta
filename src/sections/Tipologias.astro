@@ -158,9 +158,7 @@ const tipologias = [
   // Auto-advancing carousel for the mobile tipología pages. Disabled on
   // desktop (where the static building image is shown instead). Pauses
   // briefly on user interaction and stops when scrolled out of view.
-  const isMobile = matchMedia(
-    '(pointer: coarse), (hover: none), (max-width: 1280px)',
-  ).matches;
+  const isMobile = document.documentElement.getAttribute('data-device') === 'phone';
   if (isMobile) {
     const carousel = document.querySelector<HTMLElement>('[data-tipologia-carousel-mobile]');
     const track = document.querySelector<HTMLElement>('[data-tipologia-track]');

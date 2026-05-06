@@ -39,7 +39,8 @@ const dividers = [388, 534, 684, 842];
 
 <!-- Top + bottom horizontal lines. The .desktop-nav class is kept because
      index.astro's per-section nav-theme CSS targets it; everything inside is
-     hidden on mobile via the `mobile:hidden` Tailwind variant. -->
+     hidden on mobile via the `mobile:hidden` Tailwind variant (touch devices
+     OR layout viewport ≤1280 — see @custom-variant in global.css). -->
 <div data-nav-rule="top" class={`desktop-nav absolute left-[139px] top-[59px] w-[1003px] h-px ${stroke} z-30 mobile:hidden`}></div>
 <div data-nav-rule="bottom" class={`desktop-nav absolute left-[139px] top-[95px] w-[1003px] h-px ${stroke} z-30 mobile:hidden`}></div>
 
@@ -101,20 +102,20 @@ const dividers = [388, 534, 684, 842];
   </ul>
 </div>
 
-<style>
-  /* Hamburger → X morph when open. The :nth-child + aria-expanded selectors
-     are awkward to express purely in Tailwind, so this small block stays. */
-  [data-mobile-toggle][aria-expanded="true"] .burger-line:nth-child(1) {
-    transform: translateY(16px) rotate(45deg);
-  }
-  [data-mobile-toggle][aria-expanded="true"] .burger-line:nth-child(2) {
-    opacity: 0;
-  }
-  [data-mobile-toggle][aria-expanded="true"] .burger-line:nth-child(3) {
-    transform: translateY(-16px) rotate(-45deg);
-  }
-  .burger-line { transition: transform 0.2s ease, opacity 0.2s ease; }
-</style>
+<script is:inline>
+  // Redundant device-detection guard. Layout.astro runs the same logic in
+  // <head>, but if for any reason that script didn't classify (cache,
+  // ordering, error), do it again here from screen.width alone.
+  (function () {
+    if (typeof screen === 'undefined' || !document.documentElement) return;
+    var w = screen.width || Infinity;
+    var current = document.documentElement.getAttribute('data-device');
+    if (current && current !== 'desktop') return;
+    if (w <= 600) document.documentElement.setAttribute('data-device', 'phone');
+    else if (w <= 768) document.documentElement.setAttribute('data-device', 'tablet');
+    else if (w <= 1024) document.documentElement.setAttribute('data-device', 'pc-small');
+  })();
+</script>
 
 <script>
   const toggle = document.querySelector<HTMLButtonElement>('[data-mobile-toggle]');

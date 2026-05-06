@@ -33,9 +33,12 @@ const CLOSED_TOPS = [313, 386, 459, 532, 605];
     <span class="absolute rounded-full bg-white pointer-events-none left-[752px] top-[273px] w-[13px] h-[12px] mobile:hidden"></span>
     <span class="absolute rounded-full bg-white pointer-events-none left-[752px] top-[494px] w-[13px] h-[12px] mobile:hidden"></span>
 
-    <!-- Building fascade — repositions on mobile to occupy the bottom half. -->
+    <!-- Building fascade — repositions on mobile to occupy the bottom half.
+         Section is 100vh tall on mobile (10vh taller than before) so the
+         fachada gets the extra room to show the full building. Top shifted
+         up 10vh (40vh → 30vh) so the building sits higher in the slide. -->
     <div class="absolute pointer-events-none left-[604px] top-[-125px] w-[829px] h-[1037px]
-                mobile:left-0 mobile:top-[40vh] mobile:w-[1280px] mobile:h-[50vh]">
+                mobile:left-0 mobile:top-[30vh] mobile:w-[1280px] mobile:h-[60vh]">
       <img src="/sections/preguntas/fachada.webp" alt="Fachada VECTA 98"
            class="w-full h-full object-cover" loading="lazy" decoding="async" />
     </div>
@@ -90,9 +93,11 @@ const CLOSED_TOPS = [313, 386, 459, 532, 605];
 
 <script>
   const total = 5;
-  // Mobile (touch / ≤1280) uses larger spacing because the question/answer
-  // fonts are bumped up — keeps an open answer from overlapping the next row.
-  const isMobile = matchMedia('(pointer: coarse), (hover: none), (max-width: 1280px)').matches;
+  // Mobile (true phone, screen ≤768) uses larger spacing because the
+  // question/answer fonts are bumped up — keeps an open answer from
+  // overlapping the next row. Aligned with the `mobile:` Tailwind variant
+  // (html[data-device="phone"]) so JS positions match CSS layout.
+  const isMobile = document.documentElement.getAttribute('data-device') === 'phone';
   const CLOSED_TOPS = isMobile
     ? [313, 423, 533, 643, 753]
     : [313, 386, 459, 532, 605];

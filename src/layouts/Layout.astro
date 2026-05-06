@@ -8,7 +8,7 @@ interface Props {
 const { title = 'VECTA 98' } = Astro.props;
 ---
 
-<html lang="es" class="scroll-smooth" style="scroll-padding-top: 130px;">
+<html lang="es" class="scroll-smooth scroll-pt-[130px]">
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -41,6 +41,87 @@ const { title = 'VECTA 98' } = Astro.props;
 				href="https://fonts.googleapis.com/css2?family=Afacad:wght@400&family=Albert+Sans:wght@400;500;600;700&display=swap"
 			/>
 		</noscript>
+
+		<!-- Tag <html> with the actual device-width bucket so CSS can apply
+		     tablet-specific overrides. Standard media queries see the LAYOUT
+		     viewport (forced to 1280 by the meta tag above) and can't tell a
+		     768 device from a 1280 desktop apart. Reading screen.width here
+		     and exposing a `data-device` attr gives us a reliable hook.
+		     Runs in <head> so the attribute exists before first paint. -->
+		<script is:inline>
+			(function () {
+				function setDevice() {
+					if (!document.documentElement) return;
+					// Three sources, take the smallest:
+					//  - innerWidth   = layout viewport (forced to 1280 by meta on
+					//                   real mobile + on DevTools device-toolbar)
+					//  - screen.width = device's hardware screen (not spoofed in
+					//                   DevTools "Responsive" mode without device)
+					//  - visualViewport.width = actually-visible width (matches the
+					//                   drag width in DevTools even when meta viewport
+					//                   is respected — this is the reliable source)
+					var inner = window.innerWidth || Infinity;
+					var screenW = (screen && screen.width) ? screen.width : Infinity;
+					var visualW = (window.visualViewport && window.visualViewport.width)
+						? window.visualViewport.width : Infinity;
+					var minW = Math.min(inner, screenW, visualW);
+
+					// Bucket thresholds:
+					//   ≤ 600   → phone     (true phones — vertical mobile layout)
+					//   601-768 → tablet    (iPad portrait, 768 DevTools — PC sections,
+					//                        but hamburger nav)
+					//   769-1024 → pc-small (small PC: 1024 desktop, iPad landscape)
+					//   ≥ 1025  → desktop   (full PC, 1280+)
+					var device = 'desktop';
+					if (minW <= 600) device = 'phone';
+					else if (minW <= 768) device = 'tablet';
+					else if (minW <= 1024) device = 'pc-small';
+					document.documentElement.setAttribute('data-device', device);
+					// DEBUG: expose all read values so they can be inspected on
+					// the <html> element in DevTools. Remove once verified.
+					document.documentElement.setAttribute('data-debug',
+						'inner=' + inner + ' screen=' + screenW + ' visual=' + visualW + ' min=' + minW);
+
+					// data-layout — based on the actually-visible width
+					// (visualViewport when available, else innerWidth). Catches
+					// DevTools at narrow drag width even when meta viewport=1280
+					// is forcing innerWidth to 1280.
+					var layoutW = visualW !== Infinity ? visualW : inner;
+					var layout = 'desktop';
+					if (layoutW <= 600) layout = 'phone';
+					else if (layoutW <= 768) layout = 'tablet';
+					else if (layoutW <= 1024) layout = 'pc-small';
+					document.documentElement.setAttribute('data-layout', layout);
+
+					// Brute-force nav visibility via inline styles. Inline styles
+					// outrank any CSS rule, so this is the last line of defense
+					// when DevTools/meta-viewport quirks make CSS-based detection
+					// unreliable. Threshold: 768px (true-phone boundary). 1024
+					// "small PC" gets the desktop nav like 1440 PC.
+					var narrow = layoutW <= 768;
+					var navEls = document.querySelectorAll('.desktop-nav, .mobile-hamburger');
+					for (var i = 0; i < navEls.length; i++) {
+						var el = navEls[i];
+						if (el.classList.contains('desktop-nav')) {
+							el.style.display = narrow ? 'none' : '';
+						} else {
+							el.style.display = narrow ? 'flex' : '';
+						}
+					}
+				}
+				setDevice();
+				window.addEventListener('resize', setDevice);
+				window.addEventListener('orientationchange', setDevice);
+				document.addEventListener('DOMContentLoaded', setDevice);
+				// visualViewport has its OWN resize event — fires when the visible
+				// area changes even if window.innerWidth (the layout viewport) is
+				// pinned by meta viewport=1280. Without this, DevTools drag at
+				// narrow widths wouldn't reclassify until a window.resize event.
+				if (window.visualViewport) {
+					window.visualViewport.addEventListener('resize', setDevice);
+				}
+			})();
+		</script>
 	</head>
 	<body class="bg-vecta-bg text-vecta-dark antialiased">
 		<slot />

@@ -33,16 +33,13 @@ const items = [
        SLIDE 1 — Manifesto on lime card (formerly AboutUs.astro)
        ============================================================ -->
   <div data-about-slide="manifesto"
-       class="absolute inset-0 transition-opacity duration-500 flex items-center justify-center"
-       style="opacity: 1;">
+       class="absolute inset-0 transition-opacity duration-500 flex items-center justify-center opacity-100">
     <!-- Lime rounded card grows with viewport. White side strips reduced ~75%
          relative to a 1280-capped layout. -->
-    <div class="absolute rounded-[10px] bg-vecta-lime"
-         style="top: calc((100vw - 1270px) / 8); bottom: calc((100vw - 1270px) / 8); right: calc((100vw - 1270px) / 8); width: calc(75vw + 317.5px); min-width: 1270px;"></div>
+    <div class="absolute rounded-[10px] bg-vecta-lime top-[calc((100vw-1270px)/8)] bottom-[calc((100vw-1270px)/8)] right-[calc((100vw-1270px)/8)] w-[calc(75vw+317.5px)] min-w-[1270px]"></div>
 
     <!-- Right photo card — anchored to the lime card's right edge -->
-    <div class="absolute w-[551px] rounded-r-[10px] overflow-hidden"
-         style="top: calc((100vw - 1270px) / 8); bottom: calc((100vw - 1270px) / 8); right: calc((100vw - 1270px) / 8);">
+    <div class="absolute w-[551px] rounded-r-[10px] overflow-hidden top-[calc((100vw-1270px)/8)] bottom-[calc((100vw-1270px)/8)] right-[calc((100vw-1270px)/8)]">
       <img
         src="/sections/about-us/man-phone.webp"
         alt="Persona observando proyecto VECTA 98"
@@ -74,13 +71,11 @@ const items = [
        SLIDE 2 — 4 numbered cards on lime (formerly AboutCards.astro)
        ============================================================ -->
   <div data-about-slide="cards"
-       class="absolute inset-0 transition-opacity duration-500 flex items-center justify-center"
-       style="opacity: 0;">
+       class="absolute inset-0 transition-opacity duration-500 flex items-center justify-center opacity-0">
     <!-- Lime card with overflow-hidden + the geometric figures nested inside.
          Anything bleeding past the lime card's rounded edges gets clipped, so
          the strokes never leak onto the bg-vecta-bg side strips. -->
-    <div class="absolute left-1/2 -translate-x-1/2 bg-vecta-lime overflow-hidden"
-         style="top: calc((100vw - 1270px) / 8); bottom: calc((100vw - 1270px) / 8); width: calc(75vw + 317.5px); min-width: 1270px;">
+    <div class="absolute left-1/2 -translate-x-1/2 bg-vecta-lime overflow-hidden top-[calc((100vw-1270px)/8)] bottom-[calc((100vw-1270px)/8)] w-[calc(75vw+317.5px)] min-w-[1270px]">
       <!-- Geometric figure background (Figma 2021:189 "Group 11"):
            - Rectangle 2 (outer)  — 724.78×724.78 rotated -45° → 1025 diamond
            - Rectangle 3 (inner)  — 506.53×506.53 axis-aligned
@@ -88,19 +83,9 @@ const items = [
            All three concentric, centered horizontally on the lime card and
            shifted +37% down from its mid (50% + 37% = 87% on the y-axis).
            Clipped by the lime card's overflow-hidden. -->
-      <div class="absolute pointer-events-none"
-           style="width: 724.78px; height: 724.78px;
-                  left: calc(50% - 362.39px); top: calc(107% - 362.39px);
-                  border: 1px solid #22291D;
-                  transform: rotate(-45deg);"></div>
-      <div class="absolute pointer-events-none rounded-full"
-           style="width: 506.53px; height: 506.53px;
-                  left: calc(50% - 253.265px); top: calc(107% - 253.265px);
-                  border: 1px solid #22291D;"></div>
-      <div class="absolute pointer-events-none"
-           style="width: 506.53px; height: 506.53px;
-                  left: calc(50% - 253.265px); top: calc(107% - 253.265px);
-                  border: 1px solid #22291D;"></div>
+      <div class="absolute pointer-events-none w-[724.78px] h-[724.78px] left-[calc(50%-362.39px)] top-[calc(107%-362.39px)] border border-vecta-dark rotate-[-45deg]"></div>
+      <div class="absolute pointer-events-none rounded-full w-[506.53px] h-[506.53px] left-[calc(50%-253.265px)] top-[calc(107%-253.265px)] border border-vecta-dark"></div>
+      <div class="absolute pointer-events-none w-[506.53px] h-[506.53px] left-[calc(50%-253.265px)] top-[calc(107%-253.265px)] border border-vecta-dark"></div>
     </div>
 
     <div class="relative w-[1280px] h-[832px] mx-auto mobile:h-auto mobile:min-h-screen">
@@ -130,10 +115,8 @@ const items = [
        SLIDE 3 — Amenidades grid on black (formerly AboutAmenidades.astro)
        ============================================================ -->
   <div data-about-slide="amenidades"
-       class="absolute inset-0 transition-opacity duration-500 flex items-center justify-center mobile:items-start mobile:pt-[208px]"
-       style="opacity: 0;">
-    <div class="absolute left-1/2 -translate-x-1/2 bg-[#0a0a0a] overflow-hidden"
-         style="top: calc((100vw - 1270px) / 8); bottom: calc((100vw - 1270px) / 8); width: calc(75vw + 317.5px); min-width: 1270px;">
+       class="absolute inset-0 transition-opacity duration-500 flex items-center justify-center mobile:items-start mobile:pt-[208px] opacity-0">
+    <div class="absolute left-1/2 -translate-x-1/2 bg-[#0a0a0a] overflow-hidden top-[calc((100vw-1270px)/8)] bottom-[calc((100vw-1270px)/8)] w-[calc(75vw+317.5px)] min-w-[1270px]">
       <div class="absolute -left-[207px] -top-[157px] w-[620px] h-[620px] rounded-full border border-vecta-lime-text/40"></div>
     </div>
 
@@ -185,7 +168,7 @@ const items = [
       </div>
 
       <div class="absolute right-[80px] bottom-[90px] flex flex-col items-center gap-[8px]
-                  mobile:right-auto mobile:bottom-auto mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[1880px]">
+                  mobile:hidden">
         <!-- actualcorp logo: outer "a" mark + inner counter/eye nested inside.
              Inner 29×27 SVG offset from geometric center by +14% right / +11%
              down of the outer 90×90 (≈ +12.6 px right, +9.9 px down):
@@ -248,12 +231,15 @@ const items = [
     });
 
     // ----- Mobile auto-rotation -----
-    // On touch / ≤1280px viewports the dots are hidden; instead we cycle
-    // through slides every AUTO_MS. Any user interaction with the section
-    // pauses the cycle for RESUME_MS, then resumes from the current slide.
+    // On true phones (data-device="phone", ≤768) the dots are hidden;
+    // instead we cycle through slides every AUTO_MS. Runs continuously —
+    // does NOT pause on touchstart/pointerdown of the section, because
+    // those fire for plain scroll gestures (the section spans most of the
+    // viewport) and would suppress the rotation indefinitely. Aligned with
+    // the `mobile:` Tailwind variant so JS and CSS agree on what's mobile.
     const AUTO_MS = 5000;
     const RESUME_MS = 10000;
-    const isMobile = window.matchMedia('(pointer: coarse), (hover: none), (max-width: 1280px)').matches;
+    const isMobile = document.documentElement.getAttribute('data-device') === 'phone';
     let autoTimer: number | null = null;
     let resumeTimer: number | null = null;
 
@@ -270,12 +256,6 @@ const items = [
       if (!isMobile) return;
       stopAuto();
       resumeTimer = window.setTimeout(startAuto, RESUME_MS);
-    }
-
-    // Pause auto-rotate while the user is interacting with the section.
-    if (sectionEl && isMobile) {
-      sectionEl.addEventListener('touchstart', pauseThenResume, { passive: true });
-      sectionEl.addEventListener('pointerdown', pauseThenResume, { passive: true });
     }
 
     // Apply initial styling consistently (slide 0, default accent).

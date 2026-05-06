@@ -51,13 +51,16 @@ const SEP_MOBILE_CLASSES = [
   'mobile:!top-[640px]',
 ];
 ---
-<section class="relative w-full min-w-[1280px] min-h-screen h-[832px] overflow-hidden bg-vecta-bg mobile:h-[1920px] mobile:min-h-0">
+<section class="relative w-full min-w-[1280px] min-h-screen h-[832px] overflow-hidden bg-vecta-bg mobile:h-[2055px] mobile:min-h-0">
   <!-- Inner 1280px canvas -->
-  <div class="relative w-[1280px] min-h-screen h-[832px] mx-auto mobile:h-[1920px] mobile:min-h-0">
-    <!-- Floor plan image (desktop: right side; mobile: full-width below the
-         specs table). -->
+  <div class="relative w-[1280px] min-h-screen h-[832px] mx-auto mobile:h-[2055px] mobile:min-h-0">
+    <!-- Floor plan image (desktop: right side; mobile: centered in the
+         bottom half of the 2055px-tall slide).
+         Image is 1035x1035 (was 900, +15%). Horizontally: left=122, w=1035
+         places the image center at 640 = canvas/2. Vertically: top=990
+         keeps the same gap below the specs table. -->
     <div class="absolute left-[544px] top-[94px] w-[686px] h-[702px] overflow-hidden
-                mobile:left-[190px] mobile:top-[790px] mobile:w-[900px] mobile:h-[900px]">
+                mobile:left-[122px] mobile:top-[990px] mobile:w-[1035px] mobile:h-[1035px]">
       <img
         src="/sections/tipologia-abierta/floor-plan.webp"
         alt="Plano de tipología 3 — VECTA 98"

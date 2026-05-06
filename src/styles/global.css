@@ -13,14 +13,169 @@
   --font-nav: "Afacad", system-ui, sans-serif;
 }
 
-/* Custom variant — applied on touch devices and when the layout viewport is
-   ≤1280px. With <meta viewport content="width=1280"> mobile devices always
-   match this breakpoint, while desktop only hits it if the window is narrow.
-   Use it as `mobile:text-[40px]` etc. */
-@custom-variant mobile (@media (pointer: coarse), (hover: none), (max-width: 1280px));
+/* ============================================================
+   Per-resolution variants (scoped — edits in one don't leak to others).
+   Layout.astro reads screen.width + innerWidth and tags <html> with
+   `data-device` so we distinguish phones from 1280-layout desktops (the
+   meta viewport=1280 forces the layout viewport on real mobile devices,
+   hiding their device size from media queries).
+
+   ISOLATION RULE
+   ─ Every per-resolution edit MUST go in one of these variants. Never
+     change a base (no-prefix) class for a single-resolution tweak — base
+     classes apply everywhere there's no override and bleed across breaks.
+   ─ JS that branches on "isMobile" must read `data-device === 'phone'`
+     so its definition of mobile matches the `mobile:` variant exactly.
+
+   ┌────────────────┬─────────────────────────────────────────────┐
+   │ phone (≤768)   │ mobile:property                             │
+   │ 1024 PC        │ pc-small:property (or pc-small:!) │
+   │ 1440 PC        │ desktop:property                            │
+   │ 600-768 narrow │ tablet:property (only when needed)          │
+   └────────────────┴─────────────────────────────────────────────┘
+   ============================================================ */
+@custom-variant mobile (html[data-device="phone"] &);
+@custom-variant tablet (@media (min-width: 600px) and (max-width: 768px));
+@custom-variant tablet-device (html[data-device="tablet"] &);
+@custom-variant pc-small (html[data-device="pc-small"] &);
+@custom-variant desktop (html[data-device="desktop"] &);
+/* `narrow` — phone OR tablet (≤768). Use it on a section that should keep
+   the mobile-stacked layout at 768 (e.g. Formulario), instead of `mobile:`
+   which only fires at phone (≤600). */
+@custom-variant narrow (html[data-device="phone"] &, html[data-device="tablet"] &);
+
+/* Resolution buckets driven by `data-device` (set by Layout.astro reading
+   screen.width + visualViewport.width):
+     phone   ≤ 600   → mobile-stacked sections + hamburger nav
+     tablet  601-768 → desktop sections (PC layout) + hamburger nav
+     pc-small 769-1024 → desktop sections + PC nav
+     desktop ≥ 1025  → desktop sections + PC nav */
 
 html, body {
   background-color: var(--color-vecta-bg);
   color: var(--color-vecta-dark);
   font-family: var(--font-display);
 }
+
+/* :user-invalid border (red) for form inputs. The `:user-invalid` pseudo
+   only matches AFTER a field has been interacted with (focus + blur or
+   submit), so empty required inputs don't go red on first render. */
+.form-input-validate:user-invalid { border-color: #b91c1c; }
+
+/* ============================================================
+   Hero — Safari/WebKit media controls hide. The video tag is used as a
+   pure background; on iOS Low-Power-Mode Safari renders a fallback play
+   button overlay over the poster. These selectors target browser-specific
+   shadow-DOM pseudo-elements that Tailwind utilities cannot reach.
+   ============================================================ */
+.hero-video::-webkit-media-controls,
+.hero-video::-webkit-media-controls-panel,
+.hero-video::-webkit-media-controls-start-playback-button,
+.hero-video::-webkit-media-controls-overlay-play-button,
+.hero-video::-webkit-media-controls-play-button {
+  display: none !important;
+  -webkit-appearance: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* ============================================================
+   Header — hamburger ↔ X morph + flat device-class fallbacks.
+   The :nth-child + aria-expanded compound selector and the data-device
+   fallbacks (which need to override Tailwind nested rules unsupported on
+   older Safari) can't be expressed cleanly as Tailwind classes.
+   ============================================================ */
+[data-mobile-toggle][aria-expanded="true"] .burger-line:nth-child(1) {
+  transform: translateY(16px) rotate(45deg);
+}
+[data-mobile-toggle][aria-expanded="true"] .burger-line:nth-child(2) {
+  opacity: 0;
+}
+[data-mobile-toggle][aria-expanded="true"] .burger-line:nth-child(3) {
+  transform: translateY(-16px) rotate(-45deg);
+}
+.burger-line { transition: transform 0.2s ease, opacity 0.2s ease; }
+
+/* Nav visibility — primary source of truth: `data-device` / `data-layout`
+   (set by Layout.astro). The hamburger nav fires on phones (≤600) AND
+   tablets (601-768, e.g. iPad portrait). pc-small (1024) and desktop (≥1025)
+   show the PC nav. DO NOT add `(pointer: coarse)` / `(hover: none)` here:
+   Chrome DevTools "Responsive mode" emulates touch and would force the
+   hamburger on PC, breaking the per-resolution contract. */
+html[data-device="phone"] .desktop-nav,
+html[data-device="tablet"] .desktop-nav,
+html[data-layout="phone"] .desktop-nav,
+html[data-layout="tablet"] .desktop-nav { display: none !important; }
+html[data-device="phone"] .mobile-hamburger,
+html[data-device="tablet"] .mobile-hamburger,
+html[data-layout="phone"] .mobile-hamburger,
+html[data-layout="tablet"] .mobile-hamburger { display: flex !important; }
+
+/* Width-only fallback: at any visible viewport ≤768 force the hamburger.
+   Catches first paint before JS classifies, and any plain-DevTools-resize
+   case (no toggle device toolbar). At ≥769 (1024, 1280, 1440) never fires,
+   so PC widths always show the desktop nav regardless of DevTools quirks. */
+@media (max-width: 768px) {
+  .desktop-nav { display: none !important; }
+  .mobile-hamburger { display: flex !important; }
+}
+
+/* ============================================================
+   Site nav theme variants. The nav uses Tailwind utility classes
+   (`bg-white`, `text-white`, etc.) on its children, and the parent
+   `#site-nav` flips a `data-nav-theme` attribute as the user scrolls
+   between sections. These rules override the Tailwind utilities by
+   targeting them inside the themed parent — a class-name match like
+   this can't be expressed as Tailwind classes.
+   ============================================================ */
+#site-nav .bg-white,
+#site-nav .bg-white\/70,
+#site-nav .text-white,
+#site-nav .border-white {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+#site-nav[data-nav-theme="dark"] .text-white { color: #22291d; }
+#site-nav[data-nav-theme="dark"] .bg-white { background-color: #22291d; }
+#site-nav[data-nav-theme="dark"] .border-white { border-color: #22291d; }
+#site-nav[data-nav-theme="dark"] .bg-white\/70 { background-color: rgb(34 41 29 / 0.7); }
+
+#site-nav[data-nav-theme="lime"] .text-white { color: #EAFC9D; }
+#site-nav[data-nav-theme="lime"] .bg-white { background-color: #EAFC9D; }
+#site-nav[data-nav-theme="lime"] .border-white { border-color: #EAFC9D; }
+#site-nav[data-nav-theme="lime"] .bg-white\/70 { background-color: rgb(234 252 157 / 0.7); }
+
+#site-nav[data-nav-theme="black"] .text-white,
+#site-nav[data-nav-theme="black"] .text-vecta-lime,
+#site-nav[data-nav-theme="black"] .text-vecta-lime-text { color: #000; }
+#site-nav[data-nav-theme="black"] .bg-white { background-color: #000; }
+#site-nav[data-nav-theme="black"] .border-white,
+#site-nav[data-nav-theme="black"] .border-vecta-lime-text { border-color: #000; }
+#site-nav[data-nav-theme="black"] .bg-white\/70 { background-color: rgb(0 0 0 / 0.7); }
+#site-nav[data-nav-theme="black"] .hover\:text-vecta-lime:hover { color: #000; }
+
+#site-nav[data-nav-theme="about"] .text-white { color: #22291d; }
+#site-nav[data-nav-theme="about"] .bg-white { background-color: #22291d; }
+#site-nav[data-nav-theme="about"] .border-white { border-color: #22291d; }
+#site-nav[data-nav-theme="about"] .bg-white\/70 { background-color: rgb(34 41 29 / 0.7); }
+#site-nav[data-nav-theme="about"] a[href="#inversion"] { color: #fff !important; }
+
+#site-nav[data-nav-theme="ubicacion"] .text-white { color: #000 !important; }
+#site-nav[data-nav-theme="ubicacion"] a[href="#hero"],
+#site-nav[data-nav-theme="ubicacion"] a[href="#about-carousel"],
+#site-nav[data-nav-theme="ubicacion"] a[href="#espacios"],
+#site-nav[data-nav-theme="ubicacion"] a[href="#tipologias"],
+#site-nav[data-nav-theme="ubicacion"] a[href="#inversion"] { color: #000 !important; }
+#site-nav[data-nav-theme="ubicacion"] .caret-btn {
+  color: #22291d !important;
+  border-color: #22291d !important;
+}
+#site-nav[data-nav-theme="ubicacion"] [data-nav-rule="top"],
+#site-nav[data-nav-theme="ubicacion"] [data-nav-rule="bottom"],
+#site-nav[data-nav-theme="ubicacion"] [data-nav-divider] {
+  background-color: #000 !important;
+}
+#site-nav[data-nav-theme="ubicacion"] .burger-line {
+  background-color: #22291d !important;
+}
+

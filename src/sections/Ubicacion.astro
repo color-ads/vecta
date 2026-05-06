@@ -1,38 +1,39 @@
 ---
-// Ubicación - lime card on left + map image on right.
-// Mobile (touch / ≤1280) collapses the desktop split-screen into a vertical
-// stack: lime card on top (50vh), map below (50vh).
+// Ubicación — lime card on left half, map iframe on right half (Figma).
+// Breakpoints (driven by `mobile:` Tailwind variant = data-device="phone"):
+//   phone (≤600)    — vertical: lime 50vh top, map 90vh bottom.
+//   tablet (601-768) — uses base PC layout (split-screen) automatically
+//                      since `mobile:` doesn't fire here. Hamburger nav.
+//   pc-small (1024) — base PC layout. PC nav.
+//   desktop (≥1025) — base PC layout. PC nav.
 ---
-<section class="relative w-full min-w-[1280px] min-h-screen overflow-hidden bg-vecta-night flex items-center justify-center mobile:block mobile:h-[140vh] mobile:min-h-[140vh]">
-  <!-- Google Maps embed (free, no API key — uses the public `output=embed`
-       endpoint). Bleeds full-width on desktop so the lime panel covers the
-       left half; on mobile it occupies the bottom 50vh. The transform on
-       click is animated by the pin script below for a smooth zoom feel. -->
+<section class="relative w-full min-w-[1280px] min-h-screen overflow-hidden bg-vecta-night flex items-center justify-center
+                mobile:block mobile:h-[140vh] mobile:min-h-[140vh]">
+  <!-- Google Maps embed — full-bleed on desktop (lime panel covers left half);
+       on phone it occupies the bottom 50vh. The transform on click is
+       animated by the pin script below for a smooth zoom feel. -->
   <iframe
     src="https://www.google.com/maps?q=Carrera+15+%23+98,+Bogot%C3%A1,+Colombia&z=16&hl=es&output=embed"
     title="Mapa de ubicación Carrera 15 con calle 98"
     loading="lazy"
     referrerpolicy="no-referrer-when-downgrade"
-    style="transform-origin: center center; will-change: transform, opacity;"
-    class="absolute inset-0 w-full h-full border-0 mobile:inset-auto mobile:top-[50vh] mobile:left-0 mobile:right-0 mobile:w-full mobile:h-[90vh]"
+    class="absolute inset-0 w-full h-full border-0 origin-center will-change-[transform,opacity]
+           mobile:inset-auto mobile:top-[50vh] mobile:left-0 mobile:right-0 mobile:w-full mobile:h-[90vh]"
   ></iframe>
 
-  <!-- Lime panel bleeds from the viewport's left edge to the original
-       Figma right edge (canvas-x=639, i.e. 1px before viewport center). -->
-  <div class="absolute left-0 inset-y-0 bg-vecta-lime w-[calc(50vw-1px)] min-w-[639px] mobile:inset-auto mobile:top-0 mobile:left-0 mobile:right-0 mobile:w-full mobile:min-w-[1280px] mobile:h-[50vh]"></div>
+  <!-- Lime panel — left half on desktop; full-width strip on top on phone. -->
+  <div class="absolute left-0 inset-y-0 bg-vecta-lime w-[calc(50vw-1px)] min-w-[639px]
+              mobile:inset-auto mobile:top-0 mobile:left-0 mobile:right-0 mobile:w-full mobile:min-w-[1280px] mobile:h-[50vh]"></div>
 
-  <!-- Lime-panel text wrapper: mirrors the lime panel width so text stays
+  <!-- Lime-panel text wrapper. Mirrors the lime panel width so text stays
        centered in it regardless of viewport width. -->
-  <div class="absolute left-0 inset-y-0 w-[calc(50vw-1px)] min-w-[639px] mobile:inset-auto mobile:top-0 mobile:left-1/2 mobile:-translate-x-1/2 mobile:w-[639px] mobile:min-w-0 mobile:h-[50vh]">
-    <!-- Decorative bracket around the heading + subtitle (Figma 2075:350,
-         2075:351, 2075:352, 2075:353): two full-panel horizontal rules above
-         and below the title block, plus a vertical rule with two dots at the
-         intersections. The vertical/dot column sits at Figma x=149 in the
-         639-wide lime panel (i.e. 170.5 px left of the panel centerline). -->
+  <div class="absolute left-0 inset-y-0 w-[calc(50vw-1px)] min-w-[639px]
+              mobile:inset-auto mobile:top-0 mobile:left-1/2 mobile:-translate-x-1/2 mobile:w-[639px] mobile:min-w-0 mobile:h-[50vh]">
+    <!-- Decorative bracket around the heading + subtitle (Figma 2075:350-353). -->
     <div class="absolute left-0 right-0 h-px bg-vecta-dark top-[153px] mobile:top-[12vh]"></div>
     <div class="absolute left-0 right-0 h-px bg-vecta-dark top-[380px] mobile:top-[26vh]"></div>
-    <!-- Vertical bracket + dots are hidden on mobile (would create an
-         asymmetrical left margin once the content is centered). -->
+    <!-- Vertical bracket + dots are hidden on phone (would create asymmetric
+         left margin once the content is centered). -->
     <div class="absolute w-px bg-vecta-dark top-[106px] h-[728px] left-[calc(50%-171px)] mobile:hidden"></div>
     <div class="absolute w-[12px] h-[12px] rounded-full bg-vecta-dark top-[147px] left-[calc(50%-177px)] mobile:hidden"></div>
     <div class="absolute w-[12px] h-[12px] rounded-full bg-vecta-dark top-[374px] left-[calc(50%-177px)] mobile:hidden"></div>
@@ -40,21 +41,25 @@
     <!-- All text is left-aligned at Figma x=184 (35 px right of the vertical
          bracket line at x=149). 184 - 319.5 = -135.5 px from the 639-wide
          panel centerline, so we anchor everything via calc(50% - 135.5px).
-         On mobile (vertical bracket hidden) we re-center each element on the
-         panel midline AND retime the vertical tops in vh so the cluster
+         On phone (vertical bracket hidden) we re-center each element on
+         the panel midline AND retime the vertical tops in vh so the cluster
          centers vertically inside the 50vh lime card. -->
     <h2 class="absolute top-[186px] w-[440px] text-vecta-dark font-semibold text-[72px] leading-[0.959] font-display left-[calc(50%-135.5px)]
-               mobile:top-[14vh] mobile:left-1/2 mobile:-translate-x-1/2 mobile:text-center">
+               mobile:top-[14vh] mobile:left-1/2 mobile:-translate-x-1/2 mobile:text-center
+               pc-small:!text-[48px]">
       Ubicación que funciona
     </h2>
 
     <p class="absolute top-[317px] text-vecta-dark text-[38px] leading-[0.959] font-display left-[calc(50%-135.5px)]
-              mobile:top-[22vh] mobile:left-1/2 mobile:-translate-x-1/2 mobile:text-center">
+              mobile:top-[22vh] mobile:left-1/2 mobile:-translate-x-1/2 mobile:text-center
+              pc-small:!text-[26px]
+              desktop:mt-[2vh]">
       Carrera 15 con calle 98.
     </p>
 
     <div class="absolute top-[450px] w-[420px] text-vecta-dark text-[38px] leading-[0.959] space-y-[1.2em] font-display left-[calc(50%-135.5px)]
-                mobile:top-[30vh] mobile:left-1/2 mobile:-translate-x-1/2 mobile:text-center">
+                mobile:top-[30vh] mobile:left-1/2 mobile:-translate-x-1/2 mobile:text-center
+                pc-small:!text-[26px]">
       <p>Una zona con movimiento constante, conectividad y actividad real.</p>
       <p>
         No es una promesa de valorización futura.<br/>
@@ -62,22 +67,24 @@
       </p>
     </div>
 
-    <!-- Decorative horizontal line -->
-    <div class="absolute top-[590px] w-[292px] h-px bg-vecta-dark left-[calc(50%-135.5px)]
+    <!-- Decorative horizontal line — 3vh top gap separates it from the
+         description ending in "actividad real." above. -->
+    <div class="absolute top-[590px] mt-[3vh] w-[292px] h-px bg-vecta-dark left-[calc(50%-135.5px)]
                 mobile:top-[38vh] mobile:left-1/2 mobile:-translate-x-1/2"></div>
   </div>
 
-  <!-- Inner 1280px canvas for elements anchored to the design canvas -->
-  <div class="relative w-[1280px] h-[832px] mx-auto mobile:absolute mobile:top-0 mobile:left-1/2 mobile:-translate-x-1/2 mobile:h-[140vh]">
-    <!-- Map pin — clickable, zooms the map iframe in/out on each click.
-         Mobile: pin sits at the center of the 90vh-tall map area
-         (map: top-[50vh] h-[90vh] → center = 50 + 45 = 95vh). -->
+  <!-- Inner 1280px canvas for elements anchored to the design canvas. -->
+  <div class="relative w-[1280px] h-[832px] mx-auto
+              mobile:absolute mobile:top-0 mobile:left-1/2 mobile:-translate-x-1/2 mobile:h-[140vh]">
+    <!-- Map pin — Figma x=860 y=330 on desktop. On phone it sits centered
+         in the 90vh-tall map area (top-[95vh] = 50 + 45). -->
     <button
       id="ubicacion-map-pin"
       type="button"
       aria-label="Acercar mapa"
       data-zoomed="false"
-      class="absolute left-[860px] top-[330px] w-[40px] h-[40px] rounded-full bg-vecta-lime border-4 border-vecta-dark flex items-center justify-center cursor-pointer transition-transform duration-200 ease-out hover:scale-110 active:scale-95 mobile:left-1/2 mobile:top-[95vh] mobile:-translate-x-1/2 mobile:-translate-y-1/2 mobile:hover:scale-100">
+      class="absolute left-[860px] top-[330px] w-[40px] h-[40px] rounded-full bg-vecta-lime border-4 border-vecta-dark flex items-center justify-center cursor-pointer transition-transform duration-200 ease-out hover:scale-110 active:scale-95
+             mobile:left-1/2 mobile:top-[95vh] mobile:-translate-x-1/2 mobile:-translate-y-1/2 mobile:hover:scale-100">
       <div class="w-[10px] h-[10px] rounded-full bg-vecta-dark pointer-events-none"></div>
     </button>
   </div>
@@ -89,18 +96,15 @@
     'iframe[title="Mapa de ubicación Carrera 15 con calle 98"]'
   );
   const ADDRESS = 'Carrera+15+%23+98,+Bogot%C3%A1,+Colombia';
-  // Each Google Maps zoom step doubles the scale. Mobile viewports show the
-  // map much smaller, so we boot in at street level (z=19, ~4× closer than
-  // the desktop default z=16) and use z=21 (max) when the pin is tapped.
-  const isMobile = matchMedia(
-    '(pointer: coarse), (hover: none), (max-width: 1280px)',
-  ).matches;
-  const ZOOM_OUT = isMobile ? 19 : 16;
-  const ZOOM_IN = isMobile ? 21 : 19;
+  // Each Google Maps zoom step doubles the scale. Phone viewports show the
+  // map at the bottom 90vh, so we boot in at street level (z=19, ~4× closer
+  // than the desktop default z=16) and use z=21 (max) when the pin is
+  // tapped. Tablet/desktop use the split-screen layout so they get desktop zoom.
+  const isPhone = document.documentElement.getAttribute('data-device') === 'phone';
+  const ZOOM_OUT = isPhone ? 19 : 16;
+  const ZOOM_IN = isPhone ? 21 : 19;
 
-  // On mobile, swap the iframe src to the closer zoom right away (the SSR'd
-  // src defaults to z=16 so desktop renders correctly without any flash).
-  if (isMobile && iframe) {
+  if (isPhone && iframe) {
     iframe.src = `https://www.google.com/maps?q=${ADDRESS}&z=${ZOOM_OUT}&hl=es&output=embed`;
   }
 

@@ -1,10 +1,8 @@
 ---
-// Hero - HOME page top section (1280x832 in Figma)
-// Reference: HOME frame 2030:31, Rectangle 6 (2030:115) holds the B&W building photo as image fill.
-// The Figma MCP design-context exposes Rectangle 6 as an empty div; the photo is only visible in
-// rendered screenshots. Export it manually from Figma if you want pixel-perfect parity, then
-// replace `/sections/hero/hero-bg.jpg` (or .png) below.
-// Header lives globally in index.astro (fixed/sticky) — not rendered here.
+// Hero — HOME top section (1280x832 in Figma, frame 2030:31).
+// Background is `/herobg.mp4` (full-bleed video); a gradient + scanline
+// overlay below it provides the moody fallback if the video fails to load.
+// The site nav lives globally in index.astro (fixed/sticky) — not here.
 ---
 <section id="hero" class="relative w-full min-h-screen overflow-hidden bg-[#0d0e0c] flex items-center justify-center">
   <!-- Hero background video: autoplay muted loop, full-bleed. The deep neutral
@@ -25,20 +23,6 @@
     aria-hidden="true"
     tabindex="-1"
   ></video>
-  <style>
-    /* Hide Safari's fallback play button overlay (shown e.g. in Low Power Mode)
-       and any default media controls so the video stays a pure background. */
-    .hero-video::-webkit-media-controls,
-    .hero-video::-webkit-media-controls-panel,
-    .hero-video::-webkit-media-controls-start-playback-button,
-    .hero-video::-webkit-media-controls-overlay-play-button,
-    .hero-video::-webkit-media-controls-play-button {
-      display: none !important;
-      -webkit-appearance: none !important;
-      opacity: 0 !important;
-      pointer-events: none !important;
-    }
-  </style>
   <script is:inline>
     (() => {
       const v = document.getElementById('hero-video');
@@ -74,8 +58,12 @@
     <div class="absolute left-[102px] top-[456px] w-[76px] h-px bg-white/70 mobile:hidden"></div>
     <div class="absolute left-[102px] top-[483px] w-[163px] h-px bg-white/70 mobile:hidden"></div>
 
-    <!-- VECTA 98 logo (image 11 [Vectorized] 2030:149)  x=350, y=361, 580.84 x 133 -->
-    <div class="absolute left-[350px] top-[361px] w-[581px] h-[133px]">
+    <!-- VECTA 98 logo (image 11 [Vectorized] 2030:149)  Figma x=350, y=361, 580.84 x 133.
+         Anchor with left-1/2 + -translate-x-1/2 so the logo stays visually
+         centered on every viewport width — including when the 1280px canvas
+         overflows a narrower window (overflow-hidden clips the sides) and
+         on mobile devices where meta-viewport=1280 forces the layout. -->
+    <div class="absolute left-1/2 -translate-x-1/2 top-[361px] w-[581px] h-[133px]">
       <img src="/sections/hero/vecta-logo.svg" alt="VECTA 98" class="w-full h-full object-contain" decoding="async" fetchpriority="high" />
     </div>
 
