@@ -1,8 +1,0 @@
-{
-  "section": "galeria",
-  "images": [
-    { "src": "/sections/galeria/gallery-1.png", "alt": "Vista exterior VECTA 98" },
-    { "src": "/sections/galeria/gallery-2.png", "alt": "Detalle arquitectónico" },
-    { "src": "/sections/galeria/gallery-3.png", "alt": "Espacio interior" }
-  ]
-}

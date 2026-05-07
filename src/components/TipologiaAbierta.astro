@@ -20,25 +20,32 @@
 // this component when the modal opens, so no Header is rendered inside.
 //
 // Props:
-//   tipo  — the typology number shown in "Tipo {N}" (default: "3")
-//   mts   — the area in m² shown beneath (default: "35")
+//   tipo         — the typology number shown in "Tipo {N}" (default: "3")
+//   mts          — the area in m² shown beneath (default: "35")
+//   descripcion  — lima-colored description on the right
 //
 // The TipologiaModal can also override these at runtime via
-// [data-tipologia-title] and [data-tipologia-mts] selectors when the user
-// clicks a polygon — used on desktop where the same component is rendered once
-// and reused for all 5 typologies.
+// [data-tipologia-title], [data-tipologia-mts] and [data-tipologia-descripcion]
+// selectors when the user clicks a polygon — used on desktop where the
+// same component is rendered once and reused for all 5 typologies.
 interface Props {
   tipo?: string;
   mts?: string;
+  descripcion?: string;
 }
-const { tipo = "3", mts = "35" } = Astro.props;
+const {
+  tipo = "3",
+  mts = "35",
+  descripcion = "Espacio compacto y funcional que integra sala, cocina, habitación y zona de lavado en una distribución eficiente.",
+} = Astro.props;
 ---
 <section class="relative w-full min-w-[1280px] min-h-screen h-[832px] overflow-hidden bg-black">
   <!-- Bedroom photo + dark overlay -->
   <img
+    data-gallery="0"
     src="/sections/tipologia-abierta/bedroom-bg.webp"
     alt="Habitación VECTA 98 — Tipo 3"
-    class="absolute inset-0 w-full h-full object-cover"
+    class="absolute inset-0 w-full h-full object-cover cursor-pointer"
     loading="lazy"
     decoding="async"
   />
@@ -81,9 +88,8 @@ const { tipo = "3", mts = "35" } = Astro.props;
 
     <!-- Description (lime) -->
     <p
-      class="absolute left-[607px] top-[294px] w-[457px] text-vecta-lime-text font-medium text-[32px] leading-[0.959] font-display">
-      Espacio compacto y funcional que integra sala, cocina, habitación y zona de lavado en una distribución eficiente.
-    </p>
+      data-tipologia-descripcion
+      class="absolute left-[607px] top-[294px] w-[457px] text-vecta-lime-text font-medium text-[32px] leading-[0.959] font-display">{descripcion}</p>
 
     <!-- Bottom-right horizontal rule that closes the lower band -->
     <div class="absolute left-[620px] top-[665px] w-[610px] h-px bg-white"></div>

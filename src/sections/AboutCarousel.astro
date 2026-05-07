@@ -1,22 +1,62 @@
 ---
 // About vertical carousel — 3 stacked slides (manifesto, 4 numbered cards,
 // amenidades grid). Up/down arrows in the top-left swap the active slide.
-// Replaces the previous AboutUs / AboutCards / AboutAmenidades sections, which
-// each took a full viewport — now they share one viewport.
-const cards = [
-  { number: "1.", title: "Claridad", description: "Aquí todo se explica. Sin discursos inflados ni promesas ambiguas." },
-  { number: "2.", title: "Arquitectura funcional", description: "Cada espacio tiene un propósito real de uso." },
-  { number: "3.", title: "Ciudad activa", description: "Ubicación con dinámica real, no aspiracional." },
-  { number: "4.", title: "Coherencia a largo plazo", description: "Una lógica estructurada diseñado para sostener valor en el tiempo." }
-];
+//
+// All copy and imagery comes from Contentful:
+//   Slide 1 (manifesto)  — `webSite.bloque3seccion1texto` + `bloque3seccion1imagen`
+//   Slide 2 (cards)      — `cards` content type, ordered by `fields.numero`
+//   Slide 3 (amenidades) — `webSite.bloque3seccion3textos`
+import { getContentfulClient, getWebsite } from '../lib/contentful';
+import {
+  assetUrl,
+  extractHeadingPairs,
+  firstHeading,
+  richTextToPlain,
+  richTextHtmlWithoutFirstHeading,
+  splitParagraphAtFirstBold,
+} from '../lib/richtext';
 
-const items = [
-  { title: "Ubicación estratégica", description: "Cercanía a zonas corporativas, vías principales y servicios clave." },
-  { title: "Alta demanda potencial", description: "Zona con flujo constante de personas y actividad económica." },
-  { title: "Eficiencia en el diseño", description: "Espacios optimizados para maximizar uso y ocupación." },
-  { title: "Amenidades funcionales", description: "No decorativas, sino pensadas para complementar la operación." },
-  { title: "Bajo ruido comercial", description: "Una marca que prioriza la información sobre la persuasión." }
-];
+interface CardFields {
+  numero: number;
+  titulo: string;
+  descripcion?: any;
+}
+
+const client = getContentfulClient();
+const cardsRes = await client.getEntries({
+  content_type: 'cards',
+  order: ['fields.numero'],
+});
+
+const cards = (cardsRes.items as Array<{ fields: CardFields }>).map((it) => ({
+  number: `${it.fields.numero}.`,
+  title: String(it.fields.titulo).trim(),
+  description: richTextToPlain(it.fields.descripcion),
+}));
+
+const ws = await getWebsite();
+
+// Slide 1 — manifesto.
+// Contentful stores the body as a single paragraph with bold inline marks
+// at "VECTA 98" and "sino para funcionar.". To match the original layout
+// (two paragraphs separated by space), we split the paragraph at the first
+// bold node before rendering. Bold marks are preserved either way.
+const slide1Title = firstHeading(ws?.fields?.bloque3seccion1texto, 'heading-2');
+const slide1Doc = splitParagraphAtFirstBold(ws?.fields?.bloque3seccion1texto);
+const slide1BodyHtml = richTextHtmlWithoutFirstHeading(slide1Doc, 'heading-2');
+const slide1ImgSrc = assetUrl(ws?.fields?.bloque3seccion1imagen);
+
+// Slide 3 — amenidades.
+// Source is one heading-2 + 5 (heading-3 + paragraph) pairs. The 5 items
+// feed the same 5 absolutely-positioned slots the layout already has.
+const slide3Title = firstHeading(ws?.fields?.bloque3seccion3textos, 'heading-2');
+// Insert a mobile-only <br> between "vendemos" and "sueños" so the title
+// breaks across two lines on phones — matches the original copy. Falls
+// back to a plain title if the keyword isn't present.
+const slide3TitleHtml = slide3Title.includes('vendemos ')
+  ? slide3Title.replace('vendemos ', 'vendemos<br class="hidden mobile:inline" /> ')
+  : slide3Title;
+const items = extractHeadingPairs(ws?.fields?.bloque3seccion3textos, 'heading-3');
 ---
 <section id="about-carousel" data-active-slide="0" class="relative w-full min-w-[1280px] min-h-screen bg-vecta-bg overflow-hidden">
   <!-- Slide indicator dots — clickable, centered along the left strip. Only
@@ -41,7 +81,7 @@ const items = [
     <!-- Right photo card — anchored to the lime card's right edge -->
     <div class="absolute w-[551px] rounded-r-[10px] overflow-hidden top-[calc((100vw-1270px)/8)] bottom-[calc((100vw-1270px)/8)] right-[calc((100vw-1270px)/8)]">
       <img
-        src="/sections/about-us/man-phone.webp"
+        src={slide1ImgSrc}
         alt="Persona observando proyecto VECTA 98"
         class="w-full h-full object-cover"
         loading="lazy"
@@ -51,19 +91,11 @@ const items = [
 
     <!-- Inner 1280px canvas keeps Figma absolute positions intact for text -->
     <div class="relative w-[1280px] h-[812px] mx-auto">
-      <h2 class="absolute left-[74px] top-[245px] w-[639px] text-vecta-dark font-semibold text-[60px] leading-[0.959] font-display">
-        Aquí no vendemos sueños inmobiliarios.
-      </h2>
+      <h2 class="absolute left-[74px] top-[245px] w-[639px] text-vecta-dark font-semibold text-[60px] leading-[0.959] font-display">{slide1Title}</h2>
       <div class="absolute left-[80px] top-[207px] w-[495px] h-px bg-vecta-dark"></div>
       <div class="absolute left-[74px] top-[673px] w-[495px] h-px bg-vecta-dark"></div>
       <div class="absolute left-[74px] top-[691px] w-[292px] h-px bg-vecta-dark"></div>
-      <div class="absolute left-[74px] top-[392px] w-[475px] text-vecta-dark text-[32px] leading-[0.959] space-y-[1em] font-display">
-        <p>El mercado está lleno de promesas, renders perfectos. Discursos aspiracionales. Rentabilidades sin contexto.</p>
-        <p>
-          <span class="font-bold">VECTA 98</span> parte de una lógica distinta: No se construyó para emocionar,
-          <span class="font-bold">sino para funcionar.</span>
-        </p>
-      </div>
+      <div class="absolute left-[74px] top-[392px] w-[475px] text-vecta-dark text-[32px] leading-[0.959] space-y-[1em] font-display" set:html={slide1BodyHtml}></div>
     </div>
   </div>
 
@@ -122,9 +154,7 @@ const items = [
 
     <div class="relative w-[1280px] h-[832px] mx-auto">
       <h2 class="absolute left-[68px] top-[103px] w-[639px] text-vecta-lime-text font-semibold text-[60px] leading-[0.959] font-display
-                 mobile:left-0 mobile:right-0 mobile:top-[200px] mobile:w-full mobile:text-center mobile:px-[40px] mobile:text-[100px] mobile:leading-[1.05]">
-        Aquí no vendemos<br class="hidden mobile:inline" /> sueños inmobiliarios.
-      </h2>
+                 mobile:left-0 mobile:right-0 mobile:top-[200px] mobile:w-full mobile:text-center mobile:px-[40px] mobile:text-[100px] mobile:leading-[1.05]" set:html={slide3TitleHtml}></h2>
 
       <!-- Wrapper for everything below the title — mobile shifts this whole
            block down 160px (≈20% of slide height) so the title up top has air. -->

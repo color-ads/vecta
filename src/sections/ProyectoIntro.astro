@@ -1,10 +1,39 @@
 ---
-// Proyecto Intro – apartment render with location/area/price overlay
+// Proyecto Intro — apartment render with location/area/price overlay.
+// Background image comes from Contentful `webSite.bloque2background`.
+//
+// `webSite.bloque2texto` is stored as a single concatenated string
+// (e.g. "Bogotá, Colombia Aptos desde 40 mts² Desde $790 millones"),
+// so we parse it here using the "Aptos desde" / "Desde" literals as
+// anchors to recover the four visual tiers (ubicación / área / precio /
+// unidad). If the field is missing or the format changes, we fall back to
+// the original copy so the section never renders broken. The cleaner
+// long-term fix is to split this into separate Contentful fields.
+import { getWebsite } from '../lib/contentful';
+import { assetUrl, richTextToPlain } from '../lib/richtext';
+
+const ws = await getWebsite();
+const bgSrc = assetUrl(ws?.fields?.bloque2background);
+
+const bloque2 = richTextToPlain(ws?.fields?.bloque2texto);
+
+function parseBloque2(text: string): { ubicacion: string; area: string; precio: string; unidad: string } | null {
+  if (!text) return null;
+  const m = text.match(/^(.+?)\s+Aptos\s+desde\s+(.+?)\s+Desde\s+(\S+)\s+(\S+)\s*$/i);
+  if (!m) return null;
+  return { ubicacion: m[1].trim(), area: m[2].trim(), precio: m[3].trim(), unidad: m[4].trim() };
+}
+
+const parsed = parseBloque2(bloque2);
+const ubicacion = parsed?.ubicacion ?? 'Bogotá, Colombia';
+const area = parsed?.area ?? '40 mts²';
+const precio = parsed?.precio ?? '$790';
+const precioUnidad = parsed?.unidad ?? 'millones';
 ---
 <section id="inversion" class="relative w-full min-w-[1280px] min-h-screen overflow-hidden">
   <!-- Apartment render bleeds full-width across the viewport -->
   <img
-    src="/sections/proyecto-intro/apartment.webp"
+    src={bgSrc}
     alt="Render apartamento VECTA 98"
     class="absolute inset-0 w-full h-full object-cover"
     loading="lazy"
@@ -16,14 +45,14 @@
     <!-- Right-side info card text (Group 11 in Figma). Mobile widens the box
          and bumps the text sizes so labels + figures read on small screens. -->
     <div class="absolute right-[58px] top-[231px] w-[300px] text-vecta-dark text-right font-display mobile:w-[500px]">
-      <p class="text-[32px] leading-[0.959] mobile:text-[48px]">Bogotá, Colombia</p>
+      <p class="text-[32px] leading-[0.959] mobile:text-[48px]">{ubicacion}</p>
 
       <p class="mt-[50px] text-[32px] leading-[0.959] mobile:text-[48px]">Aptos desde</p>
-      <p class="mt-[12px] text-[64px] font-medium leading-[0.959] mobile:text-[88px]">40 mts²</p>
+      <p class="mt-[12px] text-[64px] font-medium leading-[0.959] mobile:text-[88px]">{area}</p>
 
       <p class="mt-[55px] text-[32px] leading-[0.959] mobile:text-[48px]">Desde</p>
-      <p class="mt-[10px] text-[60px] font-medium leading-[0.959] mobile:text-[88px]">$790</p>
-      <p class="text-[60px] font-medium leading-[0.959] mobile:text-[88px]">millones</p>
+      <p class="mt-[10px] text-[60px] font-medium leading-[0.959] mobile:text-[88px]">{precio}</p>
+      <p class="text-[60px] font-medium leading-[0.959] mobile:text-[88px]">{precioUnidad}</p>
     </div>
   </div>
 </section>

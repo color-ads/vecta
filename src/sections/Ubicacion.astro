@@ -1,11 +1,46 @@
 ---
 // Ubicación — lime card on left half, map iframe on right half (Figma).
+// Copy comes from Contentful `webSite.bloque5texto` as a sequence of
+// paragraphs we map by index to the existing visual slots:
+//   [0] heading       (72px h2)
+//   [1] subtitle      (38px)
+//   [2] (intentionally empty separator paragraph)
+//   [3] description 1 (38px)
+//   [4] description 2 (38px)
+//
+// `webSite.bloque5googleMapsDireccion` is intended for the Maps query
+// string; if empty in Contentful we fall back to the original hardcoded
+// address so the iframe still loads.
+//
 // Breakpoints (driven by `mobile:` Tailwind variant = data-device="phone"):
 //   phone (≤600)    — vertical: lime 50vh top, map 90vh bottom.
 //   tablet (601-768) — uses base PC layout (split-screen) automatically
 //                      since `mobile:` doesn't fire here. Hamburger nav.
 //   pc-small (1024) — base PC layout. PC nav.
 //   desktop (≥1025) — base PC layout. PC nav.
+import { getWebsite } from '../lib/contentful';
+import { richTextParagraphs, richTextToPlain } from '../lib/richtext';
+
+const ws = await getWebsite();
+const paragraphs = richTextParagraphs(ws?.fields?.bloque5texto);
+const heading = (paragraphs[0] ?? '').trim();
+const subtitle = (paragraphs[1] ?? '').trim();
+const description1 = (paragraphs[3] ?? '').trim();
+const description2Raw = (paragraphs[4] ?? '').trim();
+// Contentful stores the visual line break between sentences as U+2028
+// (LINE SEPARATOR). Render it as <br/> to match the original layout.
+// The `futura. ` regular-space fallback covers entries that were authored
+// with a plain space instead.
+const description2 = description2Raw
+  .split("\u2028").join("<br/>")
+  .replace('futura. ', 'futura.<br/>');
+
+// Fallback to the original address if the Contentful field is empty.
+const directionPlain = richTextToPlain(ws?.fields?.bloque5googleMapsDireccion).trim();
+const ADDRESS = directionPlain
+  ? encodeURIComponent(directionPlain)
+  : 'Carrera+15+%23+98,+Bogot%C3%A1,+Colombia';
+const initialMapSrc = `https://www.google.com/maps?q=${ADDRESS}&z=16&hl=es&output=embed`;
 ---
 <section class="relative w-full min-w-[1280px] min-h-screen overflow-hidden bg-vecta-night flex items-center justify-center
                 mobile:block mobile:h-[140vh] mobile:min-h-[140vh]">
@@ -13,7 +48,8 @@
        on phone it occupies the bottom 50vh. The transform on click is
        animated by the pin script below for a smooth zoom feel. -->
   <iframe
-    src="https://www.google.com/maps?q=Carrera+15+%23+98,+Bogot%C3%A1,+Colombia&z=16&hl=es&output=embed"
+    src={initialMapSrc}
+    data-address={ADDRESS}
     title="Mapa de ubicación Carrera 15 con calle 98"
     loading="lazy"
     referrerpolicy="no-referrer-when-downgrade"
@@ -46,25 +82,18 @@
          centers vertically inside the 50vh lime card. -->
     <h2 class="absolute top-[186px] w-[440px] text-vecta-dark font-semibold text-[72px] leading-[0.959] font-display left-[calc(50%-135.5px)]
                mobile:top-[14vh] mobile:left-1/2 mobile:-translate-x-1/2 mobile:text-center
-               pc-small:!text-[48px]">
-      Ubicación que funciona
-    </h2>
+               pc-small:!text-[48px]">{heading}</h2>
 
     <p class="absolute top-[317px] text-vecta-dark text-[38px] leading-[0.959] font-display left-[calc(50%-135.5px)]
               mobile:top-[22vh] mobile:left-1/2 mobile:-translate-x-1/2 mobile:text-center
               pc-small:!text-[26px]
-              desktop:mt-[2vh]">
-      Carrera 15 con calle 98.
-    </p>
+              desktop:mt-[2vh]">{subtitle}</p>
 
     <div class="absolute top-[450px] w-[420px] text-vecta-dark text-[38px] leading-[0.959] space-y-[1.2em] font-display left-[calc(50%-135.5px)]
                 mobile:top-[30vh] mobile:left-1/2 mobile:-translate-x-1/2 mobile:text-center
                 pc-small:!text-[26px]">
-      <p>Una zona con movimiento constante, conectividad y actividad real.</p>
-      <p>
-        No es una promesa de valorización futura.<br/>
-        Es una ubicación que ya funciona.
-      </p>
+      <p>{description1}</p>
+      <p set:html={description2}></p>
     </div>
 
     <!-- Decorative horizontal line — 3vh top gap separates it from the
@@ -95,7 +124,9 @@
   const iframe = document.querySelector<HTMLIFrameElement>(
     'iframe[title="Mapa de ubicación Carrera 15 con calle 98"]'
   );
-  const ADDRESS = 'Carrera+15+%23+98,+Bogot%C3%A1,+Colombia';
+  // Read the encoded address the iframe was rendered with (set from
+  // Contentful at build time) so zoom navigation hits the same place.
+  const ADDRESS = iframe?.dataset.address ?? 'Carrera+15+%23+98,+Bogot%C3%A1,+Colombia';
   // Each Google Maps zoom step doubles the scale. Phone viewports show the
   // map at the bottom 90vh, so we boot in at street level (z=19, ~4× closer
   // than the desktop default z=16) and use z=21 (max) when the pin is

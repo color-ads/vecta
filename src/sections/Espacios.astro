@@ -1,20 +1,43 @@
 ---
-// Espacios — dark image carousel of 5 spaces. All slides share the same Figma
-// "Group 11" geometric overlay (Rectangle 2 rotated -45° + Ellipse 1 + Rectangle 3),
-// the same subtitle "Espacio con alta activación", and the same dark overlay
-// rgba(56,48,28,0.44). Only the background photo and the title text change.
-// Source slides: 2069:152 GIMNASIO, 2069:100 COWORKING, 2069:131 LOUNGE,
-// 2069:173 RESTAURANTE, 2069:194 LOOBY.
-const slides = [
-  { id: 'gimnasio',    title: 'GIMNASIO',    bg: '/sections/espacios/gimnasio.webp' },
-  { id: 'coworking',   title: 'COWORKING',   bg: '/sections/espacios/coworking.webp' },
-  { id: 'lounge',      title: 'LOUNGE',      bg: '/sections/espacios/lounge.webp' },
-  { id: 'restaurante', title: 'RESTAURANTE', bg: '/sections/espacios/restaurante.webp' },
-  { id: 'looby',       title: 'LOOBY',       bg: '/sections/espacios/looby.webp' },
-];
+// Espacios — dark image carousel of 5 spaces.
+// Content (titles, subtitles, background images, and order) all come from
+// the Contentful `lugares` content type. Slides are rendered in the order
+// Contentful returns them (sys.createdAt asc).
+import { getContentfulClient } from '../lib/contentful';
+
+interface LugarFields {
+  titulo: string;
+  descripcion?: { content?: Array<{ content?: Array<{ value?: string }> }> };
+  imagen?: { fields: { file: { url: string } } };
+}
+
+const client = getContentfulClient();
+const res = await client.getEntries({
+  content_type: 'lugares',
+  order: ['sys.createdAt'],
+});
+
+function richTextToPlain(doc: LugarFields['descripcion']): string {
+  if (!doc?.content) return '';
+  return doc.content
+    .map((node) => (node.content ?? []).map((n) => n.value ?? '').join(''))
+    .join(' ')
+    .trim();
+}
+
+const slides = (res.items as Array<{ fields: LugarFields }>).map((it) => {
+  const titulo = String(it.fields.titulo).trim();
+  const url = it.fields.imagen?.fields.file.url;
+  return {
+    id: titulo.toLowerCase().replace(/\s+/g, '-'),
+    title: titulo.toUpperCase(),
+    subtitle: richTextToPlain(it.fields.descripcion),
+    bg: url ? `https:${url}` : '',
+  };
+});
 ---
 <section id="espacios" class="relative w-full min-w-[1280px] min-h-screen overflow-hidden bg-black flex items-center justify-center">
-  <!-- Stack all 5 background photos full-bleed; only the active one is visible
+  <!-- Stack all background photos full-bleed; only the active one is visible
        (controlled by the script below via inline opacity). -->
   {slides.map((slide, i) => (
     <img
@@ -30,6 +53,10 @@ const slides = [
   <!-- Warm dark overlay matching Figma rgba(56,48,28,0.44) -->
   <div class="absolute inset-0 bg-[rgba(56,48,28,0.44)]"></div>
 
+  <!-- Slide data for the client script: avoids putting human-readable copy
+       on a data-* attribute that competes with the existing selectors. -->
+  <script type="application/json" data-espacios-data set:html={JSON.stringify(slides.map((s) => ({ title: s.title, subtitle: s.subtitle })))}></script>
+
   <!-- Inner 1280px canvas keeps Figma absolute positions intact -->
   <div class="relative w-[1280px] h-[832px] mx-auto">
     <!-- Geometric figure from GYM ESPACIOS (Figma 2069:154 "Group 11").
@@ -44,10 +71,10 @@ const slides = [
     <!-- Rectangle 3 (2069:156) — inner 620.185×620.185 axis-aligned -->
     <div class="absolute pointer-events-none w-[620.185px] h-[620.185px] top-[134.4075px] left-[329.9075px] border border-white/50"></div>
 
-    <!-- Title + subtitle stack (title text swapped by JS, subtitle is constant) -->
+    <!-- Title + subtitle stack (both swapped per slide by the script). -->
     <div class="absolute left-1/2 top-[399px] -translate-x-1/2 text-center text-white whitespace-nowrap font-display">
-      <h2 data-espacios-title class="text-[64px] font-medium leading-[0.959] mobile:text-[96px]">GIMNASIO</h2>
-      <p class="text-[32px] font-normal leading-[0.959] mobile:text-[44px]">Espacio con alta activación</p>
+      <h2 data-espacios-title class="text-[64px] font-medium leading-[0.959] mobile:text-[96px]">{slides[0]?.title ?? ''}</h2>
+      <p data-espacios-subtitle class="text-[32px] font-normal leading-[0.959] mobile:text-[44px]">{slides[0]?.subtitle ?? ''}</p>
     </div>
 
     <!-- Arrow buttons (Figma 2021:201, 2021:203). The SVG includes the circle
@@ -71,10 +98,17 @@ const slides = [
 </section>
 
 <script>
-  const titles = ['GIMNASIO', 'COWORKING', 'LOUNGE', 'RESTAURANTE', 'LOOBY'];
+  // Read the slide list (titles + subtitles) injected by the Astro template
+  // from Contentful at build time.
+  const dataEl = document.querySelector<HTMLScriptElement>('[data-espacios-data]');
+  const slides: Array<{ title: string; subtitle: string }> = dataEl?.textContent
+    ? JSON.parse(dataEl.textContent)
+    : [];
+
   let active = 0;
 
-  const titleEl = document.querySelector('[data-espacios-title]');
+  const titleEl = document.querySelector<HTMLElement>('[data-espacios-title]');
+  const subtitleEl = document.querySelector<HTMLElement>('[data-espacios-subtitle]');
   const slideImgs = document.querySelectorAll<HTMLImageElement>('[data-espacios-slide]');
   const prev = document.querySelector('[data-espacios-prev]');
   const next = document.querySelector('[data-espacios-next]');
@@ -87,8 +121,10 @@ const slides = [
   let resumeTimer: number | null = null;
 
   function show(i: number) {
-    active = (i + titles.length) % titles.length;
-    if (titleEl) titleEl.textContent = titles[active];
+    if (slides.length === 0) return;
+    active = (i + slides.length) % slides.length;
+    if (titleEl) titleEl.textContent = slides[active].title;
+    if (subtitleEl) subtitleEl.textContent = slides[active].subtitle;
     slideImgs.forEach((img, idx) => {
       img.style.opacity = idx === active ? '1' : '0';
     });
@@ -96,6 +132,7 @@ const slides = [
 
   function startAuto() {
     stopAuto();
+    if (slides.length <= 1) return;
     autoTimer = window.setInterval(() => show(active + 1), AUTO_MS);
   }
 

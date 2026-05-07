@@ -37,6 +37,54 @@ import TipologiaAbierta2 from './TipologiaAbierta2.astro';
   </div>
 </div>
 
+<!-- Gallery lightbox — opens when any [data-gallery] image is clicked. Sits
+     above the modal (z-[140]) and the global nav. Renders outside the modal
+     so it also works for mobile-carousel images that aren't inside it. -->
+<div
+  data-gallery-lightbox
+  hidden
+  role="dialog"
+  aria-modal="true"
+  aria-label="Visor de galería de tipología"
+  class="fixed inset-0 z-[140] bg-black/95 flex items-center justify-center">
+
+  <button
+    data-gallery-close
+    aria-label="Cerrar visor"
+    type="button"
+    class="fixed top-[24px] right-[24px] z-[150] w-[48px] h-[48px] rounded-full bg-white text-vecta-dark flex items-center justify-center text-[28px] leading-none hover:bg-vecta-lime transition-colors cursor-pointer">
+    ×
+  </button>
+
+  <button
+    data-gallery-prev
+    aria-label="Imagen anterior"
+    type="button"
+    class="fixed left-[24px] top-1/2 -translate-y-1/2 z-[150] w-[64px] h-[64px] rounded-full bg-white/90 text-vecta-dark flex items-center justify-center text-[40px] leading-none hover:bg-vecta-lime transition-colors cursor-pointer">
+    ‹
+  </button>
+  <button
+    data-gallery-next
+    aria-label="Imagen siguiente"
+    type="button"
+    class="fixed right-[24px] top-1/2 -translate-y-1/2 z-[150] w-[64px] h-[64px] rounded-full bg-white/90 text-vecta-dark flex items-center justify-center text-[40px] leading-none hover:bg-vecta-lime transition-colors cursor-pointer">
+    ›
+  </button>
+
+  <img
+    data-gallery-img
+    src=""
+    alt=""
+    class="max-w-[90vw] max-h-[85vh] object-contain select-none"
+  />
+
+  <p
+    data-gallery-counter
+    class="fixed bottom-[24px] left-1/2 -translate-x-1/2 text-white/80 text-[16px] font-display">
+    1 / 2
+  </p>
+</div>
+
 <script>
   const modal = document.querySelector<HTMLElement>('[data-tipologia-modal]');
   const closeBtn = document.querySelector<HTMLButtonElement>('[data-tipologia-close]');
@@ -59,16 +107,55 @@ import TipologiaAbierta2 from './TipologiaAbierta2.astro';
     siteNav.setAttribute('data-nav-theme', onPlano ? 'dark' : 'light');
   }
 
+  // Full per-tipo dataset (id → fields) injected by Tipologias.astro so the
+  // modal can render every field — descripcion, camas, salaComedor, baños,
+  // floor-plan image — not just the title and area.
+  interface TipoRecord {
+    tipo: string;
+    mts: string;
+    areaTotal: string;
+    camas: string;
+    salaComedor: string;
+    baos: string;
+    descripcion: string;
+    imagen: string;
+  }
+  const tipoDataEl = document.querySelector<HTMLScriptElement>('[data-tipologias-data]');
+  const tipoList: TipoRecord[] = tipoDataEl?.textContent ? JSON.parse(tipoDataEl.textContent) : [];
+  const tipoByNumber = new Map<string, TipoRecord>(tipoList.map((t) => [String(t.tipo), t]));
+
+  function setRow(key: string, value: string) {
+    if (!modal) return;
+    modal.querySelectorAll<HTMLElement>(`[data-tipologia-row="${key}"]`).forEach((el) => {
+      el.textContent = value;
+    });
+  }
+
   function setTipo(tipo: string, mts: string) {
     // Scoped to the modal so other in-page TipologiaAbierta instances (e.g.
     // the mobile carousel slides) keep their own static tipo/mts.
     if (!modal) return;
+    const record = tipoByNumber.get(String(tipo));
+    const areaText = record?.areaTotal || `${mts} mts²`;
+
     modal.querySelectorAll<HTMLElement>('[data-tipologia-title]').forEach((el) => {
       el.textContent = `Tipo ${tipo}`;
     });
     modal.querySelectorAll<HTMLElement>('[data-tipologia-mts]').forEach((el) => {
-      el.textContent = `${mts} mts²`;
+      el.textContent = areaText;
     });
+
+    if (record) {
+      setRow('camas', record.camas);
+      setRow('sala', record.salaComedor);
+      setRow('baos', record.baos);
+      modal.querySelectorAll<HTMLElement>('[data-tipologia-descripcion]').forEach((el) => {
+        el.textContent = record.descripcion;
+      });
+      modal.querySelectorAll<HTMLImageElement>('[data-tipologia-image]').forEach((el) => {
+        if (record.imagen) el.src = record.imagen;
+      });
+    }
   }
 
   function open(tipo: string, mts: string) {
@@ -142,4 +229,93 @@ import TipologiaAbierta2 from './TipologiaAbierta2.astro';
       if (modal && !modal.hasAttribute('hidden')) close();
     });
   });
+
+  // ------------------------------------------------------------------
+  // Gallery lightbox — fullscreen viewer for tipología images.
+  // Opens when any [data-gallery] image is clicked; arrow buttons /
+  // arrow keys navigate between the images; Escape / × / backdrop close.
+  // ------------------------------------------------------------------
+  const galleryItems = [
+    {
+      src: '/sections/tipologia-abierta/bedroom-bg.webp',
+      alt: 'Habitación VECTA 98',
+    },
+    {
+      src: '/sections/tipologia-abierta/floor-plan.webp',
+      alt: 'Plano de tipología VECTA 98',
+    },
+  ];
+  const lightbox = document.querySelector<HTMLElement>('[data-gallery-lightbox]');
+  const lightboxImg = lightbox?.querySelector<HTMLImageElement>('[data-gallery-img]');
+  const lightboxCounter = lightbox?.querySelector<HTMLElement>('[data-gallery-counter]');
+  const galleryCloseBtn = document.querySelector<HTMLButtonElement>('[data-gallery-close]');
+  const galleryPrevBtn = document.querySelector<HTMLButtonElement>('[data-gallery-prev]');
+  const galleryNextBtn = document.querySelector<HTMLButtonElement>('[data-gallery-next]');
+  let galleryIdx = 0;
+
+  function paintGallery() {
+    if (!lightboxImg || !lightboxCounter) return;
+    const item = galleryItems[galleryIdx];
+    lightboxImg.src = item.src;
+    lightboxImg.alt = item.alt;
+    lightboxCounter.textContent = `${galleryIdx + 1} / ${galleryItems.length}`;
+  }
+
+  function openGallery(startIdx: number) {
+    if (!lightbox) return;
+    const len = galleryItems.length;
+    galleryIdx = ((startIdx % len) + len) % len;
+    paintGallery();
+    lightbox.removeAttribute('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeGallery() {
+    if (!lightbox || lightbox.hasAttribute('hidden')) return;
+    lightbox.setAttribute('hidden', '');
+    // Only restore scroll if the underlying tipología modal isn't open.
+    if (!modal || modal.hasAttribute('hidden')) {
+      document.body.style.overflow = '';
+    }
+  }
+
+  function stepGallery(direction: 1 | -1) {
+    galleryIdx = (galleryIdx + direction + galleryItems.length) % galleryItems.length;
+    paintGallery();
+  }
+
+  document.querySelectorAll<HTMLImageElement>('[data-gallery]').forEach((img) => {
+    img.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const idx = Number(img.dataset.gallery ?? '0');
+      openGallery(Number.isFinite(idx) ? idx : 0);
+    });
+  });
+
+  galleryCloseBtn?.addEventListener('click', closeGallery);
+  galleryPrevBtn?.addEventListener('click', () => stepGallery(-1));
+  galleryNextBtn?.addEventListener('click', () => stepGallery(1));
+
+  // Backdrop click closes the lightbox.
+  lightbox?.addEventListener('click', (e) => {
+    if (e.target === lightbox) closeGallery();
+  });
+
+  // Keyboard navigation. Capture phase + stopImmediatePropagation prevents
+  // the modal's own Escape handler from also firing while the lightbox is up.
+  document.addEventListener(
+    'keydown',
+    (e) => {
+      if (!lightbox || lightbox.hasAttribute('hidden')) return;
+      if (e.key === 'Escape') {
+        e.stopImmediatePropagation();
+        closeGallery();
+      } else if (e.key === 'ArrowLeft') {
+        stepGallery(-1);
+      } else if (e.key === 'ArrowRight') {
+        stepGallery(1);
+      }
+    },
+    true,
+  );
 </script>

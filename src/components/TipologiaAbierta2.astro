@@ -17,19 +17,37 @@
 // this component when the modal opens, so no Header is rendered inside.
 //
 // Props:
-//   tipo  — the typology number (default "3")
-//   mts   — the area shown in the ÁREA TOTAL row (default "35")
+//   tipo         — the typology number (default "3")
+//   mts          — the area shown in the ÁREA TOTAL row (default "35")
+//   camas        — value for the CAMAS row (default "2")
+//   salaComedor  — value for the SALA COMEDOR row (default "1")
+//   baos         — value for the BAÑOS row (default "2")
+//   imagen       — floor plan image URL (default local fallback)
+//
+// In the modal, these defaults are overwritten at runtime via the
+// [data-tipologia-row="<key>"] and [data-tipologia-image] selectors.
 interface Props {
   tipo?: string;
   mts?: string;
+  camas?: string;
+  salaComedor?: string;
+  baos?: string;
+  imagen?: string;
 }
-const { tipo = "3", mts = "35" } = Astro.props;
+const {
+  tipo = "3",
+  mts = "35",
+  camas = "2",
+  salaComedor = "1",
+  baos = "2",
+  imagen = "/sections/tipologia-abierta/floor-plan.webp",
+} = Astro.props;
 
 const rows = [
-  { label: "ÁREA TOTAL",   value: `${mts} mts²` },
-  { label: "CAMAS",        value: "2"           },
-  { label: "SALA COMEDOR", value: "1"           },
-  { label: "BAÑOS",        value: "2"           },
+  { label: "ÁREA TOTAL",   value: `${mts} mts²`, key: "mts"   },
+  { label: "CAMAS",        value: camas,         key: "camas" },
+  { label: "SALA COMEDOR", value: salaComedor,   key: "sala"  },
+  { label: "BAÑOS",        value: baos,          key: "baos"  },
 ];
 const ROW_TOPS = [416, 480, 544, 608];
 const SEP_TOPS = [461, 525, 589];
@@ -62,9 +80,11 @@ const SEP_MOBILE_CLASSES = [
     <div class="absolute left-[544px] top-[94px] w-[686px] h-[702px] overflow-hidden
                 mobile:left-[122px] mobile:top-[990px] mobile:w-[1035px] mobile:h-[1035px]">
       <img
-        src="/sections/tipologia-abierta/floor-plan.webp"
-        alt="Plano de tipología 3 — VECTA 98"
-        class="block w-full h-full object-contain"
+        data-gallery="1"
+        data-tipologia-image
+        src={imagen}
+        alt="Plano de tipología — VECTA 98"
+        class="block w-full h-full object-contain cursor-pointer"
         loading="lazy"
         decoding="async"
       />
@@ -92,7 +112,8 @@ const SEP_MOBILE_CLASSES = [
           {row.label}
         </p>
         <p
-          {...(row.label === "ÁREA TOTAL" ? { "data-tipologia-mts": true } : {})}
+          data-tipologia-row={row.key}
+          {...(row.key === "mts" ? { "data-tipologia-mts": true } : {})}
           class={`absolute left-[345px] w-[133px] text-vecta-dark text-[24px] leading-[1.008] text-center font-bold font-['Istok_Web',sans-serif] mobile:left-[700px] mobile:w-[300px] mobile:text-[36px] ${ROW_MOBILE_CLASSES[idx]}`}
           style={`top: ${ROW_TOPS[idx]}px;`}>
           {row.value}

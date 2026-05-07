@@ -1,5 +1,13 @@
 ---
-// Galería - 3 image grid (1 large left + 2 stacked right)
+// Galería - 3 image grid (1 large left + 2 stacked right).
+// Images come from Contentful `webSite.bloque6imagenes` — an Array of 3
+// asset links, in document order.
+import { getWebsite } from '../lib/contentful';
+import { assetUrl } from '../lib/richtext';
+
+const ws = await getWebsite();
+const imgs = (ws?.fields?.bloque6imagenes ?? []) as Array<unknown>;
+const [g1 = '', g2 = '', g3 = ''] = imgs.map((a) => assetUrl(a));
 ---
 <section class="relative w-full min-w-[1280px] min-h-screen overflow-hidden bg-vecta-bg">
   <!-- Images bleed to viewport edges. Seam between left and right columns
@@ -8,16 +16,16 @@
 
   <!-- Large left image: viewport left edge → 9px before viewport center -->
   <div class="absolute left-0 inset-y-0 overflow-hidden w-[calc(50vw-9px)] min-w-[631px]">
-    <img src="/sections/galeria/gallery-1.webp" alt="Vista exterior VECTA 98" class="w-full h-full object-cover" loading="lazy" decoding="async" />
+    <img src={g1} alt="Vista exterior VECTA 98" class="w-full h-full object-cover" loading="lazy" decoding="async" />
   </div>
 
   <!-- Top right image: 9px before viewport center → viewport right edge -->
   <div class="absolute top-0 right-0 overflow-hidden left-[calc(50vw-9px)] h-[43.78%] min-w-[649px]">
-    <img src="/sections/galeria/gallery-2.webp" alt="Detalle arquitectónico" class="w-full h-full object-cover" loading="lazy" decoding="async" />
+    <img src={g2} alt="Detalle arquitectónico" class="w-full h-full object-cover" loading="lazy" decoding="async" />
   </div>
 
   <!-- Bottom right image -->
   <div class="absolute bottom-0 right-0 overflow-hidden left-[calc(50vw-9px)] top-[43.78%] min-w-[649px]">
-    <img src="/sections/galeria/gallery-3.webp" alt="Espacio interior" class="w-full h-full object-cover" loading="lazy" decoding="async" />
+    <img src={g3} alt="Espacio interior" class="w-full h-full object-cover" loading="lazy" decoding="async" />
   </div>
 </section>
