@@ -4,19 +4,23 @@
 // title → form → comment label/box → consent → submit. All text scales up.
 ---
 <section class="relative w-full min-w-[1280px] min-h-screen overflow-hidden bg-vecta-lime flex items-center justify-center
-                narrow:block narrow:h-auto narrow:min-h-[1840px]">
+                narrow:block narrow:h-auto narrow:min-h-[2050px]">
   <!-- Inner 1280px canvas keeps Figma absolute positions intact.
-       Submit button at top-[1750] + h-[80] ends at 1830 → section is 1840
-       to give a 10px breathing margin without leaving a big empty strip. -->
-  <div class="relative w-[1280px] h-[832px] mx-auto narrow:h-[1840px]">
+       Extra height accommodates the subtitle + the new Apellido field. -->
+  <div class="relative w-[1280px] h-[940px] mx-auto narrow:h-[2050px]">
     <!-- Title -->
     <h2 class="absolute left-[168px] top-[148px] text-vecta-dark font-semibold text-[44px] leading-[0.959] font-display
                narrow:left-0 narrow:right-0 narrow:top-[80px] narrow:w-full narrow:text-center narrow:text-[80px]">
       Quiero saber más
     </h2>
 
-    <p class="absolute left-[706px] top-[151px] text-vecta-dark text-[24px] font-display
-              narrow:left-1/2 narrow:top-[1250px] narrow:-translate-x-1/2 narrow:text-[44px] narrow:whitespace-nowrap">
+    <p class="absolute left-[168px] top-[195px] text-vecta-dark text-[20px] leading-[1.2] font-display
+              narrow:left-0 narrow:right-0 narrow:top-[170px] narrow:w-full narrow:text-center narrow:text-[32px]">
+      Déjanos tus datos y nuestros asesores se<br />pondrán en contacto contigo.
+    </p>
+
+    <p class="absolute left-[706px] top-[260px] text-vecta-dark text-[24px] font-display
+              narrow:left-1/2 narrow:top-[1380px] narrow:-translate-x-1/2 narrow:text-[44px] narrow:whitespace-nowrap">
       Deja tu comentario aquí:
     </p>
 
@@ -26,14 +30,14 @@
       form="contactForm"
       name="comentario"
       maxlength="1000"
-      class="absolute left-[706px] top-[201px] w-[392px] h-[335px] rounded-[10px] border-2 border-vecta-dark bg-transparent p-[14px] text-vecta-dark text-[18px] resize-none focus:outline-none focus:ring-2 focus:ring-vecta-dark/40 font-display
-             narrow:left-1/2 narrow:top-[1320px] narrow:-translate-x-1/2 narrow:w-[1000px] narrow:h-[280px] narrow:text-[28px]"></textarea>
+      class="absolute left-[706px] top-[310px] w-[392px] h-[335px] rounded-[10px] border-2 border-vecta-dark bg-transparent p-[14px] text-vecta-dark text-[18px] resize-none focus:outline-none focus:ring-2 focus:ring-vecta-dark/40 font-display
+             narrow:left-1/2 narrow:top-[1450px] narrow:-translate-x-1/2 narrow:w-[1000px] narrow:h-[280px] narrow:text-[28px]"></textarea>
 
     <form
       id="contactForm"
       novalidate
-      class="absolute left-[175px] top-[218px] w-[451px] font-display
-             narrow:left-1/2 narrow:top-[220px] narrow:-translate-x-1/2 narrow:w-[1000px]">
+      class="absolute left-[175px] top-[280px] w-[451px] font-display
+             narrow:left-1/2 narrow:top-[290px] narrow:-translate-x-1/2 narrow:w-[1000px]">
       <label class="block text-vecta-dark text-[20px] font-semibold mb-[6px] narrow:text-[36px] narrow:mb-[12px]" for="form-nombre">Nombre:</label>
       <input
         id="form-nombre"
@@ -42,7 +46,19 @@
         required
         minlength="2"
         maxlength="80"
-        autocomplete="name"
+        autocomplete="given-name"
+        class="w-full h-[47px] rounded-[10px] border-2 border-vecta-dark bg-transparent px-[14px] text-vecta-dark mb-[15px] focus:outline-none focus:ring-2 focus:ring-vecta-dark/40 form-input-validate
+               narrow:h-[80px] narrow:text-[32px] narrow:mb-[24px]" />
+
+      <label class="block text-vecta-dark text-[20px] font-semibold mb-[6px] narrow:text-[36px] narrow:mb-[12px]" for="form-apellido">Apellido:</label>
+      <input
+        id="form-apellido"
+        name="apellido"
+        type="text"
+        required
+        minlength="2"
+        maxlength="80"
+        autocomplete="family-name"
         class="w-full h-[47px] rounded-[10px] border-2 border-vecta-dark bg-transparent px-[14px] text-vecta-dark mb-[15px] focus:outline-none focus:ring-2 focus:ring-vecta-dark/40 form-input-validate
                narrow:h-[80px] narrow:text-[32px] narrow:mb-[24px]" />
 
@@ -137,8 +153,8 @@
     </form>
 
     <!-- Consent + checkbox (associated to the form via form="contactForm") -->
-    <label class="absolute left-[706px] top-[549px] w-[395px] flex gap-[12px] cursor-pointer
-                  narrow:left-1/2 narrow:top-[1630px] narrow:-translate-x-1/2 narrow:w-[1000px] narrow:gap-[18px]">
+    <label class="absolute left-[706px] top-[660px] w-[395px] flex gap-[12px] cursor-pointer
+                  narrow:left-1/2 narrow:top-[1760px] narrow:-translate-x-1/2 narrow:w-[1000px] narrow:gap-[18px]">
       <input
         type="checkbox"
         form="contactForm"
@@ -155,8 +171,8 @@
     <button
       type="submit"
       form="contactForm"
-      class="absolute left-[875px] top-[640px] w-[214px] h-[47px] rounded-[10px] bg-vecta-dark text-white text-[28px] font-semibold flex items-center justify-center hover:bg-vecta-dark/90 transition-colors disabled:opacity-50 font-display
-             narrow:left-1/2 narrow:top-[1750px] narrow:-translate-x-1/2 narrow:w-[360px] narrow:h-[80px] narrow:text-[40px]">
+      class="absolute left-[875px] top-[760px] w-[214px] h-[47px] rounded-[10px] bg-vecta-dark text-white text-[28px] font-semibold flex items-center justify-center hover:bg-vecta-dark/90 transition-colors disabled:opacity-50 font-display
+             narrow:left-1/2 narrow:top-[1940px] narrow:-translate-x-1/2 narrow:w-[360px] narrow:h-[80px] narrow:text-[40px]">
       ENVIAR
     </button>
   </div>
