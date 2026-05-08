@@ -18,6 +18,7 @@
     "@tailwindcss/vite": "^4.2.4",
     "astro": "^6.1.9",
     "contentful": "^11.12.1",
-    "tailwindcss": "^4.2.4"
+    "tailwindcss": "^4.2.4",
+    "tslib": "^2.8.1"
   }
 }
