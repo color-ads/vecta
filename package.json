@@ -5,6 +5,7 @@
   "engines": {
     "node": ">=22.12.0"
   },
+  "packageManager": "pnpm@10.30.0",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -12,15 +13,12 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@contentful/rich-text-html-renderer": "17.2.2",
-    "@contentful/rich-text-types": "17.2.7",
-    "@tailwindcss/vite": "4.2.4",
-    "astro": "6.1.10",
-    "contentful": "11.12.1",
-    "tailwindcss": "4.2.4",
-    "tslib": "2.8.1"
-  },
-  "overrides": {
-    "vite": "7.3.3"
+    "@contentful/rich-text-html-renderer": "^17.2.2",
+    "@contentful/rich-text-types": "^17.2.7",
+    "@tailwindcss/vite": "^4.2.4",
+    "astro": "^6.1.9",
+    "contentful": "^11.12.1",
+    "tailwindcss": "^4.2.4",
+    "tslib": "^2.8.1"
   }
 }
