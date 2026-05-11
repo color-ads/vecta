@@ -28,6 +28,7 @@
 // [data-tipologia-row="<key>"] and [data-tipologia-image] selectors.
 interface Props {
   tipo?: string;
+  nombre?: string;
   mts?: string;
   camas?: string;
   salaComedor?: string;
@@ -36,12 +37,17 @@ interface Props {
 }
 const {
   tipo = "3",
+  nombre,
   mts = "35",
   camas = "2",
   salaComedor = "1",
   baos = "2",
   imagen = "/sections/tipologia-abierta/floor-plan.webp",
 } = Astro.props;
+// `nombre` viene de Contentful (campo `tipologia.nombre`) con valores como
+// "Tipo A1", "Tipo B", etc. Si no se pasó, fallback al formato legacy
+// "Tipo {N}" para que el componente siga renderizando algo.
+const tituloMostrado = nombre && nombre.trim() ? nombre.trim() : `Tipo ${tipo}`;
 
 const rows = [
   { label: "ÁREA TOTAL",   value: `${mts} mts²`, key: "mts"   },
@@ -96,7 +102,7 @@ const SEP_MOBILE_CLASSES = [
       data-tipologia-title
       class="absolute left-[92px] top-[272px] w-[311px] text-vecta-dark font-semibold text-[100px] leading-[0.959] font-display
              mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[230px] mobile:w-auto mobile:text-[140px] mobile:text-center">
-      Tipo {tipo}
+      {tituloMostrado}
     </h2>
 
     <!-- Specs table (4 rows + 3 separators). The first row's value (ÁREA TOTAL)

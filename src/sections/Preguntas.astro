@@ -138,10 +138,13 @@ const CLOSED_TOPS = items.map((_, i) => 313 + i * 73);
   const isMobile = document.documentElement.getAttribute('data-device') === 'phone';
   const ROW_SPACING = isMobile ? 110 : 73;
   const CLOSED_TOPS = Array.from({ length: total }, (_, i) => 313 + i * ROW_SPACING);
-  const OPEN_SHIFT     = isMobile ? 225 : 76;
-  const CARET_OFFSET   = isMobile ? 8   : 2;
-  const ANSWER_OFFSET  = isMobile ? 175 : 80;
-  const LINE_OFFSET    = isMobile ? 305 : 126;
+  const CARET_OFFSET          = isMobile ? 8  : 2;
+  const ANSWER_OFFSET         = isMobile ? 175 : 80;
+  const LINE_GAP_BELOW_ANSWER = isMobile ? 28 : 16;
+  const BUFFER_BELOW_LINE     = isMobile ? 36 : 22;
+  // LINE_OFFSET sólo se usa para items CERRADOS (línea con opacity 0 igual,
+  // pero mantenemos su posición previa por consistencia con el SSR).
+  const LINE_OFFSET           = isMobile ? 305 : 126;
   const FADE_MS = 200;
   const SHIFT_MS = 300;
 
@@ -150,9 +153,26 @@ const CLOSED_TOPS = items.map((_, i) => 313 + i * 73);
 
   const sleep = (ms: number) => new Promise<void>(r => setTimeout(r, ms));
 
+  // Mide la altura real renderizada del párrafo de respuesta i en el DOM.
+  // Las respuestas viven con opacity:0 pero SÍ están laid out, así que
+  // offsetHeight refleja su altura natural — incluyendo wrapping para
+  // textos largos como los que vienen de Contentful.
+  function answerHeight(i: number): number {
+    const a = document.querySelector<HTMLElement>(`[data-faq-answer="${i}"]`);
+    return a ? a.offsetHeight : 0;
+  }
+
+  // Cuánto deben bajar los items i > openIdx para no pisar la respuesta:
+  //   shift = ANSWER_OFFSET + altura_real_respuesta + gap_línea + buffer − ROW_SPACING
+  // (El ROW_SPACING ya separa los items por defecto; sólo agregamos lo extra.)
+  function dynamicShift(forIdx: number): number {
+    return ANSWER_OFFSET + answerHeight(forIdx) + LINE_GAP_BELOW_ANSWER + BUFFER_BELOW_LINE - ROW_SPACING;
+  }
+
   function applyPositions() {
     for (let i = 0; i < total; i++) {
-      const top = CLOSED_TOPS[i] + (openIdx >= 0 && openIdx < i ? OPEN_SHIFT : 0);
+      const shift = (openIdx >= 0 && openIdx < i) ? dynamicShift(openIdx) : 0;
+      const top = CLOSED_TOPS[i] + shift;
       const caret = document.querySelector<HTMLElement>(`[data-faq-caret="${i}"]`);
       const question = document.querySelector<HTMLElement>(`[data-faq-question="${i}"]`);
       const answer = document.querySelector<HTMLElement>(`[data-faq-answer="${i}"]`);
@@ -160,7 +180,15 @@ const CLOSED_TOPS = items.map((_, i) => 313 + i * 73);
       if (caret) caret.style.top = `${top + CARET_OFFSET}px`;
       if (question) question.style.top = `${top}px`;
       if (answer) answer.style.top = `${top + ANSWER_OFFSET}px`;
-      if (line) line.style.top = `${top + LINE_OFFSET}px`;
+      if (line) {
+        // Para el item abierto la línea baja para sentarse debajo del texto
+        // real; para los cerrados queda en su slot original (opacity:0, no
+        // se ve, pero su `top` no es relevante visualmente).
+        const lineTop = (i === openIdx)
+          ? top + ANSWER_OFFSET + answerHeight(i) + LINE_GAP_BELOW_ANSWER
+          : top + LINE_OFFSET;
+        line.style.top = `${lineTop}px`;
+      }
     }
   }
 

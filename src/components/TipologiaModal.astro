@@ -112,6 +112,7 @@ import TipologiaAbierta2 from './TipologiaAbierta2.astro';
   // floor-plan image — not just the title and area.
   interface TipoRecord {
     tipo: string;
+    nombre: string;
     mts: string;
     areaTotal: string;
     camas: string;
@@ -139,7 +140,9 @@ import TipologiaAbierta2 from './TipologiaAbierta2.astro';
     const areaText = record?.areaTotal || `${mts} mts²`;
 
     modal.querySelectorAll<HTMLElement>('[data-tipologia-title]').forEach((el) => {
-      el.textContent = `Tipo ${tipo}`;
+      // Usa el `nombre` del campo Contentful ("Tipo A1", "Tipo B", etc.).
+      // Fallback al formato legacy "Tipo {numero}" si no hay nombre.
+      el.textContent = record?.nombre || `Tipo ${tipo}`;
     });
     modal.querySelectorAll<HTMLElement>('[data-tipologia-mts]').forEach((el) => {
       el.textContent = areaText;

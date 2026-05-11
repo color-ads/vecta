@@ -30,14 +30,20 @@
 // same component is rendered once and reused for all 5 typologies.
 interface Props {
   tipo?: string;
+  nombre?: string;
   mts?: string;
   descripcion?: string;
 }
 const {
   tipo = "3",
+  nombre,
   mts = "35",
   descripcion = "Espacio compacto y funcional que integra sala, cocina, habitación y zona de lavado en una distribución eficiente.",
 } = Astro.props;
+// `nombre` viene de Contentful con valores tipo "Tipo A1". Fallback a
+// `Tipo {N}` si no se pasó (preserva render inicial cuando el modal aún
+// no ha aplicado los valores dinámicos del polígono clickeado).
+const tituloMostrado = nombre && nombre.trim() ? nombre.trim() : `Tipo ${tipo}`;
 ---
 <section class="relative w-full min-w-[1280px] min-h-screen h-[832px] overflow-hidden bg-black">
   <!-- Bedroom photo + dark overlay -->
@@ -70,7 +76,7 @@ const {
     <h2
       data-tipologia-title
       class="absolute left-[170px] top-[279px] w-[393px] text-white font-semibold text-[115px] leading-[0.959] font-display [text-shadow:0px_5px_10px_rgba(0,0,0,0.1),0px_19px_19px_rgba(0,0,0,0.09),0px_42px_25px_rgba(0,0,0,0.05)]">
-      Tipo {tipo}
+      {tituloMostrado}
     </h2>
 
     <!-- "X mts²" with leading arrow (text is set by TipologiaModal at open time) -->

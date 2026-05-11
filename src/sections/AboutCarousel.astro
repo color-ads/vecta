@@ -43,7 +43,11 @@ const ws = await getWebsite();
 // bold node before rendering. Bold marks are preserved either way.
 const slide1Title = firstHeading(ws?.fields?.bloque3seccion1texto, 'heading-2');
 const slide1Doc = splitParagraphAtFirstBold(ws?.fields?.bloque3seccion1texto);
-const slide1BodyHtml = richTextHtmlWithoutFirstHeading(slide1Doc, 'heading-2');
+// Pegamos "forma aleatoria" con un espacio no-rompible (U+00A0) para que
+// el navegador siempre los renderice juntos en la misma línea aunque el
+// resto del párrafo se wrappee. Robusto frente a cambios de ancho/font.
+const slide1BodyHtml = richTextHtmlWithoutFirstHeading(slide1Doc, 'heading-2')
+  .replace(/forma aleatoria/g, 'forma aleatoria');
 const slide1ImgSrc = assetUrl(ws?.fields?.bloque3seccion1imagen);
 
 // Slide 3 — amenidades.
@@ -91,11 +95,14 @@ const items = extractHeadingPairs(ws?.fields?.bloque3seccion3textos, 'heading-3'
 
     <!-- Inner 1280px canvas keeps Figma absolute positions intact for text -->
     <div class="relative w-[1280px] h-[812px] mx-auto">
-      <h2 class="absolute left-[74px] top-[245px] w-[639px] text-vecta-dark font-semibold text-[60px] leading-[0.959] font-display">{slide1Title}</h2>
-      <div class="absolute left-[80px] top-[207px] w-[495px] h-px bg-vecta-dark"></div>
-      <div class="absolute left-[74px] top-[673px] w-[495px] h-px bg-vecta-dark"></div>
-      <div class="absolute left-[74px] top-[691px] w-[292px] h-px bg-vecta-dark"></div>
-      <div class="absolute left-[74px] top-[392px] w-[475px] text-vecta-dark text-[32px] leading-[0.959] space-y-[1em] font-display" set:html={slide1BodyHtml}></div>
+      <h2 class="absolute left-[74px] top-[42px] w-[639px] text-vecta-dark font-semibold text-[84px] leading-[0.95853] font-display
+                 narrow:text-[120px]
+                 pc-small:!text-[60px]">{slide1Title}</h2>
+      <div class="absolute left-[80px] top-[126px] w-[495px] h-px bg-vecta-dark"></div>
+      <div class="absolute left-[74px] top-[189px] w-[475px] text-vecta-dark font-normal text-[24px] leading-[0.95853] space-y-[1em] font-display
+                  narrow:text-[38px] narrow:w-[560px]
+                  [&>p:first-child]:text-[60px] [&>p:first-child]:font-semibold
+                  narrow:[&>p:first-child]:text-[90px]" set:html={slide1BodyHtml}></div>
     </div>
   </div>
 

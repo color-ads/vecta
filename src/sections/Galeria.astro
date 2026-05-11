@@ -1,13 +1,17 @@
 ---
-// Galería - 3 image grid (1 large left + 2 stacked right).
-// Images come from Contentful `webSite.bloque6imagenes` — an Array of 3
-// asset links, in document order.
+// Galería - 3 image grid (1 large left + 2 stacked right) + visor lightbox.
+// Las imágenes vienen de Contentful `webSite.bloque6imagenes` (array completo,
+// hoy 15 items). El grid muestra los 3 primeros como "preview"; al hacer click
+// sobre cualquiera abre un visor fullscreen que recorre TODAS las imágenes con
+// flechas prev/next, contador, teclado (←/→/Esc) y click en el backdrop.
 import { getWebsite } from '../lib/contentful';
 import { assetUrl } from '../lib/richtext';
 
 const ws = await getWebsite();
 const imgs = (ws?.fields?.bloque6imagenes ?? []) as Array<unknown>;
-const [g1 = '', g2 = '', g3 = ''] = imgs.map((a) => assetUrl(a));
+const sources = imgs.map((a) => assetUrl(a)).filter(Boolean) as string[];
+const [g1 = '', g2 = '', g3 = ''] = sources;
+const totalImages = sources.length;
 ---
 <section class="relative w-full min-w-[1280px] min-h-screen overflow-hidden bg-vecta-bg">
   <!-- Images bleed to viewport edges. Seam between left and right columns
@@ -15,17 +19,194 @@ const [g1 = '', g2 = '', g3 = ''] = imgs.map((a) => assetUrl(a));
        Right column split keeps original Figma ratio: 363/829 ≈ 43.78%. -->
 
   <!-- Large left image: viewport left edge → 9px before viewport center -->
-  <div class="absolute left-0 inset-y-0 overflow-hidden w-[calc(50vw-9px)] min-w-[631px]">
-    <img src={g1} alt="Vista exterior VECTA 98" class="w-full h-full object-cover" loading="lazy" decoding="async" />
+  <div data-gal-trigger data-gal-index="0" role="button" tabindex="0"
+       aria-label="Abrir galería en imagen 1"
+       class="group absolute left-0 inset-y-0 overflow-hidden w-[calc(50vw-9px)] min-w-[631px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-vecta-lime focus:ring-inset">
+    <img src={g1} alt="Vista exterior VECTA 98"
+         class="w-full h-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.015]"
+         loading="lazy" decoding="async" />
   </div>
 
   <!-- Top right image: 9px before viewport center → viewport right edge -->
-  <div class="absolute top-0 right-0 overflow-hidden left-[calc(50vw-9px)] h-[43.78%] min-w-[649px]">
-    <img src={g2} alt="Detalle arquitectónico" class="w-full h-full object-cover" loading="lazy" decoding="async" />
+  <div data-gal-trigger data-gal-index="1" role="button" tabindex="0"
+       aria-label="Abrir galería en imagen 2"
+       class="group absolute top-0 right-0 overflow-hidden left-[calc(50vw-9px)] h-[43.78%] min-w-[649px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-vecta-lime focus:ring-inset">
+    <img src={g2} alt="Detalle arquitectónico"
+         class="w-full h-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.015]"
+         loading="lazy" decoding="async" />
   </div>
 
   <!-- Bottom right image -->
-  <div class="absolute bottom-0 right-0 overflow-hidden left-[calc(50vw-9px)] top-[43.78%] min-w-[649px]">
-    <img src={g3} alt="Espacio interior" class="w-full h-full object-cover" loading="lazy" decoding="async" />
+  <div data-gal-trigger data-gal-index="2" role="button" tabindex="0"
+       aria-label="Abrir galería en imagen 3"
+       class="group absolute bottom-0 right-0 overflow-hidden left-[calc(50vw-9px)] top-[43.78%] min-w-[649px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-vecta-lime focus:ring-inset">
+    <img src={g3} alt="Espacio interior"
+         class="w-full h-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.015]"
+         loading="lazy" decoding="async" />
   </div>
+
+  <!-- "Ver todas" CTA — anclado abajo-izquierda sobre la imagen grande.
+       Hace explícito que la galería tiene N imágenes adicionales y al click
+       abre el visor en la primera. Sigue la paleta lime/dark del proyecto. -->
+  {totalImages > 3 && (
+    <button type="button" data-gal-trigger data-gal-index="0"
+            class="absolute bottom-[40px] left-[40px] z-20 inline-flex items-center gap-[10px] rounded-[10px] bg-vecta-dark text-white px-[22px] py-[14px] font-display font-semibold text-[18px] cursor-pointer hover:bg-vecta-night transition-colors
+                   narrow:bottom-[60px] narrow:left-[60px] narrow:text-[32px] narrow:px-[36px] narrow:py-[22px] narrow:gap-[16px]">
+      <svg viewBox="0 0 24 24" class="w-[20px] h-[20px] narrow:w-[32px] narrow:h-[32px]" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="3" width="7" height="7" rx="1"/>
+        <rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/>
+        <rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      Ver todas ({totalImages})
+    </button>
+  )}
+
+  <!-- ============================================================
+       Lightbox / visor fullscreen. Cubre la viewport entera con un
+       backdrop oscuro vecta-night y muestra la imagen activa con
+       object-contain. Controles: prev/next, close, contador.
+       ============================================================ -->
+  <div id="galeria-lightbox" data-open="false"
+       role="dialog" aria-modal="true" aria-label="Galería de imágenes VECTA 98"
+       hidden
+       class="fixed inset-0 z-[300] hidden data-[open=true]:flex items-center justify-center bg-vecta-night/95 backdrop-blur-sm">
+
+    <!-- Imagen activa: object-contain para no recortar. -->
+    <img data-gal-image src="" alt=""
+         class="max-w-[calc(100vw-200px)] max-h-[calc(100vh-160px)] object-contain rounded-[6px] shadow-[0_20px_60px_rgba(0,0,0,0.5)]
+                narrow:max-w-[calc(100vw-60px)] narrow:max-h-[calc(100vh-220px)]" />
+
+    <!-- Cerrar -->
+    <button type="button" data-gal-close aria-label="Cerrar galería"
+            class="absolute top-[24px] right-[24px] w-[48px] h-[48px] rounded-full border-2 border-vecta-lime text-vecta-lime flex items-center justify-center cursor-pointer hover:bg-vecta-lime hover:text-vecta-dark transition-colors
+                   narrow:top-[40px] narrow:right-[40px] narrow:w-[80px] narrow:h-[80px]">
+      <svg viewBox="0 0 24 24" class="w-[18px] h-[18px] narrow:w-[30px] narrow:h-[30px]" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" d="M6 6l12 12M18 6l-12 12"/>
+      </svg>
+    </button>
+
+    <!-- Prev -->
+    <button type="button" data-gal-prev aria-label="Imagen anterior"
+            class="absolute left-[24px] top-1/2 -translate-y-1/2 w-[56px] h-[56px] rounded-full border-2 border-vecta-lime text-vecta-lime flex items-center justify-center cursor-pointer hover:bg-vecta-lime hover:text-vecta-dark transition-colors
+                   narrow:left-[40px] narrow:w-[88px] narrow:h-[88px]">
+      <svg viewBox="0 0 24 24" class="w-[22px] h-[22px] narrow:w-[36px] narrow:h-[36px]" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 6l-7 6 7 6"/>
+      </svg>
+    </button>
+
+    <!-- Next -->
+    <button type="button" data-gal-next aria-label="Imagen siguiente"
+            class="absolute right-[24px] top-1/2 -translate-y-1/2 w-[56px] h-[56px] rounded-full border-2 border-vecta-lime text-vecta-lime flex items-center justify-center cursor-pointer hover:bg-vecta-lime hover:text-vecta-dark transition-colors
+                   narrow:right-[40px] narrow:w-[88px] narrow:h-[88px]">
+      <svg viewBox="0 0 24 24" class="w-[22px] h-[22px] narrow:w-[36px] narrow:h-[36px]" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 6l7 6-7 6"/>
+      </svg>
+    </button>
+
+    <!-- Contador "N / Total" -->
+    <p data-gal-counter
+       class="absolute bottom-[28px] left-1/2 -translate-x-1/2 text-vecta-lime font-display font-semibold text-[16px] tracking-[0.12em]
+              narrow:text-[26px] narrow:bottom-[44px]">1 / {totalImages}</p>
+  </div>
+
+  <!-- Data island: las URLs de todas las imágenes serializadas para el
+       script. Astro inyecta el JSON al render; el script lo lee al cargar. -->
+  <script id="gallery-sources-data" type="application/json" set:html={JSON.stringify(sources)}></script>
 </section>
+
+<script>
+  const overlay = document.getElementById('galeria-lightbox') as HTMLDivElement | null;
+  const imgEl = document.querySelector<HTMLImageElement>('[data-gal-image]');
+  const counter = document.querySelector<HTMLElement>('[data-gal-counter]');
+  const dataNode = document.getElementById('gallery-sources-data');
+  const sources: string[] = dataNode ? JSON.parse(dataNode.textContent || '[]') : [];
+  const triggers = document.querySelectorAll<HTMLElement>('[data-gal-trigger]');
+  const prevBtn = document.querySelector<HTMLElement>('[data-gal-prev]');
+  const nextBtn = document.querySelector<HTMLElement>('[data-gal-next]');
+  const closeBtn = document.querySelector<HTMLElement>('[data-gal-close]');
+
+  let idx = 0;
+  let prevFocus: HTMLElement | null = null;
+
+  function paint() {
+    if (!imgEl || !counter) return;
+    imgEl.src = sources[idx] ?? '';
+    imgEl.alt = `Galería VECTA 98 — imagen ${idx + 1} de ${sources.length}`;
+    counter.textContent = `${idx + 1} / ${sources.length}`;
+  }
+
+  function open(at: number) {
+    if (!overlay || sources.length === 0) return;
+    idx = Math.max(0, Math.min(sources.length - 1, at));
+    paint();
+    prevFocus = document.activeElement as HTMLElement | null;
+    overlay.removeAttribute('hidden');
+    overlay.setAttribute('data-open', 'true');
+    document.body.style.overflow = 'hidden';
+    closeBtn?.focus();
+  }
+
+  function close() {
+    if (!overlay) return;
+    overlay.setAttribute('hidden', '');
+    overlay.setAttribute('data-open', 'false');
+    document.body.style.overflow = '';
+    prevFocus?.focus?.();
+  }
+
+  function step(delta: number) {
+    if (sources.length === 0) return;
+    idx = (idx + delta + sources.length) % sources.length;
+    paint();
+  }
+
+  triggers.forEach((t) => {
+    t.addEventListener('click', (e) => {
+      e.preventDefault();
+      const at = Number((t as HTMLElement).dataset.galIndex ?? '0');
+      open(at);
+    });
+    // Soporte teclado en los <div role="button">: Enter/Space activan.
+    t.addEventListener('keydown', (e) => {
+      const ke = e as KeyboardEvent;
+      if (ke.key === 'Enter' || ke.key === ' ') {
+        ke.preventDefault();
+        const at = Number((t as HTMLElement).dataset.galIndex ?? '0');
+        open(at);
+      }
+    });
+  });
+  prevBtn?.addEventListener('click', () => step(-1));
+  nextBtn?.addEventListener('click', () => step(1));
+  closeBtn?.addEventListener('click', close);
+
+  // Click en el backdrop (no en la imagen ni en los controles) → cerrar.
+  overlay?.addEventListener('click', (e) => {
+    if (e.target === overlay) close();
+  });
+
+  // Teclado global mientras el visor está abierto.
+  document.addEventListener('keydown', (e) => {
+    if (overlay?.getAttribute('data-open') !== 'true') return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft') step(-1);
+    if (e.key === 'ArrowRight') step(1);
+  });
+
+  // Swipe nav en táctil — útil en tablet/phone con el visor abierto.
+  let touchStartX = 0;
+  const SWIPE_THRESHOLD = 50;
+  overlay?.addEventListener('touchstart', (e) => {
+    if (overlay.getAttribute('data-open') !== 'true') return;
+    const t = (e as TouchEvent).touches[0];
+    if (t) touchStartX = t.clientX;
+  }, { passive: true });
+  overlay?.addEventListener('touchend', (e) => {
+    if (overlay.getAttribute('data-open') !== 'true') return;
+    const t = (e as TouchEvent).changedTouches[0];
+    if (!t) return;
+    const dx = t.clientX - touchStartX;
+    if (Math.abs(dx) > SWIPE_THRESHOLD) step(dx < 0 ? 1 : -1);
+  }, { passive: true });
+</script>

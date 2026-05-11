@@ -35,6 +35,11 @@ const tipologias = tipoRes.items.map((it: any) => {
   const mts = areaTotal.replace(/\s*mts²?\s*$/i, '').trim();
   return {
     tipo: String(f.numero ?? ''),
+    // Campo `nombre` en Contentful — valores "Tipo A", "Tipo A1", "Tipo B",
+    // etc. Es el título mostrado en el modal y carrusel; reemplaza el viejo
+    // "Tipo {numero}" hardcoded. Si Contentful no devolvió nombre caemos al
+    // formato anterior para no romper la UI.
+    nombre: String(f.nombre ?? `Tipo ${f.numero ?? ''}`).trim(),
     mts,
     areaTotal,
     camas: richTextToPlain(f.camas).trim(),
@@ -56,21 +61,18 @@ const t4 = byTipo['4'] ?? tipologias[3];
 const t5 = byTipo['5'] ?? tipologias[4];
 ---
 <section id="tipologias" class="relative w-full min-w-[1280px] h-[2085px] overflow-hidden bg-black mobile:h-auto">
-  <!-- Inner 1280px canvas keeps Figma absolute positions intact (desktop only).
-       La imagen del edificio + overlay viven DENTRO de este canvas (no full-bleed
-       a `w-full`) para que la imagen siempre comparta sistema de coordenadas con
-       los 5 polígonos clickables. A >1280px la sección crece (fondo negro a los
-       lados), pero la imagen y los polígonos quedan anclados al mismo canvas
-       centrado de 1280px y nunca se desalinean. -->
+  <!-- Background image bleeds full-width across the viewport (desktop only) -->
+  <img
+    src={bgSrc}
+    alt="Edificio VECTA 98 con tipologías"
+    class="absolute inset-0 w-full h-full object-cover mobile:hidden"
+    loading="lazy"
+    decoding="async"
+  />
+  <div class="absolute inset-0 bg-black/30 mobile:hidden"></div>
+
+  <!-- Inner 1280px canvas keeps Figma absolute positions intact (desktop only) -->
   <div class="relative w-[1280px] h-full mx-auto mobile:hidden">
-    <img
-      src={bgSrc}
-      alt="Edificio VECTA 98 con tipologías"
-      class="absolute inset-0 w-full h-full object-cover"
-      loading="lazy"
-      decoding="async"
-    />
-    <div class="absolute inset-0 bg-black/30"></div>
     <!-- Big title -->
     <h2 class="absolute right-[120px] top-[101px] text-white font-medium text-[128px] leading-[0.959] font-display">
       Tipologias
@@ -177,6 +179,7 @@ const t5 = byTipo['5'] ?? tipologias[4];
         <div class="w-[1280px] flex-shrink-0">
           <TipologiaAbierta2
             tipo={t.tipo}
+            nombre={t.nombre}
             mts={t.mts}
             camas={t.camas}
             salaComedor={t.salaComedor}
