@@ -178,6 +178,15 @@
   </div>
 
   <script>
+    // HubSpot Forms API — portal + form configured from the embed snippet
+    // (portalId 19575552, formId 8db66949-101b-4205-8602-84d360d28bab,
+    // region na1). We send a JSON submission to the v3 integration endpoint
+    // and keep the custom Figma-derived UI instead of HubSpot's iframe.
+    const HUBSPOT_PORTAL_ID = '19575552';
+    const HUBSPOT_FORM_ID   = '8db66949-101b-4205-8602-84d360d28bab';
+    const HUBSPOT_ENDPOINT  =
+      `https://api.hsforms.com/submissions/v3/integration/submit/${HUBSPOT_PORTAL_ID}/${HUBSPOT_FORM_ID}`;
+
     const form = document.getElementById('contactForm') as HTMLFormElement | null;
     const status = document.querySelector<HTMLParagraphElement>('[data-form-status]');
 
@@ -204,6 +213,31 @@
       return null;
     }
 
+    // Map the local field names → HubSpot contact property internal names.
+    // Standard properties (firstname/lastname/phone/email/message) ship with
+    // every HubSpot account. The custom ones (proposito / contacto_telefonico
+    // / origen_contacto) must exist on the form in HubSpot with these exact
+    // internal names, otherwise HubSpot rejects them as "Unknown field".
+    function buildHubspotFields(data: Record<string, FormDataEntryValue>) {
+      const map: Record<string, string> = {
+        nombre: 'firstname',
+        apellido: 'lastname',
+        celular: 'phone',
+        correo: 'email',
+        comentario: 'message',
+        proposito: 'proposito',
+        contactoTelefonico: 'contacto_telefonico',
+        origenContacto: 'origen_contacto',
+      };
+      return Object.entries(map)
+        .map(([local, hsName]) => ({
+          objectTypeId: '0-1',
+          name: hsName,
+          value: String(data[local] ?? '').trim(),
+        }))
+        .filter((f) => f.value.length > 0);
+    }
+
     form?.addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!form) return;
@@ -217,14 +251,58 @@
       const data = Object.fromEntries(new FormData(form).entries());
       setStatus('Enviando…', '');
 
+      const consentText =
+        'Autorizo a recibir información del proyecto a mi correo electrónico y autorizo el uso de mis datos según la política de tratamiento de datos personales.';
+
+      const payload = {
+        submittedAt: Date.now(),
+        fields: buildHubspotFields(data),
+        context: {
+          pageUri: window.location.href,
+          pageName: document.title,
+        },
+        legalConsentOptions: {
+          consent: {
+            consentToProcess: true,
+            text: consentText,
+            communications: [
+              {
+                value: true,
+                subscriptionTypeId: 999,
+                text: consentText,
+              },
+            ],
+          },
+        },
+      };
+
       try {
-        // Plug the real endpoint here (e.g. fetch('/api/contact', {...})).
-        // Until then, simulate success so the UX is testable.
-        await new Promise((r) => setTimeout(r, 400));
-        console.log('Formulario válido — payload:', data);
+        const res = await fetch(HUBSPOT_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        if (!res.ok) {
+          let detail = '';
+          try {
+            const body = await res.json();
+            detail = body?.message || JSON.stringify(body);
+          } catch {}
+          console.error('HubSpot rechazó el envío:', res.status, detail);
+          setStatus(
+            'No pudimos enviar el formulario. Intenta de nuevo.',
+            'error',
+          );
+          return;
+        }
+
         setStatus('¡Gracias! Recibimos tu información.', 'success');
         form.reset();
-      } catch {
+        // Redirigir a la página de gracias para la confirmación final.
+        window.location.href = '/gracias';
+      } catch (err) {
+        console.error('Error de red al enviar a HubSpot:', err);
         setStatus('No pudimos enviar el formulario. Intenta de nuevo.', 'error');
       }
     });

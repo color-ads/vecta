@@ -1,0 +1,67 @@
+---
+// Página de gracias — confirmación post-submit del formulario de contacto.
+// Sigue las mismas convenciones de marca que el resto del sitio:
+//   - Canvas 1280px con posicionamiento absoluto (estilo Figma)
+//   - Override `narrow:` para móvil/tablet (≤768)
+//   - Paleta: vecta-night + vecta-lime, tipografía Albert Sans
+//   - Header global con el mismo wrapper #site-nav que en index.astro
+//
+// Se renderiza al navegar a /gracias después de que el POST a la API de
+// HubSpot devuelve 200 (ver Formulario.astro).
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+---
+
+<Layout title="VECTA 98 — Gracias">
+  <header id="site-nav" data-nav-theme="light"
+          class="fixed top-0 left-0 right-0 z-[120] h-[130px] pointer-events-none">
+    <div class="relative w-[1280px] h-full mx-auto pointer-events-auto">
+      <Header variant="light" />
+    </div>
+  </header>
+
+  <main class="bg-vecta-night text-white">
+    <section class="relative w-full min-w-[1280px] min-h-screen overflow-hidden flex items-center justify-center
+                    narrow:block narrow:min-h-[1400px]">
+      <div class="relative w-[1280px] h-[832px] mx-auto narrow:h-[1400px]">
+
+        <!-- Sutil halo lime detrás del logo para reforzar el acento de marca -->
+        <div aria-hidden="true"
+             class="absolute left-1/2 top-[260px] -translate-x-1/2 w-[520px] h-[520px] rounded-full bg-vecta-lime/15 blur-[120px] pointer-events-none
+                    narrow:top-[400px] narrow:w-[760px] narrow:h-[760px]"></div>
+
+        <!-- VECTA wordmark, centrado. Wrapper con proporción exacta (580.836:133
+             ≈ 4.37:1) porque el SVG usa preserveAspectRatio="none" y sin un
+             contenedor de tamaño fijo + object-contain se estira. -->
+        <div class="absolute left-1/2 -translate-x-1/2 top-[240px] w-[420px] h-[96px]
+                    narrow:top-[360px] narrow:w-[640px] narrow:h-[147px]">
+          <img src="/sections/hero/vecta-logo.svg" alt="VECTA 98"
+               class="w-full h-full object-contain" decoding="async" />
+        </div>
+
+        <!-- ¡Gracias! titular -->
+        <h1 class="absolute left-0 right-0 top-[360px] text-center text-vecta-lime font-semibold font-display text-[52px] leading-[1] tracking-[-0.01em]
+                   narrow:top-[560px] narrow:text-[96px]">
+          ¡Gracias!
+        </h1>
+
+        <!-- Línea divisoria lime, eco del estilo del header -->
+        <div class="absolute left-1/2 -translate-x-1/2 top-[440px] w-[100px] h-px bg-vecta-lime
+                    narrow:top-[700px] narrow:w-[180px]"></div>
+
+        <!-- Subtítulo -->
+        <p class="absolute left-1/2 -translate-x-1/2 top-[470px] w-[680px] text-center text-white/85 font-display text-[20px] leading-[1.35]
+                  narrow:top-[740px] narrow:w-[1000px] narrow:text-[34px]">
+          Recibimos tu información correctamente.
+        </p>
+
+        <!-- Botón Volver al inicio -->
+        <a href="/"
+           class="absolute left-1/2 -translate-x-1/2 top-[580px] w-[260px] h-[56px] rounded-[10px] bg-vecta-lime text-vecta-dark text-[20px] font-semibold flex items-center justify-center hover:bg-vecta-lime/90 transition-colors font-display
+                  narrow:top-[940px] narrow:w-[400px] narrow:h-[95px] narrow:text-[34px]">
+          VOLVER AL INICIO
+        </a>
+      </div>
+    </section>
+  </main>
+</Layout>

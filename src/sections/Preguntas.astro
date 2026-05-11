@@ -3,14 +3,48 @@
 //   Open : 1) items below shift down (300ms) → 2) answer + line fade in (200ms)
 //   Close: 1) answer + line fade out (200ms) → 2) items shift back up (300ms)
 // Only one item open at a time.
-const items = [
+//
+// Contenido: viene del content type `preguntas` de Contentful. Cada entry
+// tiene los campos `pregunta` y `respuesta` (string plano o rich text).
+// El layout reserva 5 slots verticales fijos, así que limitamos la query a
+// 5; si Contentful devuelve menos, se renderiza la cantidad disponible.
+import { getContentfulClient } from '../lib/contentful';
+import { richTextToPlain } from '../lib/richtext';
+
+const client = getContentfulClient();
+const preguntasRes = await client.getEntries({
+  content_type: 'preguntas',
+  order: ['sys.createdAt'],
+  limit: 5,
+});
+
+function coercePlain(value: any): string {
+  if (typeof value === 'string') return value.trim();
+  if (value && typeof value === 'object') return richTextToPlain(value).trim();
+  return '';
+}
+
+const cmsItems = preguntasRes.items
+  .map((it: any) => ({
+    q: coercePlain(it.fields?.pregunta),
+    a: coercePlain(it.fields?.respuesta),
+  }))
+  .filter((it) => it.q.length > 0);
+
+// Fallback estático sólo si Contentful no devolvió ninguna pregunta —
+// evita renderizar la sección vacía.
+const fallback = [
   { q: "¿Cuál es el precio del proyecto?", a: "Cercanía a zonas corporativas, vías principales y servicios clave." },
   { q: "¿Qué áreas tienen?",               a: "Cinco tipologías disponibles, desde 18 m² hasta 40 m² según la configuración." },
   { q: "¿Dónde está ubicado?",             a: "Carrera 15 con calle 98, Bogotá — una zona con flujo constante y conectividad real." },
   { q: "¿Qué incluye el proyecto?",        a: "Apartamentos terminados con amenidades funcionales: gimnasio, coworking, lounge, restaurante y lobby." },
   { q: "¿Cómo es el proceso de compra?",   a: "Reserva con un asesor, cuota inicial del 10% y financiación con tu banco aliado." },
 ];
-const CLOSED_TOPS = [313, 386, 459, 532, 605];
+
+const items = cmsItems.length > 0 ? cmsItems : fallback;
+// Espaciado fijo de 73px entre rows (mismo que la versión hardcoded original);
+// el script reemplaza estos valores en mobile.
+const CLOSED_TOPS = items.map((_, i) => 313 + i * 73);
 ---
 <section class="relative w-full min-w-[1280px] min-h-screen overflow-hidden bg-vecta-night mobile:block mobile:h-[90vh] mobile:min-h-[90vh]">
   <div class="relative w-[1280px] h-[832px] mx-auto mobile:h-[90vh]">
@@ -72,12 +106,14 @@ const CLOSED_TOPS = [313, 386, 459, 532, 605];
     ))}
 
     <!-- Answer panels — opacity 0 by default, transitions on opacity (fade) and
-         on top (follow layout shift). pointer-events: none always (decorative). -->
+         on top (follow layout shift). pointer-events: none always (decorative).
+         Offset 80px from the question top: deja margen para preguntas que
+         wrappean a 2 líneas (línea 2 termina en ~70px) sin pisar la respuesta. -->
     {items.map((item, idx) => (
       <p class="absolute text-white font-semibold leading-[1.09] pointer-events-none font-display left-[81px] w-[602px] text-[20px] tracking-[-0.22px] opacity-0 [transition:opacity_0.2s_ease,top_0.3s_ease]
                 mobile:!text-[40px] mobile:!w-[1100px]"
          data-faq-answer={idx}
-         style={`top: ${CLOSED_TOPS[idx] + 51}px;`}>
+         style={`top: ${CLOSED_TOPS[idx] + 80}px;`}>
         {item.a}
       </p>
     ))}
@@ -86,25 +122,26 @@ const CLOSED_TOPS = [313, 386, 459, 532, 605];
     {items.map((item, idx) => (
       <div class="absolute h-px bg-white pointer-events-none left-[-49px] w-[495px] opacity-0 [transition:opacity_0.2s_ease,top_0.3s_ease]"
            data-faq-line={idx}
-           style={`top: ${CLOSED_TOPS[idx] + 96}px;`}></div>
+           style={`top: ${CLOSED_TOPS[idx] + 126}px;`}></div>
     ))}
   </div>
 </section>
 
 <script>
-  const total = 5;
+  // Total real de preguntas renderizadas (≤5). Se lee del DOM para no
+  // depender de un literal hardcoded — Contentful manda la cantidad.
+  const total = document.querySelectorAll('[data-faq-caret]').length;
   // Mobile (true phone, screen ≤768) uses larger spacing because the
   // question/answer fonts are bumped up — keeps an open answer from
   // overlapping the next row. Aligned with the `mobile:` Tailwind variant
   // (html[data-device="phone"]) so JS positions match CSS layout.
   const isMobile = document.documentElement.getAttribute('data-device') === 'phone';
-  const CLOSED_TOPS = isMobile
-    ? [313, 423, 533, 643, 753]
-    : [313, 386, 459, 532, 605];
-  const OPEN_SHIFT     = isMobile ? 180 : 46;
+  const ROW_SPACING = isMobile ? 110 : 73;
+  const CLOSED_TOPS = Array.from({ length: total }, (_, i) => 313 + i * ROW_SPACING);
+  const OPEN_SHIFT     = isMobile ? 225 : 76;
   const CARET_OFFSET   = isMobile ? 8   : 2;
-  const ANSWER_OFFSET  = isMobile ? 130 : 51;
-  const LINE_OFFSET    = isMobile ? 260 : 96;
+  const ANSWER_OFFSET  = isMobile ? 175 : 80;
+  const LINE_OFFSET    = isMobile ? 305 : 126;
   const FADE_MS = 200;
   const SHIFT_MS = 300;
 

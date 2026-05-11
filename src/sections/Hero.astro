@@ -1,55 +1,75 @@
 ---
 // Hero — HOME top section (1280x832 in Figma, frame 2030:31).
 // Background is the `heroBackground` asset from Contentful (`webSite`
-// singleton, field `heroBackground` — currently a video); a gradient +
-// scanline overlay below it provides the moody fallback if the video
-// fails to load. The site nav lives globally in index.astro.
+// singleton, field `heroBackground`). Detectamos el contentType del asset
+// y renderizamos <video> (video/*) o <img> (image/*) en consecuencia.
+// El gradiente + overlay scanline encima sigue intacto para mantener el
+// mismo aire moody con cualquiera de los dos medios.
 import { getWebsite } from '../lib/contentful';
 import { assetUrl, richTextToPlain } from '../lib/richtext';
 
 const ws = await getWebsite();
-const heroVideoSrc = assetUrl(ws?.fields?.heroBackground);
+const heroAsset = ws?.fields?.heroBackground as any;
+const heroSrc = assetUrl(heroAsset);
+const heroContentType: string = heroAsset?.fields?.file?.contentType ?? '';
+// `video/mp4`, `video/webm`, etc. → video. Cualquier `image/*` → imagen.
+// Si Contentful no devolvió contentType (vacío), caemos a video por
+// retro-compatibilidad con el comportamiento previo del Hero.
+const isVideo = heroContentType.startsWith('video/') || (!heroContentType && !!heroSrc);
+const isImage = heroContentType.startsWith('image/');
 const tagline = richTextToPlain(ws?.fields?.textoPrincipal);
 ---
 <section id="hero" class="relative w-full min-h-screen overflow-hidden bg-[#0d0e0c] flex items-center justify-center">
-  <!-- Hero background video: autoplay muted loop, full-bleed. The deep neutral
-       gradient and scanline overlay below it provide a fallback if the video
-       fails to load and add the same vignette/grain feel as before. -->
-  <video
-    id="hero-video"
-    src={heroVideoSrc}
-    autoplay
-    muted
-    loop
-    playsinline
-    preload="auto"
-    disablepictureinpicture
-    disableremoteplayback
-    x-webkit-airplay="deny"
-    class="hero-video absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
-    aria-hidden="true"
-    tabindex="-1"
-  ></video>
-  <script is:inline>
-    (() => {
-      const v = document.getElementById('hero-video');
-      if (!v) return;
-      v.muted = true;
-      v.defaultMuted = true;
-      v.setAttribute('muted', '');
-      v.setAttribute('playsinline', '');
-      const tryPlay = () => {
-        const p = v.play();
-        if (p && typeof p.catch === 'function') p.catch(() => {});
-      };
-      tryPlay();
-      const events = ['loadedmetadata', 'canplay', 'visibilitychange', 'pageshow'];
-      events.forEach((e) => document.addEventListener(e, tryPlay, { passive: true }));
-      ['touchstart', 'click', 'scroll', 'keydown'].forEach((e) =>
-        document.addEventListener(e, tryPlay, { once: true, passive: true })
-      );
-    })();
-  </script>
+  {isVideo && (
+    <video
+      id="hero-video"
+      src={heroSrc}
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="auto"
+      disablepictureinpicture
+      disableremoteplayback
+      x-webkit-airplay="deny"
+      class="hero-video absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
+      aria-hidden="true"
+      tabindex="-1"
+    ></video>
+  )}
+  {isImage && (
+    <img
+      id="hero-image"
+      src={heroSrc}
+      alt=""
+      decoding="async"
+      fetchpriority="high"
+      class="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
+      aria-hidden="true"
+    />
+  )}
+  {isVideo && (
+    <script is:inline>
+      (() => {
+        const v = document.getElementById('hero-video');
+        if (!v) return;
+        v.muted = true;
+        v.defaultMuted = true;
+        v.setAttribute('muted', '');
+        v.setAttribute('playsinline', '');
+        const tryPlay = () => {
+          const p = v.play();
+          if (p && typeof p.catch === 'function') p.catch(() => {});
+        };
+        tryPlay();
+        const events = ['loadedmetadata', 'canplay', 'visibilitychange', 'pageshow'];
+        events.forEach((e) => document.addEventListener(e, tryPlay, { passive: true }));
+        ['touchstart', 'click', 'scroll', 'keydown'].forEach((e) =>
+          document.addEventListener(e, tryPlay, { once: true, passive: true })
+        );
+      })();
+    </script>
+  )}
   <!-- Gradient + scanline overlay sits on top of the video for the original
        moody look (kept subtle so the video stays readable). -->
   <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 pointer-events-none"></div>

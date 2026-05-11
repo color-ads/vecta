@@ -56,18 +56,21 @@ const t4 = byTipo['4'] ?? tipologias[3];
 const t5 = byTipo['5'] ?? tipologias[4];
 ---
 <section id="tipologias" class="relative w-full min-w-[1280px] h-[2085px] overflow-hidden bg-black mobile:h-auto">
-  <!-- Background image bleeds full-width across the viewport (desktop only) -->
-  <img
-    src={bgSrc}
-    alt="Edificio VECTA 98 con tipologías"
-    class="absolute inset-0 w-full h-full object-cover mobile:hidden"
-    loading="lazy"
-    decoding="async"
-  />
-  <div class="absolute inset-0 bg-black/30 mobile:hidden"></div>
-
-  <!-- Inner 1280px canvas keeps Figma absolute positions intact (desktop only) -->
+  <!-- Inner 1280px canvas keeps Figma absolute positions intact (desktop only).
+       La imagen del edificio + overlay viven DENTRO de este canvas (no full-bleed
+       a `w-full`) para que la imagen siempre comparta sistema de coordenadas con
+       los 5 polígonos clickables. A >1280px la sección crece (fondo negro a los
+       lados), pero la imagen y los polígonos quedan anclados al mismo canvas
+       centrado de 1280px y nunca se desalinean. -->
   <div class="relative w-[1280px] h-full mx-auto mobile:hidden">
+    <img
+      src={bgSrc}
+      alt="Edificio VECTA 98 con tipologías"
+      class="absolute inset-0 w-full h-full object-cover"
+      loading="lazy"
+      decoding="async"
+    />
+    <div class="absolute inset-0 bg-black/30"></div>
     <!-- Big title -->
     <h2 class="absolute right-[120px] top-[101px] text-white font-medium text-[128px] leading-[0.959] font-display">
       Tipologias

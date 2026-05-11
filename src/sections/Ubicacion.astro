@@ -35,11 +35,25 @@ const description2 = description2Raw
   .split("\u2028").join("<br/>")
   .replace('futura. ', 'futura.<br/>');
 
-// Fallback to the original address if the Contentful field is empty.
-const directionPlain = richTextToPlain(ws?.fields?.bloque5googleMapsDireccion).trim();
-const ADDRESS = directionPlain
-  ? encodeURIComponent(directionPlain)
-  : 'Carrera+15+%23+98,+Bogot%C3%A1,+Colombia';
+// `bloque5googleMapsDireccion` puede venir como:
+//   - Rich text con coordenadas dentro (p.ej. "4.6832, -74.0486")
+//   - String plano (mismo contenido)
+//   - Dirección textual ("Carrera 15 # 98, Bogotá")
+// Resolver a string sin importar el tipo de campo, y si parece coordenadas
+// (LAT,LNG con espacio opcional) las normalizamos a "LAT,LNG" sin espacio
+// para que Google Maps embed las interprete como punto, no como búsqueda.
+const directionRaw = ws?.fields?.bloque5googleMapsDireccion;
+const directionPlain = (typeof directionRaw === 'string'
+  ? directionRaw
+  : richTextToPlain(directionRaw)
+).trim();
+
+const COORD_RE = /^\s*(-?\d{1,3}(?:\.\d+)?)\s*,\s*(-?\d{1,3}(?:\.\d+)?)\s*$/;
+const coordMatch = directionPlain.match(COORD_RE);
+const mapQuery = coordMatch
+  ? `${coordMatch[1]},${coordMatch[2]}`            // "lat,lng" normalizado
+  : directionPlain || 'Carrera 15 # 98, Bogotá, Colombia';
+const ADDRESS = encodeURIComponent(mapQuery);
 const initialMapSrc = `https://www.google.com/maps?q=${ADDRESS}&z=16&hl=es&output=embed`;
 ---
 <section class="relative w-full min-w-[1280px] min-h-screen overflow-hidden bg-vecta-night flex items-center justify-center
