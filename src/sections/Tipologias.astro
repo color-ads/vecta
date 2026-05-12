@@ -27,7 +27,11 @@ const tipoRes = await client.getEntries({
   order: ['fields.numero'],
 });
 
-const tipologias = tipoRes.items.map((it: any) => {
+// Las tipologías con numero=0 se omiten por completo (ni callouts/polígonos
+// del desktop ni slides del carrusel móvil ni data island del modal).
+const tipologias = tipoRes.items
+  .filter((it: any) => Number(it.fields?.numero) !== 0)
+  .map((it: any) => {
   const f = it.fields;
   const areaTotal = richTextToPlain(f.areaTotal).trim();
   // Strip the unit so callouts can render the numeric value alongside
@@ -45,20 +49,31 @@ const tipologias = tipoRes.items.map((it: any) => {
     camas: richTextToPlain(f.camas).trim(),
     salaComedor: richTextToPlain(f.salaComedor).trim(),
     baos: richTextToPlain(f.baos).trim(),
+    // Campo `piso` en Contentful — añadir como rich text o short text con el
+    // piso de ubicación del apartamento (p.ej. "5", "5-15"). Si no existe en
+    // el modelo aún, queda vacío y la fila se renderiza sin valor hasta que
+    // crees el campo y publiques los entries.
+    piso: typeof f.piso === 'string' ? f.piso.trim() : richTextToPlain(f.piso).trim(),
     descripcion: richTextToPlain(f.descripcion).trim(),
     imagen: assetUrl(f.imagen, '/sections/tipologia-abierta/floor-plan.webp'),
   };
 });
 
-// Lookup by number so the absolutely-positioned callouts/polygons (which
-// have fixed positions tied to specific tipo numbers in the building
-// render) can pull their per-tipo copy.
+// El `numero` de Contentful es el id de slot fijo (cada N corresponde a un
+// apartamento específico del render del edificio), no un índice secuencial.
+// numero=1 → top-left, 2 → top-right, 3 → bottom-left, 4 → mid-right,
+// 5 → bottom-right, 6 → callout extra al pie (sin polígono).
 const byTipo = Object.fromEntries(tipologias.map((t) => [t.tipo, t])) as Record<string, typeof tipologias[number]>;
-const t1 = byTipo['1'] ?? tipologias[0];
-const t2 = byTipo['2'] ?? tipologias[1];
-const t3 = byTipo['3'] ?? tipologias[2];
-const t4 = byTipo['4'] ?? tipologias[3];
-const t5 = byTipo['5'] ?? tipologias[4];
+const EMPTY_TIPO: typeof tipologias[number] = {
+  tipo: '', nombre: '', mts: '', areaTotal: '', camas: '', salaComedor: '',
+  baos: '', piso: '', descripcion: '', imagen: '',
+};
+const t1 = byTipo['1'] ?? EMPTY_TIPO;
+const t2 = byTipo['2'] ?? EMPTY_TIPO;
+const t3 = byTipo['3'] ?? EMPTY_TIPO;
+const t4 = byTipo['4'] ?? EMPTY_TIPO;
+const t5 = byTipo['5'] ?? EMPTY_TIPO;
+const t6 = byTipo['6'] ?? EMPTY_TIPO;
 ---
 <section id="tipologias" class="relative w-full min-w-[1280px] h-[2085px] overflow-hidden bg-black mobile:h-auto">
   <!-- Background image bleeds full-width across the viewport (desktop only) -->
@@ -86,42 +101,65 @@ const t5 = byTipo['5'] ?? tipologias[4];
     <div class="absolute left-[663px] top-[257px] w-[495px] h-px bg-white"></div>
 
     <!-- Vector 35 — Tipología 1 (Figma 2047:30) -->
+    {t1.tipo && (
     <div data-tipologia-polygon data-tipo={t1.tipo} data-mts={t1.mts} role="button" tabindex="0" aria-label={`Ver detalle de Tipología ${t1.tipo} (${t1.areaTotal})`} class="cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60 absolute left-[157px] top-[575px] w-[217px] h-[330px] mobile:hidden">
       <div class="absolute top-[-76.92%] right-[-116.59%] bottom-[-77.02%] left-[-24.42%]">
         <img src="/sections/tipologias/vector-35.svg" alt="" class="block max-w-none w-full h-full" loading="lazy" decoding="async" />
       </div>
     </div>
+    )}
 
-    <!-- Vector 36 — Tipología 2 (Figma 2050:31) -->
-    <div data-tipologia-polygon data-tipo={t2.tipo} data-mts={t2.mts} role="button" tabindex="0" aria-label={`Ver detalle de Tipología ${t2.tipo} (${t2.areaTotal})`} class="cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60 mobile:hidden absolute left-[753px] top-[788px] w-[332px] h-[350px]">
+    <!-- Vector 36 — slot 2 del edificio (top-right). Visualmente etiquetado
+         como "Tipología 2" pero los datos (data-tipo, data-mts, click→modal)
+         vienen de t3, que es el apartamento real ubicado en este polígono. -->
+    {t3.tipo && (
+    <div data-tipologia-polygon data-tipo={t3.tipo} data-mts={t3.mts} role="button" tabindex="0" aria-label={`Ver detalle de Tipología 2 (${t3.areaTotal})`} class="cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60 mobile:hidden absolute left-[753px] top-[788px] w-[332px] h-[350px]">
       <div class="absolute top-[-72.42%] right-[-76.17%] bottom-[-72.27%] left-[-76.06%]">
         <img src="/sections/tipologias/vector-36.svg" alt="" class="block max-w-none w-full h-full" loading="lazy" decoding="async" />
       </div>
     </div>
+    )}
 
     <!-- Vector 37 — Tipología 4 (Figma 2050:32) -->
+    {t4.tipo && (
     <div data-tipologia-polygon data-tipo={t4.tipo} data-mts={t4.mts} role="button" tabindex="0" aria-label={`Ver detalle de Tipología ${t4.tipo} (${t4.areaTotal})`} class="cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60 mobile:hidden absolute left-[1130px] top-[1170px] w-[238px] h-[169px]">
       <div class="absolute top-[-149.72%] right-[-6.08%] bottom-[-149.69%] left-[-106.10%]">
         <img src="/sections/tipologias/vector-37.svg" alt="" class="block max-w-none w-full h-full" loading="lazy" decoding="async" />
       </div>
     </div>
+    )}
 
     <!-- Vector 38 — Tipología 3 (Figma 2051:33) -->
+    {t3.tipo && (
     <div data-tipologia-polygon data-tipo={t3.tipo} data-mts={t3.mts} role="button" tabindex="0" aria-label={`Ver detalle de Tipología ${t3.tipo} (${t3.areaTotal})`} class="cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60 mobile:hidden absolute left-[207px] top-[1096px] w-[359px] h-[305px]">
       <div class="absolute top-[-82.92%] right-[-70.47%] bottom-[-82.98%] left-[-27.58%]">
         <img src="/sections/tipologias/vector-38.svg" alt="" class="block max-w-none w-full h-full" loading="lazy" decoding="async" />
       </div>
     </div>
+    )}
 
     <!-- Vector 39 — Tipología 5 (Figma 2051:34) -->
+    {t5.tipo && (
     <div data-tipologia-polygon data-tipo={t5.tipo} data-mts={t5.mts} role="button" tabindex="0" aria-label={`Ver detalle de Tipología ${t5.tipo} (${t5.areaTotal})`} class="cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60 mobile:hidden absolute left-[932px] top-[1488px] w-[288px] h-[155px]">
       <div class="absolute top-[-163.00%] right-[-56.07%] bottom-[-163.46%] left-[-87.68%]">
         <img src="/sections/tipologias/vector-39.svg" alt="" class="block max-w-none w-full h-full" loading="lazy" decoding="async" />
       </div>
     </div>
+    )}
+
+    <!-- Tipología 6 — caja blanca a la derecha de t5 (no hay SVG dedicado).
+         Borde blanco 5px + glow blanco para mantener el estilo de los demás
+         polígonos. Se renderiza siempre (sin condicional) para que sea
+         visible aunque t6 todavía no esté publicado en Contentful. El click
+         abre el modal solo si t6 tiene datos; si no, no hace nada. -->
+    <div data-tipologia-polygon={t6.tipo ? '' : undefined} data-tipo={t6.tipo} data-mts={t6.mts} role="button" tabindex="0"
+         aria-label={t6.tipo ? `Ver detalle de Tipología ${t6.tipo} (${t6.areaTotal})` : 'Tipología 6 (sin datos publicados)'}
+         class:list={['mobile:hidden absolute left-[1139px] top-[1735px] w-[231px] h-[73px] border-[5px] border-white shadow-[0_0_30px_rgba(255,255,255,0.5),0_0_80px_rgba(255,255,255,0.3)]', t6.tipo && 'cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60']}>
+    </div>
 
     <!-- Typology callouts -->
     <!-- Tipología 1 - top left -->
+    {t1.tipo && (
     <div class="absolute left-[57px] top-[400px] text-white font-display">
       <p class="text-[32px] leading-[0.959] mobile:text-[44px]">Tipología {t1.tipo}</p>
       <p class="mt-[8px] text-[64px] font-medium leading-[0.959] mobile:text-[88px]">{t1.areaTotal}</p>
@@ -129,20 +167,25 @@ const t5 = byTipo['5'] ?? tipologias[4];
         <path d="M16.1421 0.585786C15.3611 -0.195262 14.0947 -0.195262 13.3137 0.585786L0.58577 13.3137C-0.195279 14.0948 -0.195279 15.3611 0.58577 16.1421C1.36682 16.9232 2.63315 16.9232 3.4142 16.1421L14.7279 4.82843L26.0416 16.1421C26.8227 16.9232 28.089 16.9232 28.87 16.1421C29.6511 15.3611 29.6511 14.0948 28.87 13.3137L16.1421 0.585786ZM14.7279 107H16.7279V2H14.7279H12.7279V107H14.7279Z" fill="white"/>
       </svg>
     </div>
+    )}
 
-    <!-- Tipología 2 - top right -->
+    <!-- Callout slot 2 - top right. Etiqueta "Tipología 2" hardcoded, pero
+         los metros corresponden a t3 (el apartamento real en este slot). -->
+    {t3.tipo && (
     <div class="absolute left-[846px] top-[601px] text-white font-display">
-      <p class="text-[32px] leading-[0.959] mobile:text-[44px]">Tipología {t2.tipo}</p>
-      <p class="mt-[8px] text-[64px] font-medium leading-[0.959] mobile:text-[88px]">{t2.areaTotal}</p>
+      <p class="text-[32px] leading-[0.959] mobile:text-[44px]">Tipología 2</p>
+      <p class="mt-[8px] text-[64px] font-medium leading-[0.959] mobile:text-[88px]">{t3.areaTotal}</p>
       <svg class="absolute left-[103px] top-[105px]" xmlns="http://www.w3.org/2000/svg" width="30" height="107" viewBox="0 0 30 107" fill="none">
         <path d="M16.1421 0.585786C15.3611 -0.195262 14.0947 -0.195262 13.3137 0.585786L0.58577 13.3137C-0.195279 14.0948 -0.195279 15.3611 0.58577 16.1421C1.36682 16.9232 2.63315 16.9232 3.4142 16.1421L14.7279 4.82843L26.0416 16.1421C26.8227 16.9232 28.089 16.9232 28.87 16.1421C29.6511 15.3611 29.6511 14.0948 28.87 13.3137L16.1421 0.585786ZM14.7279 107H16.7279V2H14.7279H12.7279V107H14.7279Z" fill="white"/>
       </svg>
     </div>
+    )}
 
     <!-- Tipología 4 - mid right. Net offset from original top:1000 is
          -5% +3% -1% = -3% / -62px → top:938. The arrow stays at its
          original canvas position (parent.top + arrow.top = 1100px), so
          its inner top is bumped from 100 → 162 to compensate. -->
+    {t4.tipo && (
     <div class="absolute left-[1070px] top-[938px] text-center text-white font-display">
       <p class="text-[30px] leading-[0.959] mobile:text-[44px]">Tipología {t4.tipo}</p>
       <p class="mt-[8px] text-[60px] font-medium leading-[0.959] mobile:text-[88px]">{t4.areaTotal}</p>
@@ -150,8 +193,10 @@ const t5 = byTipo['5'] ?? tipologias[4];
         <path d="M16.1421 0.585786C15.3611 -0.195262 14.0947 -0.195262 13.3137 0.585786L0.58577 13.3137C-0.195279 14.0948 -0.195279 15.3611 0.58577 16.1421C1.36682 16.9232 2.63315 16.9232 3.4142 16.1421L14.7279 4.82843L26.0416 16.1421C26.8227 16.9232 28.089 16.9232 28.87 16.1421C29.6511 15.3611 29.6511 14.0948 28.87 13.3137L16.1421 0.585786ZM14.7279 107H16.7279V2H14.7279H12.7279V107H14.7279Z" fill="white"/>
       </svg>
     </div>
+    )}
 
     <!-- Tipología 3 - bottom left -->
+    {t3.tipo && (
     <div class="absolute left-[202px] top-[1509px] text-white font-display">
       <p class="text-[32px] leading-[0.959] mobile:text-[44px]">Tipología {t3.tipo}</p>
       <p class="mt-[8px] text-[64px] font-medium leading-[0.959] mobile:text-[88px]">{t3.areaTotal}</p>
@@ -159,15 +204,32 @@ const t5 = byTipo['5'] ?? tipologias[4];
         <path d="M13.3138 70.4142C14.0949 71.1953 15.3612 71.1953 16.1422 70.4142L28.8702 57.6863C29.6512 56.9052 29.6512 55.6389 28.8702 54.8579C28.0891 54.0768 26.8228 54.0768 26.0417 54.8579L14.728 66.1716L3.41432 54.8579C2.63327 54.0768 1.36694 54.0768 0.585892 54.8579C-0.195157 55.6389 -0.195157 56.9052 0.585892 57.6863L13.3138 70.4142ZM16.728 2V0H12.728V2H14.728H16.728ZM14.728 69H16.728V2H14.728H12.728V69H14.728Z" fill="white"/>
       </svg>
     </div>
+    )}
 
-    <!-- Tipología 5 - bottom right -->
-    <div class="absolute left-[953px] top-[1738px] text-white font-display">
+    <!-- Tipología 5 - bottom right (movido 128px / 10% del canvas a la izquierda) -->
+    {t5.tipo && (
+    <div class="absolute left-[825px] top-[1738px] text-white font-display">
       <p class="text-[32px] leading-[0.959] mobile:text-[44px]">Tipología {t5.tipo}</p>
       <p class="mt-[8px] text-[64px] font-medium leading-[0.959] mobile:text-[88px]">{t5.areaTotal}</p>
       <svg class="absolute left-[104px] top-[-75px]" xmlns="http://www.w3.org/2000/svg" width="30" height="71" viewBox="0 0 30 71" fill="none">
         <path d="M13.3138 70.4142C14.0949 71.1953 15.3612 71.1953 16.1422 70.4142L28.8702 57.6863C29.6512 56.9052 29.6512 55.6389 28.8702 54.8579C28.0891 54.0768 26.8228 54.0768 26.0417 54.8579L14.728 66.1716L3.41432 54.8579C2.63327 54.0768 1.36694 54.0768 0.585892 54.8579C-0.195157 55.6389 -0.195157 56.9052 0.585892 57.6863L13.3138 70.4142ZM16.728 2V0H12.728V2H14.728H16.728ZM14.728 69H16.728V2H14.728H12.728V69H14.728Z" fill="white"/>
       </svg>
     </div>
+    )}
+
+    <!-- Tipología 6 - debajo del polígono (caja blanca a la derecha de t5).
+         Mismo estilo que t3/t5: flecha vertical apuntando hacia arriba a la
+         caja, texto "Tipología N" + área debajo. Polígono está en
+         top:1735+h:73=bottom 1808; dejamos ~70px de aire antes de la flecha. -->
+    {t6.tipo && (
+    <div class="absolute left-[1038px] top-[1880px] text-white font-display">
+      <p class="whitespace-nowrap text-[32px] leading-[0.959] mobile:text-[44px]">Tipología {t6.tipo}</p>
+      <p class="whitespace-nowrap mt-[8px] text-[64px] font-medium leading-[0.959] mobile:text-[88px]">{t6.areaTotal}</p>
+      <svg class="absolute left-[104px] top-[-75px]" xmlns="http://www.w3.org/2000/svg" width="30" height="71" viewBox="0 0 30 71" fill="none">
+        <path d="M13.3138 70.4142C14.0949 71.1953 15.3612 71.1953 16.1422 70.4142L28.8702 57.6863C29.6512 56.9052 29.6512 55.6389 28.8702 54.8579C28.0891 54.0768 26.8228 54.0768 26.0417 54.8579L14.728 66.1716L3.41432 54.8579C2.63327 54.0768 1.36694 54.0768 0.585892 54.8579C-0.195157 55.6389 -0.195157 56.9052 0.585892 57.6863L13.3138 70.4142ZM16.728 2V0H12.728V2H14.728H16.728ZM14.728 69H16.728V2H14.728H12.728V69H14.728Z" fill="white"/>
+      </svg>
+    </div>
+    )}
   </div>
 
   <!-- Mobile-only: horizontal auto-advancing carousel. Each of the 5 slides
@@ -184,6 +246,7 @@ const t5 = byTipo['5'] ?? tipologias[4];
             camas={t.camas}
             salaComedor={t.salaComedor}
             baos={t.baos}
+            piso={t.piso}
             imagen={t.imagen}
           />
         </div>

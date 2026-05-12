@@ -58,18 +58,36 @@ const initialMapSrc = `https://www.google.com/maps?q=${ADDRESS}&z=16&hl=es&outpu
 ---
 <section class="relative w-full min-w-[1280px] min-h-screen overflow-hidden bg-vecta-night flex items-center justify-center
                 mobile:block mobile:h-[140vh] mobile:min-h-[140vh]">
-  <!-- Google Maps embed — full-bleed on desktop (lime panel covers left half);
-       on phone it occupies the bottom 50vh. The transform on click is
-       animated by the pin script below for a smooth zoom feel. -->
-  <iframe
-    src={initialMapSrc}
-    data-address={ADDRESS}
-    title="Mapa de ubicación Carrera 15 con calle 98"
-    loading="lazy"
-    referrerpolicy="no-referrer-when-downgrade"
-    class="absolute inset-0 w-full h-full border-0 origin-center will-change-[transform,opacity]
-           mobile:inset-auto mobile:top-[50vh] mobile:left-0 mobile:right-0 mobile:w-full mobile:h-[90vh]"
-  ></iframe>
+  <!-- Map + pin wrapper. El iframe se restringe a la mitad derecha (en
+       desktop) para que su centro geométrico — donde Google Maps dibuja
+       el marker rojo — caiga en el medio del área visible del mapa, no
+       detrás del card lime. Mobile: bottom 90vh igual que antes. El pin
+       lime se posiciona al 50%/50% del wrapper para superponerse al
+       marker rojo. -->
+  <div class="absolute inset-y-0 left-1/2 right-0 overflow-hidden
+              mobile:inset-auto mobile:top-[50vh] mobile:left-0 mobile:right-0 mobile:w-full mobile:h-[90vh]">
+    <iframe
+      src={initialMapSrc}
+      data-address={ADDRESS}
+      title="Mapa de ubicación Carrera 15 con calle 98"
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+      class="block w-full h-full border-0 origin-center will-change-[transform,opacity]"
+    ></iframe>
+
+    <!-- Hit-area transparente sobre el marker rojo de Google Maps. No se ve
+         (sin background ni borde), pero captura el click — necesario porque
+         el iframe es cross-origin y no podemos escuchar clicks sobre el
+         marker rojo directamente. El script de abajo arma la animación de
+         zoom suave hacia un nivel cercano al hacer click. -->
+    <button
+      id="ubicacion-map-pin"
+      type="button"
+      aria-label="Acercar mapa"
+      data-zoomed="false"
+      class="pointer-events-auto absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[50px] h-[50px] cursor-pointer bg-transparent border-0 outline-none"
+    ></button>
+  </div>
 
   <!-- Lime panel — left half on desktop; full-width strip on top on phone. -->
   <div class="absolute left-0 inset-y-0 bg-vecta-lime w-[calc(50vw-1px)] min-w-[639px]
@@ -116,21 +134,6 @@ const initialMapSrc = `https://www.google.com/maps?q=${ADDRESS}&z=16&hl=es&outpu
                 mobile:top-[38vh] mobile:left-1/2 mobile:-translate-x-1/2"></div>
   </div>
 
-  <!-- Inner 1280px canvas for elements anchored to the design canvas. -->
-  <div class="relative w-[1280px] h-[832px] mx-auto
-              mobile:absolute mobile:top-0 mobile:left-1/2 mobile:-translate-x-1/2 mobile:h-[140vh]">
-    <!-- Map pin — Figma x=860 y=330 on desktop. On phone it sits centered
-         in the 90vh-tall map area (top-[95vh] = 50 + 45). -->
-    <button
-      id="ubicacion-map-pin"
-      type="button"
-      aria-label="Acercar mapa"
-      data-zoomed="false"
-      class="absolute left-[860px] top-[330px] w-[40px] h-[40px] rounded-full bg-vecta-lime border-4 border-vecta-dark flex items-center justify-center cursor-pointer transition-transform duration-200 ease-out hover:scale-110 active:scale-95
-             mobile:left-1/2 mobile:top-[95vh] mobile:-translate-x-1/2 mobile:-translate-y-1/2 mobile:hover:scale-100">
-      <div class="w-[10px] h-[10px] rounded-full bg-vecta-dark pointer-events-none"></div>
-    </button>
-  </div>
 </section>
 
 <script>
@@ -143,17 +146,19 @@ const initialMapSrc = `https://www.google.com/maps?q=${ADDRESS}&z=16&hl=es&outpu
   const ADDRESS = iframe?.dataset.address ?? 'Carrera+15+%23+98,+Bogot%C3%A1,+Colombia';
   // Each Google Maps zoom step doubles the scale. Phone viewports show the
   // map at the bottom 90vh, so we boot in at street level (z=19, ~4× closer
-  // than the desktop default z=16) and use z=21 (max) when the pin is
-  // tapped. Tablet/desktop use the split-screen layout so they get desktop zoom.
+  // than the desktop default z=16). Al hacer click sobre el marker rojo
+  // bajamos a z=21 (máximo, nivel edificio) tanto en desktop como mobile
+  // para que quede bien cerca.
   const isPhone = document.documentElement.getAttribute('data-device') === 'phone';
   const ZOOM_OUT = isPhone ? 19 : 16;
-  const ZOOM_IN = isPhone ? 21 : 19;
+  const ZOOM_IN = 21;
 
   if (isPhone && iframe) {
     iframe.src = `https://www.google.com/maps?q=${ADDRESS}&z=${ZOOM_OUT}&hl=es&output=embed`;
   }
 
-  const ZOOM_DURATION = 700;
+  // Animación más larga = transición más suave hacia el zoom cercano.
+  const ZOOM_DURATION = 1000;
 
   pin?.addEventListener('click', () => {
     if (!iframe || pin.dataset.animating === 'true') return;
@@ -161,7 +166,9 @@ const initialMapSrc = `https://www.google.com/maps?q=${ADDRESS}&z=16&hl=es&outpu
 
     const zoomed = pin.dataset.zoomed === 'true';
     const nextZoom = zoomed ? ZOOM_OUT : ZOOM_IN;
-    const targetScale = zoomed ? 0.72 : 1.4;
+    // Scale más grande = sensación de zoom más profundo durante la animación
+    // antes de que recargue el iframe en el nuevo nivel de Google Maps.
+    const targetScale = zoomed ? 0.6 : 1.8;
 
     // Anchor the visual zoom on the pin so it feels like the map is moving
     // toward (or away from) the marker, not just rescaling from the center.

@@ -44,6 +44,9 @@ const {
 // `Tipo {N}` si no se pasó (preserva render inicial cuando el modal aún
 // no ha aplicado los valores dinámicos del polígono clickeado).
 const tituloMostrado = nombre && nombre.trim() ? nombre.trim() : `Tipo ${tipo}`;
+// Nombres como "Tipo A2", "Tipo B2" son más anchos que el contenedor a 115px
+// y se desbordan. Cuando el nombre termina en "2" bajamos el tamaño.
+const tituloEndsIn2 = /2$/.test(tituloMostrado);
 ---
 <section class="relative w-full min-w-[1280px] min-h-screen h-[832px] overflow-hidden bg-black">
   <!-- Bedroom photo + dark overlay -->
@@ -75,7 +78,8 @@ const tituloMostrado = nombre && nombre.trim() ? nombre.trim() : `Tipo ${tipo}`;
     <!-- "Tipo N" big title (text is set by TipologiaModal at open time) -->
     <h2
       data-tipologia-title
-      class="absolute left-[170px] top-[279px] w-[393px] text-white font-semibold text-[115px] leading-[0.959] font-display [text-shadow:0px_5px_10px_rgba(0,0,0,0.1),0px_19px_19px_rgba(0,0,0,0.09),0px_42px_25px_rgba(0,0,0,0.05)]">
+      data-tipo-small={tituloEndsIn2 ? '' : undefined}
+      class="absolute left-[170px] top-[279px] w-[393px] whitespace-nowrap text-white font-semibold text-[115px] data-[tipo-small]:text-[95px] leading-[0.959] font-display [text-shadow:0px_5px_10px_rgba(0,0,0,0.1),0px_19px_19px_rgba(0,0,0,0.09),0px_42px_25px_rgba(0,0,0,0.05)]">
       {tituloMostrado}
     </h2>
 

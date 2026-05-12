@@ -118,6 +118,7 @@ import TipologiaAbierta2 from './TipologiaAbierta2.astro';
     camas: string;
     salaComedor: string;
     baos: string;
+    piso: string;
     descripcion: string;
     imagen: string;
   }
@@ -142,7 +143,15 @@ import TipologiaAbierta2 from './TipologiaAbierta2.astro';
     modal.querySelectorAll<HTMLElement>('[data-tipologia-title]').forEach((el) => {
       // Usa el `nombre` del campo Contentful ("Tipo A1", "Tipo B", etc.).
       // Fallback al formato legacy "Tipo {numero}" si no hay nombre.
-      el.textContent = record?.nombre || `Tipo ${tipo}`;
+      const titulo = record?.nombre || `Tipo ${tipo}`;
+      el.textContent = titulo;
+      // Reduce el tamaño cuando el nombre termina en "2" (Tipo A2, B2…) para
+      // que no se desborde del ancho de columna del título.
+      if (/2$/.test(titulo.trim())) {
+        el.setAttribute('data-tipo-small', '');
+      } else {
+        el.removeAttribute('data-tipo-small');
+      }
     });
     modal.querySelectorAll<HTMLElement>('[data-tipologia-mts]').forEach((el) => {
       el.textContent = areaText;
@@ -152,6 +161,7 @@ import TipologiaAbierta2 from './TipologiaAbierta2.astro';
       setRow('camas', record.camas);
       setRow('sala', record.salaComedor);
       setRow('baos', record.baos);
+      setRow('piso', record.piso);
       modal.querySelectorAll<HTMLElement>('[data-tipologia-descripcion]').forEach((el) => {
         el.textContent = record.descripcion;
       });

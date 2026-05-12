@@ -33,6 +33,7 @@ interface Props {
   camas?: string;
   salaComedor?: string;
   baos?: string;
+  piso?: string;
   imagen?: string;
 }
 const {
@@ -42,21 +43,28 @@ const {
   camas = "2",
   salaComedor = "1",
   baos = "2",
+  piso = "",
   imagen = "/sections/tipologia-abierta/floor-plan.webp",
 } = Astro.props;
 // `nombre` viene de Contentful (campo `tipologia.nombre`) con valores como
 // "Tipo A1", "Tipo B", etc. Si no se pasó, fallback al formato legacy
 // "Tipo {N}" para que el componente siga renderizando algo.
 const tituloMostrado = nombre && nombre.trim() ? nombre.trim() : `Tipo ${tipo}`;
+// Mismo criterio que TipologiaAbierta: si termina en "2" reducimos el tamaño
+// para que "Tipo A2/B2/..." no se desborde del ancho de columna.
+const tituloEndsIn2 = /2$/.test(tituloMostrado);
 
 const rows = [
-  { label: "ÁREA TOTAL",   value: `${mts} mts²`, key: "mts"   },
-  { label: "CAMAS",        value: camas,         key: "camas" },
-  { label: "SALA COMEDOR", value: salaComedor,   key: "sala"  },
-  { label: "BAÑOS",        value: baos,          key: "baos"  },
+  { label: "ÁREA TOTAL",        value: `${mts} mts²`, key: "mts"   },
+  { label: "CAMAS",             value: camas,         key: "camas" },
+  { label: "SALA COMEDOR",      value: salaComedor,   key: "sala"  },
+  { label: "BAÑOS",             value: baos,          key: "baos"  },
+  { label: "PISO DE UBICACIÓN", value: piso,          key: "piso"  },
 ];
-const ROW_TOPS = [416, 480, 544, 608];
-const SEP_TOPS = [461, 525, 589];
+// +64px de espaciado por fila (mismo intervalo que las anteriores) y un
+// separador a 45px debajo de la fila BAÑOS para abrir la nueva sección.
+const ROW_TOPS = [416, 480, 544, 608, 672];
+const SEP_TOPS = [461, 525, 589, 653];
 // Mobile reflow: Tipo N + specs table go on top, floor plan image goes
 // underneath. Each row/separator gets a `mobile:!top-[Xpx]` class with
 // !important so it overrides the inline desktop `top` style. The literal
@@ -68,11 +76,13 @@ const ROW_MOBILE_CLASSES = [
   'mobile:!top-[510px]',
   'mobile:!top-[590px]',
   'mobile:!top-[670px]',
+  'mobile:!top-[750px]',
 ];
 const SEP_MOBILE_CLASSES = [
   'mobile:!top-[480px]',
   'mobile:!top-[560px]',
   'mobile:!top-[640px]',
+  'mobile:!top-[720px]',
 ];
 ---
 <section class="relative w-full min-w-[1280px] min-h-screen h-[832px] overflow-hidden bg-vecta-bg mobile:h-[2055px] mobile:min-h-0">
@@ -100,8 +110,9 @@ const SEP_MOBILE_CLASSES = [
          On mobile it moves to the top and centers horizontally. -->
     <h2
       data-tipologia-title
-      class="absolute left-[92px] top-[272px] w-[311px] text-vecta-dark font-semibold text-[100px] leading-[0.959] font-display
-             mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[230px] mobile:w-auto mobile:text-[140px] mobile:text-center">
+      data-tipo-small={tituloEndsIn2 ? '' : undefined}
+      class="absolute left-[92px] top-[272px] w-[311px] whitespace-nowrap text-vecta-dark font-semibold text-[100px] data-[tipo-small]:text-[85px] leading-[0.959] font-display
+             mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[230px] mobile:w-auto mobile:text-[140px] mobile:data-[tipo-small]:text-[115px] mobile:text-center">
       {tituloMostrado}
     </h2>
 

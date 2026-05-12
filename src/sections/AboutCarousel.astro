@@ -43,11 +43,12 @@ const ws = await getWebsite();
 // bold node before rendering. Bold marks are preserved either way.
 const slide1Title = firstHeading(ws?.fields?.bloque3seccion1texto, 'heading-2');
 const slide1Doc = splitParagraphAtFirstBold(ws?.fields?.bloque3seccion1texto);
-// Pegamos "forma aleatoria" con un espacio no-rompible (U+00A0) para que
-// el navegador siempre los renderice juntos en la misma línea aunque el
-// resto del párrafo se wrappee. Robusto frente a cambios de ancho/font.
+// Pegamos "de forma aleatoria" con espacios no-rompibles (U+00A0) para que
+// las tres palabras se rendericen siempre juntas en la misma línea aunque
+// el resto del párrafo se wrappee. Sin esto, "de" se quedaba arriba y
+// "forma aleatoria" caía al renglón siguiente.
 const slide1BodyHtml = richTextHtmlWithoutFirstHeading(slide1Doc, 'heading-2')
-  .replace(/forma aleatoria/g, 'forma aleatoria');
+  .replace(/de forma aleatoria/g, 'de forma aleatoria');
 const slide1ImgSrc = assetUrl(ws?.fields?.bloque3seccion1imagen);
 
 // Slide 3 — amenidades.
