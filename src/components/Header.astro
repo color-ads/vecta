@@ -21,11 +21,6 @@ const burger = variant === "light" ? "bg-white" : "bg-vecta-dark";
 // Caret circle buttons (up/down). Both default to white lines in the light
 // variant (Hero) until pressed. Pressed state is toggled via JS below.
 const caretBorder = variant === "light" ? "border-white text-white" : "border-vecta-dark text-vecta-dark";
-// actualcorp logo lives on the right side of the floating nav (mirrors the
-// caret cluster on the left). text-white on the wrapper drives both the
-// SVG (via currentColor) and the span — both flip via #site-nav[data-nav-theme]
-// rules in global.css when the nav passes over light-bg sections.
-const logoColor = variant === "light" ? "text-white" : "text-vecta-dark";
 
 // Frame 18 sits at canvas x=318 inside the 1280px hero. Items are absolutely
 // positioned within it. Each maps to a section id so the nav scroll-jumps to
@@ -178,16 +173,13 @@ const dividers = [388, 534, 684, 842];
 </button>
 
 <!-- actualcorp logo on the right side of the floating nav (mirrors the
-     caret cluster at left-[50px]). Same outer "a" mark + inner counter as
-     AboutCarousel, scaled down to fit the 130px header. Lives inside
-     #site-nav so it scrolls with the fixed nav and inherits the nav-theme
-     color via text-white → currentColor on the SVG paths. -->
-<div data-actualcorp-logo class={`desktop-nav absolute right-[-14px] top-[49px] flex flex-col items-center gap-[6px] z-30 ${logoColor} mobile:hidden`}>
-  <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 90 90" fill="none">
-    <path d="M65.338 0.207339C76.8727 -1.82185 77.5324 11.5197 79.3628 19.4294C77.7054 16.6523 75.4046 13.0969 72.6029 11.3261C62.2186 4.76404 42.4457 9.62051 35.4325 19.3492C31.6563 24.5876 31.6736 31.7141 32.7026 37.62L42.9649 35.8498C41.8329 29.9249 42.6738 24.4495 48.3566 21.2755C54.1861 18.0189 64.7149 16.338 68.7607 23.1667C70.1371 25.492 70.1392 28.5987 69.4204 31.1272C68.8808 31.631 68.2435 32.1308 67.5533 32.4601C57.0611 37.4694 41.391 38.735 35.9429 50.548C33.9834 54.7967 34.2772 60.8272 35.9464 65.0815C41.0286 78.0343 54.6137 78.9007 66.1728 74.2183C71.764 71.8957 75.9055 68.6264 78.5179 62.9531C80.7963 67.3155 84.3554 69.9255 89.3236 68.03C87.2773 77.006 82.3967 76.635 74.7449 78.271L60.7831 81.2603L35.4681 86.529C31.2655 87.3824 27.0731 88.278 22.8473 89.0271C18.3471 89.8248 14.3436 87.7078 12.958 83.2522C11.8215 79.5964 11.1107 75.8043 10.2942 72.0632C8.81716 65.338 7.38109 58.6037 5.98613 51.8609L2.16227 34.0275C0.914527 28.225 -1.91203 20.6621 1.98736 15.6785C4.35905 12.6476 8.80698 12.1286 12.3684 11.2881C17.7267 10.0231 23.1393 8.99751 28.5086 7.83231L53.1313 2.64588C56.7699 1.89962 61.791 0.687904 65.338 0.207339Z" fill="currentColor"/>
-    <svg x="43.1" y="41.4" width="29" height="27" viewBox="0 0 29 27" fill="none">
-      <path d="M26.9093 0L27.286 0.145698C27.5711 0.897258 27.7136 1.49659 27.8215 2.28794C28.526 7.40214 29.483 12.3929 26.7159 17.1028C22.3973 24.4564 11.3981 28.9237 3.67298 24.3607C2.60198 23.6032 1.72033 22.6074 1.09727 21.4514C0.0384793 19.4587 -0.348387 16.7212 0.358151 14.5245C2.17438 8.87649 10.83 6.67711 15.7452 4.63812C19.4795 3.08889 23.3318 1.90124 26.9093 0Z" fill="currentColor"/>
-    </svg>
-  </svg>
-  <span class="text-white text-[18px] font-bold leading-none font-display">actualcorp</span>
-</div>
+     caret cluster at left-[50px]). Static white PNG with transparent bg —
+     replaces the previous inline SVG. Lives inside #site-nav so it scrolls
+     with the fixed nav. NOTE: this image is solid white, so it stays white
+     across all sections regardless of data-nav-theme. -->
+<img
+  src="/Logo%20Actual%20Corp.png"
+  alt="actualcorp"
+  data-actualcorp-logo
+  class="desktop-nav absolute right-[-14px] top-[49px] w-[102px] h-[102px] z-30 mobile:hidden"
+/>
