@@ -179,3 +179,13 @@ html[data-layout="tablet"] .mobile-hamburger { display: flex !important; }
   background-color: #22291d !important;
 }
 
+/* actualcorp logo in the floating nav must stay white over the AboutCarousel
+   block (module 3) regardless of which slide is active. Decoupled from
+   data-nav-theme because slide 2 reuses the `dark` theme (also used by
+   Formulario, where the logo should stay dark). data-active-section is set
+   by index.astro's updateNavTheme to the id of the section under the nav line. */
+#site-nav[data-active-section="about-carousel"] [data-actualcorp-logo],
+#site-nav[data-active-section="about-carousel"] [data-actualcorp-logo] .text-white {
+  color: #fff !important;
+}
+

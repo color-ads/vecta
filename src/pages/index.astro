@@ -68,9 +68,11 @@ import Formulario from '../sections/Formulario.astro';
 	function updateNavTheme() {
 		if (!nav) return;
 		let theme = 'light';
+		let activeSection = '';
 		for (const section of sections) {
 			const rect = section.getBoundingClientRect();
 			if (rect.top <= NAV_LINE_Y && rect.bottom > NAV_LINE_Y) {
+				activeSection = section.id || '';
 				theme = lightBgSections.has(section) ? 'dark' : 'light';
 				// Section 2 (ProyectoIntro) → full black nav (monochrome, overrides lime accents).
 				if (section === sections[1]) {
@@ -98,6 +100,7 @@ import Formulario from '../sections/Formulario.astro';
 			}
 		}
 		if (nav.dataset.navTheme !== theme) nav.dataset.navTheme = theme;
+		if (nav.dataset.activeSection !== activeSection) nav.dataset.activeSection = activeSection;
 	}
 
 	window.addEventListener('scroll', updateNavTheme, { passive: true });
