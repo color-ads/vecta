@@ -189,3 +189,13 @@ html[data-layout="tablet"] .mobile-hamburger { display: flex !important; }
   color: #fff !important;
 }
 
+/* actualcorp logo is a static white PNG. Over light-bg blocks (ProyectoIntro
+   #inversion = block 2, Ubicacion = block 6, Formulario = the form) we
+   invert it so the white pixels render as black. Transparent pixels stay
+   transparent; anti-aliased edges keep their alpha. */
+#site-nav[data-active-section="inversion"] [data-actualcorp-logo],
+#site-nav[data-active-section="ubicacion"] [data-actualcorp-logo],
+#site-nav[data-active-section="formulario"] [data-actualcorp-logo] {
+  filter: invert(1);
+}
+

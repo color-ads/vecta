@@ -56,7 +56,7 @@ const mapQuery = coordMatch
 const ADDRESS = encodeURIComponent(mapQuery);
 const initialMapSrc = `https://www.google.com/maps?q=${ADDRESS}&z=16&hl=es&output=embed`;
 ---
-<section class="relative w-full min-w-[1280px] min-h-screen overflow-hidden bg-vecta-night flex items-center justify-center
+<section id="ubicacion" class="relative w-full min-w-[1280px] min-h-screen overflow-hidden bg-vecta-night flex items-center justify-center
                 mobile:block mobile:h-[140vh] mobile:min-h-[140vh]">
   <!-- Map + pin wrapper. El iframe se restringe a la mitad derecha (en
        desktop) para que su centro geométrico — donde Google Maps dibuja
