@@ -114,24 +114,29 @@ const initialMapSrc = `https://www.google.com/maps?q=${ADDRESS}&z=16&hl=es&outpu
          centers vertically inside the 50vh lime card. -->
     <h2 class="absolute top-[186px] w-[440px] text-vecta-dark font-semibold text-[72px] leading-[0.959] font-display left-[calc(50%-135.5px)]
                mobile:top-[14vh] mobile:left-1/2 mobile:-translate-x-1/2 mobile:text-center
-               pc-small:!text-[48px]">{heading}</h2>
+               pc-small:!text-[48px]
+               desktop:!text-[56px]">{heading}</h2>
 
     <p class="absolute top-[317px] text-vecta-dark text-[38px] leading-[0.959] font-display left-[calc(50%-135.5px)]
               mobile:top-[22vh] mobile:left-1/2 mobile:-translate-x-1/2 mobile:text-center
               pc-small:!text-[26px]
+              desktop:!text-[28px]
               desktop:mt-[2vh]">{subtitle}</p>
 
     <div class="absolute top-[450px] w-[420px] text-vecta-dark text-[38px] leading-[0.959] space-y-[1.2em] font-display left-[calc(50%-135.5px)]
                 mobile:top-[30vh] mobile:left-1/2 mobile:-translate-x-1/2 mobile:text-center
-                pc-small:!text-[26px]">
+                pc-small:!text-[26px]
+                desktop:!text-[28px]">
       <p>{description1}</p>
       <p set:html={description2}></p>
     </div>
 
     <!-- Decorative horizontal line — 3vh top gap separates it from the
-         description ending in "actividad real." above. -->
+         description ending in "actividad real." above. Hidden on desktop
+         where the descriptions can be long enough to overlap with it. -->
     <div class="absolute top-[590px] mt-[3vh] w-[292px] h-px bg-vecta-dark left-[calc(50%-135.5px)]
-                mobile:top-[38vh] mobile:left-1/2 mobile:-translate-x-1/2"></div>
+                mobile:top-[38vh] mobile:left-1/2 mobile:-translate-x-1/2
+                desktop:hidden"></div>
   </div>
 
 </section>
