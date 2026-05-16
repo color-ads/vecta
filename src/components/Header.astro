@@ -11,7 +11,7 @@
 // Caret Down: x=50, y=83, 36x36 (desktop)
 
 interface Props {
-  active?: "HOME" | "ABOUT US" | "ESPACIOS" | "TIPOLOGÍAS" | "INVERSIÓN";
+  active?: "HOME" | "NOSOTROS" | "ESPACIOS" | "TIPOLOGÍAS" | "INVERSIÓN";
   variant?: "light" | "dark";
 }
 const { active, variant = "light" } = Astro.props;
@@ -27,7 +27,7 @@ const caretBorder = variant === "light" ? "border-white text-white" : "border-ve
 // the right block; smooth-scroll + scroll-padding-top live in Layout.astro.
 const navItems = [
   { label: "HOME",       x: 0,   w: 55,  href: "#hero" },
-  { label: "ABOUT US",   x: 105, w: 90,  href: "#about-carousel" },
+  { label: "NOSOTROS",   x: 105, w: 90,  href: "#about-carousel" },
   { label: "ESPACIOS",   x: 245, w: 87,  href: "#espacios" },
   { label: "TIPOLOGÍAS", x: 382, w: 111, href: "#tipologias" },
   { label: "INVERSIÓN",  x: 543, w: 102, href: "#inversion" },
