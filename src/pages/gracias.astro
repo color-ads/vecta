@@ -15,15 +15,13 @@ import Header from '../components/Header.astro';
 <Layout title="VECTA 98 — Gracias">
   <header id="site-nav" data-nav-theme="light"
           class="fixed top-0 left-0 right-0 z-[120] h-[130px] pointer-events-none">
-    <div class="relative w-[1280px] h-full mx-auto pointer-events-auto">
-      <Header variant="light" />
-    </div>
+    <Header variant="light" />
   </header>
 
   <main class="bg-vecta-night text-white">
-    <section class="relative w-full min-w-[1280px] min-h-screen overflow-hidden flex items-center justify-center
+    <section class="relative w-full min-h-screen overflow-hidden flex items-center justify-center
                     narrow:block narrow:min-h-[1400px]">
-      <div class="relative w-[1280px] h-[832px] mx-auto narrow:h-[1400px]">
+      <div class="relative w-full max-w-[1280px] h-[832px] mx-auto narrow:h-[1400px]">
 
         <!-- Sutil halo lime detrás del logo para reforzar el acento de marca -->
         <div aria-hidden="true"
@@ -40,8 +38,8 @@ import Header from '../components/Header.astro';
         </div>
 
         <!-- ¡Gracias! titular -->
-        <h1 class="absolute left-0 right-0 top-[360px] text-center text-vecta-lime font-semibold font-display text-[52px] leading-[1] tracking-[-0.01em]
-                   narrow:top-[560px] narrow:text-[96px]">
+        <h1 class="absolute left-0 right-0 top-[360px] text-center text-vecta-lime font-semibold font-display text-[clamp(26px,4.2vw,52px)] leading-[1] tracking-[-0.01em]
+                   narrow:top-[560px] narrow:text-[clamp(44px,7.5vw,96px)]">
           ¡Gracias!
         </h1>
 
@@ -50,15 +48,15 @@ import Header from '../components/Header.astro';
                     narrow:top-[700px] narrow:w-[180px]"></div>
 
         <!-- Subtítulo -->
-        <p class="absolute left-1/2 -translate-x-1/2 top-[470px] w-[680px] text-center text-white/85 font-display text-[20px] leading-[1.35]
-                  narrow:top-[740px] narrow:w-[1000px] narrow:text-[34px]">
+        <p class="absolute left-1/2 -translate-x-1/2 top-[470px] w-[min(680px,calc(100vw-40px))] text-center text-white/85 font-display text-[clamp(14px,1.6vw,20px)] leading-[1.35]
+                  narrow:top-[740px] narrow:w-[min(1000px,calc(100vw-40px))] narrow:text-[clamp(22px,4.5vw,34px)]">
           Recibimos tu información correctamente.
         </p>
 
         <!-- Botón Volver al inicio -->
         <a href="/"
-           class="absolute left-1/2 -translate-x-1/2 top-[580px] w-[260px] h-[56px] rounded-[10px] bg-vecta-lime text-vecta-dark text-[20px] font-semibold flex items-center justify-center hover:bg-vecta-lime/90 transition-colors font-display
-                  narrow:top-[940px] narrow:w-[400px] narrow:h-[95px] narrow:text-[34px]">
+           class="absolute left-1/2 -translate-x-1/2 top-[580px] w-[260px] h-[56px] rounded-[10px] bg-vecta-lime text-vecta-dark text-[clamp(14px,1.6vw,20px)] font-semibold flex items-center justify-center hover:bg-vecta-lime/90 transition-colors font-display
+                  narrow:top-[940px] narrow:w-[min(400px,calc(100vw-40px))] narrow:h-[95px] narrow:text-[clamp(22px,4.5vw,34px)]">
           VOLVER AL INICIO
         </a>
       </div>

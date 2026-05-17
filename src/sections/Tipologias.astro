@@ -55,7 +55,7 @@ const tipologias = tipoRes.items
     // crees el campo y publiques los entries.
     piso: typeof f.piso === 'string' ? f.piso.trim() : richTextToPlain(f.piso).trim(),
     descripcion: richTextToPlain(f.descripcion).trim(),
-    imagen: assetUrl(f.imagen, '/sections/tipologia-abierta/floor-plan.webp'),
+    imagen: assetUrl(f.imagen, '/sections/tipologia-abierta/floor-plan.jpg'),
   };
 });
 
@@ -75,156 +75,154 @@ const t4 = byTipo['4'] ?? EMPTY_TIPO;
 const t5 = byTipo['5'] ?? EMPTY_TIPO;
 const t6 = byTipo['6'] ?? EMPTY_TIPO;
 ---
-<section id="tipologias" class="relative w-full min-w-[1280px] h-[2085px] overflow-hidden bg-black mobile:h-auto">
-  <!-- Background image bleeds full-width across the viewport (desktop only) -->
-  <img
-    src={bgSrc}
-    alt="Edificio VECTA 98 con tipologías"
-    class="absolute inset-0 w-full h-full object-cover mobile:hidden"
-    loading="lazy"
-    decoding="async"
-  />
-  <div class="absolute inset-0 bg-black/30 mobile:hidden"></div>
+<section id="tipologias" class="relative w-full overflow-hidden bg-black mobile:h-auto">
+  <!-- Desktop wrapper: aspect-ratio 1280:2085 (~0.614) que mantiene la
+       proporción del canvas Figma. Imagen + polígonos + callouts viven
+       dentro de él, todos en posiciones %, así escalan juntos en cualquier
+       viewport y los polígonos siguen alineados con la imagen.
+       Tope max-w-[1280px] en desktop; fluido por debajo. -->
+  <div class="relative w-full max-w-[1280px] mx-auto aspect-[1280/2085] mobile:hidden">
+    <!-- Background image dentro del wrapper para compartir dimensiones con los polígonos -->
+    <img
+      src={bgSrc}
+      alt="Edificio VECTA 98 con tipologías"
+      class="absolute inset-0 w-full h-full object-cover"
+      loading="lazy"
+      decoding="async"
+    />
+    <div class="absolute inset-0 bg-black/30"></div>
 
-  <!-- Inner 1280px canvas keeps Figma absolute positions intact (desktop only) -->
-  <div class="relative w-[1280px] h-full mx-auto mobile:hidden">
-    <!-- Big title -->
-    <h2 class="absolute right-[120px] top-[101px] text-white font-medium text-[128px] leading-[0.959] font-display">
+    <!-- Big title — right:120/1280=9.38%, top:101/2085=4.84% -->
+    <h2 class="absolute right-[9.38%] top-[4.84%] text-white font-medium text-[clamp(72px,10vw,128px)] leading-[0.959] font-display">
       Tipologias
     </h2>
 
-    <!-- Logo — same SVG asset as Hero (`/sections/hero/vecta-logo.svg`),
-         sized to the Tipologias canvas position (448×103). -->
-    <div class="absolute left-[732px] top-[290px] w-[448px] h-[103px]">
+    <!-- Logo VECTA 98 — left:732/1280=57.19%, top:290/2085=13.91%, w:448/1280=35%, h:103/2085=4.94% -->
+    <div class="absolute left-[57.19%] top-[13.91%] w-[35%] h-[4.94%]">
       <img src="/sections/hero/vecta-logo.svg" alt="VECTA 98" class="w-full h-full object-contain" loading="lazy" decoding="async" />
     </div>
-    <div class="absolute left-[663px] top-[257px] w-[495px] h-px bg-white"></div>
+    <!-- Línea horizontal sobre el logo — left:663/1280=51.80%, top:257/2085=12.33%, w:495/1280=38.67% -->
+    <div class="absolute left-[51.80%] top-[12.33%] w-[38.67%] h-px bg-white"></div>
 
-    <!-- Vector 35 — Tipología 1 (Figma 2047:30) -->
+    <!-- Polígonos clicables — left/top/w/h convertidos a % del wrapper.
+         Los offsets internos del SVG ya estaban en % (relativos al polígono),
+         así que siguen funcionando. -->
+    <!-- Vector 35 — Tipología 1 (Figma 2047:30): left:157/1280=12.27%, top:575/2085=27.58%, w:217/1280=16.95%, h:330/2085=15.83% -->
     {t1.tipo && (
-    <div data-tipologia-polygon data-tipo={t1.tipo} data-mts={t1.mts} role="button" tabindex="0" aria-label={`Ver detalle de Tipología ${t1.tipo} (${t1.areaTotal})`} class="cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60 absolute left-[157px] top-[575px] w-[217px] h-[330px] mobile:hidden">
+    <div data-tipologia-polygon data-tipo={t1.tipo} data-mts={t1.mts} role="button" tabindex="0" aria-label={`Ver detalle de Tipología ${t1.tipo} (${t1.areaTotal})`} class="cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60 absolute left-[12.27%] top-[27.58%] w-[16.95%] h-[15.83%]">
       <div class="absolute top-[-76.92%] right-[-116.59%] bottom-[-77.02%] left-[-24.42%]">
         <img src="/sections/tipologias/vector-35.svg" alt="" class="block max-w-none w-full h-full" loading="lazy" decoding="async" />
       </div>
     </div>
     )}
 
-    <!-- Vector 36 — slot 2 del edificio (top-right). Visualmente etiquetado
-         como "Tipología 2" pero los datos (data-tipo, data-mts, click→modal)
-         vienen de t3, que es el apartamento real ubicado en este polígono. -->
+    <!-- Vector 36 — slot 2 (top-right): left:753/1280=58.83%, top:788/2085=37.79%, w:332/1280=25.94%, h:350/2085=16.79% -->
     {t3.tipo && (
-    <div data-tipologia-polygon data-tipo={t3.tipo} data-mts={t3.mts} role="button" tabindex="0" aria-label={`Ver detalle de Tipología 2 (${t3.areaTotal})`} class="cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60 mobile:hidden absolute left-[753px] top-[788px] w-[332px] h-[350px]">
+    <div data-tipologia-polygon data-tipo={t3.tipo} data-mts={t3.mts} role="button" tabindex="0" aria-label={`Ver detalle de Tipología 2 (${t3.areaTotal})`} class="cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60 absolute left-[58.83%] top-[37.79%] w-[25.94%] h-[16.79%]">
       <div class="absolute top-[-72.42%] right-[-76.17%] bottom-[-72.27%] left-[-76.06%]">
         <img src="/sections/tipologias/vector-36.svg" alt="" class="block max-w-none w-full h-full" loading="lazy" decoding="async" />
       </div>
     </div>
     )}
 
-    <!-- Vector 37 — Tipología 4 (Figma 2050:32) -->
+    <!-- Vector 37 — Tipología 4 (Figma 2050:32): left:1130/1280=88.28%, top:1170/2085=56.12%, w:238/1280=18.59%, h:169/2085=8.11% -->
     {t4.tipo && (
-    <div data-tipologia-polygon data-tipo={t4.tipo} data-mts={t4.mts} role="button" tabindex="0" aria-label={`Ver detalle de Tipología ${t4.tipo} (${t4.areaTotal})`} class="cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60 mobile:hidden absolute left-[1130px] top-[1170px] w-[238px] h-[169px]">
+    <div data-tipologia-polygon data-tipo={t4.tipo} data-mts={t4.mts} role="button" tabindex="0" aria-label={`Ver detalle de Tipología ${t4.tipo} (${t4.areaTotal})`} class="cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60 absolute left-[88.28%] top-[56.12%] w-[18.59%] h-[8.11%]">
       <div class="absolute top-[-149.72%] right-[-6.08%] bottom-[-149.69%] left-[-106.10%]">
         <img src="/sections/tipologias/vector-37.svg" alt="" class="block max-w-none w-full h-full" loading="lazy" decoding="async" />
       </div>
     </div>
     )}
 
-    <!-- Vector 38 — Tipología 3 (Figma 2051:33) -->
+    <!-- Vector 38 — Tipología 3 (Figma 2051:33): left:207/1280=16.17%, top:1096/2085=52.57%, w:359/1280=28.05%, h:305/2085=14.63% -->
     {t3.tipo && (
-    <div data-tipologia-polygon data-tipo={t3.tipo} data-mts={t3.mts} role="button" tabindex="0" aria-label={`Ver detalle de Tipología ${t3.tipo} (${t3.areaTotal})`} class="cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60 mobile:hidden absolute left-[207px] top-[1096px] w-[359px] h-[305px]">
+    <div data-tipologia-polygon data-tipo={t3.tipo} data-mts={t3.mts} role="button" tabindex="0" aria-label={`Ver detalle de Tipología ${t3.tipo} (${t3.areaTotal})`} class="cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60 absolute left-[16.17%] top-[52.57%] w-[28.05%] h-[14.63%]">
       <div class="absolute top-[-82.92%] right-[-70.47%] bottom-[-82.98%] left-[-27.58%]">
         <img src="/sections/tipologias/vector-38.svg" alt="" class="block max-w-none w-full h-full" loading="lazy" decoding="async" />
       </div>
     </div>
     )}
 
-    <!-- Vector 39 — Tipología 5 (Figma 2051:34) -->
+    <!-- Vector 39 — Tipología 5 (Figma 2051:34): left:932/1280=72.81%, top:1488/2085=71.37%, w:288/1280=22.50%, h:155/2085=7.43% -->
     {t5.tipo && (
-    <div data-tipologia-polygon data-tipo={t5.tipo} data-mts={t5.mts} role="button" tabindex="0" aria-label={`Ver detalle de Tipología ${t5.tipo} (${t5.areaTotal})`} class="cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60 mobile:hidden absolute left-[932px] top-[1488px] w-[288px] h-[155px]">
+    <div data-tipologia-polygon data-tipo={t5.tipo} data-mts={t5.mts} role="button" tabindex="0" aria-label={`Ver detalle de Tipología ${t5.tipo} (${t5.areaTotal})`} class="cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60 absolute left-[72.81%] top-[71.37%] w-[22.50%] h-[7.43%]">
       <div class="absolute top-[-163.00%] right-[-56.07%] bottom-[-163.46%] left-[-87.68%]">
         <img src="/sections/tipologias/vector-39.svg" alt="" class="block max-w-none w-full h-full" loading="lazy" decoding="async" />
       </div>
     </div>
     )}
 
-    <!-- Tipología 6 — caja blanca a la derecha de t5 (no hay SVG dedicado).
-         Borde blanco 5px + glow blanco para mantener el estilo de los demás
-         polígonos. Se renderiza siempre (sin condicional) para que sea
-         visible aunque t6 todavía no esté publicado en Contentful. El click
-         abre el modal solo si t6 tiene datos; si no, no hace nada. -->
+    <!-- Tipología 6 — caja blanca sin SVG dedicado.
+         left:1139/1280=88.98%, top:1735/2085=83.21%, w:231/1280=18.05%, h:73/2085=3.50%
+         Border 5px y shadow se mantienen en px (decoración fina). -->
     <div data-tipologia-polygon={t6.tipo ? '' : undefined} data-tipo={t6.tipo} data-mts={t6.mts} role="button" tabindex="0"
          aria-label={t6.tipo ? `Ver detalle de Tipología ${t6.tipo} (${t6.areaTotal})` : 'Tipología 6 (sin datos publicados)'}
-         class:list={['mobile:hidden absolute left-[1139px] top-[1735px] w-[231px] h-[73px] border-[5px] border-white shadow-[0_0_30px_rgba(255,255,255,0.5),0_0_80px_rgba(255,255,255,0.3)]', t6.tipo && 'cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60']}>
+         class:list={['absolute left-[88.98%] top-[83.21%] w-[18.05%] h-[3.50%] border-[5px] border-white shadow-[0_0_30px_rgba(255,255,255,0.5),0_0_80px_rgba(255,255,255,0.3)]', t6.tipo && 'cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60']}>
     </div>
 
-    <!-- Typology callouts -->
-    <!-- Tipología 1 - top left -->
+    <!-- Typology callouts — texto + flecha SVG.
+         Las flechas son SVG en px (decoración fina, OK que no escalen),
+         el texto usa clamp() para escalar con el viewport. -->
+    <!-- Tipología 1 - top left: left:57/1280=4.45%, top:400/2085=19.18% -->
     {t1.tipo && (
-    <div class="absolute left-[57px] top-[400px] text-white font-display">
-      <p class="text-[32px] leading-[0.959] mobile:text-[44px]">Tipología {t1.tipo}</p>
-      <p class="mt-[8px] text-[64px] font-medium leading-[0.959] mobile:text-[88px]">{t1.areaTotal}</p>
+    <div class="absolute left-[4.45%] top-[19.18%] text-white font-display">
+      <p class="text-[clamp(20px,2.5vw,32px)] leading-[0.959]">Tipología {t1.tipo}</p>
+      <p class="mt-[8px] text-[clamp(40px,5vw,64px)] font-medium leading-[0.959]">{t1.areaTotal}</p>
       <svg class="absolute left-[114px] top-[105px]" xmlns="http://www.w3.org/2000/svg" width="30" height="107" viewBox="0 0 30 107" fill="none">
         <path d="M16.1421 0.585786C15.3611 -0.195262 14.0947 -0.195262 13.3137 0.585786L0.58577 13.3137C-0.195279 14.0948 -0.195279 15.3611 0.58577 16.1421C1.36682 16.9232 2.63315 16.9232 3.4142 16.1421L14.7279 4.82843L26.0416 16.1421C26.8227 16.9232 28.089 16.9232 28.87 16.1421C29.6511 15.3611 29.6511 14.0948 28.87 13.3137L16.1421 0.585786ZM14.7279 107H16.7279V2H14.7279H12.7279V107H14.7279Z" fill="white"/>
       </svg>
     </div>
     )}
 
-    <!-- Callout slot 2 - top right. Etiqueta "Tipología 2" hardcoded, pero
-         los metros corresponden a t3 (el apartamento real en este slot). -->
+    <!-- Callout slot 2 - top right: left:846/1280=66.09%, top:601/2085=28.83% -->
     {t3.tipo && (
-    <div class="absolute left-[846px] top-[601px] text-white font-display">
-      <p class="text-[32px] leading-[0.959] mobile:text-[44px]">Tipología 2</p>
-      <p class="mt-[8px] text-[64px] font-medium leading-[0.959] mobile:text-[88px]">{t3.areaTotal}</p>
+    <div class="absolute left-[66.09%] top-[28.83%] text-white font-display">
+      <p class="text-[clamp(20px,2.5vw,32px)] leading-[0.959]">Tipología 2</p>
+      <p class="mt-[8px] text-[clamp(40px,5vw,64px)] font-medium leading-[0.959]">{t3.areaTotal}</p>
       <svg class="absolute left-[103px] top-[105px]" xmlns="http://www.w3.org/2000/svg" width="30" height="107" viewBox="0 0 30 107" fill="none">
         <path d="M16.1421 0.585786C15.3611 -0.195262 14.0947 -0.195262 13.3137 0.585786L0.58577 13.3137C-0.195279 14.0948 -0.195279 15.3611 0.58577 16.1421C1.36682 16.9232 2.63315 16.9232 3.4142 16.1421L14.7279 4.82843L26.0416 16.1421C26.8227 16.9232 28.089 16.9232 28.87 16.1421C29.6511 15.3611 29.6511 14.0948 28.87 13.3137L16.1421 0.585786ZM14.7279 107H16.7279V2H14.7279H12.7279V107H14.7279Z" fill="white"/>
       </svg>
     </div>
     )}
 
-    <!-- Tipología 4 - mid right. Net offset from original top:1000 is
-         -5% +3% -1% = -3% / -62px → top:938. The arrow stays at its
-         original canvas position (parent.top + arrow.top = 1100px), so
-         its inner top is bumped from 100 → 162 to compensate. -->
+    <!-- Tipología 4 - mid right: left:1070/1280=83.59%, top:938/2085=44.99% -->
     {t4.tipo && (
-    <div class="absolute left-[1070px] top-[938px] text-center text-white font-display">
-      <p class="text-[30px] leading-[0.959] mobile:text-[44px]">Tipología {t4.tipo}</p>
-      <p class="mt-[8px] text-[60px] font-medium leading-[0.959] mobile:text-[88px]">{t4.areaTotal}</p>
+    <div class="absolute left-[83.59%] top-[44.99%] text-center text-white font-display">
+      <p class="text-[clamp(20px,2.4vw,30px)] leading-[0.959]">Tipología {t4.tipo}</p>
+      <p class="mt-[8px] text-[clamp(38px,4.7vw,60px)] font-medium leading-[0.959]">{t4.areaTotal}</p>
       <svg class="absolute left-[69px] top-[162px]" xmlns="http://www.w3.org/2000/svg" width="30" height="107" viewBox="0 0 30 107" fill="none">
         <path d="M16.1421 0.585786C15.3611 -0.195262 14.0947 -0.195262 13.3137 0.585786L0.58577 13.3137C-0.195279 14.0948 -0.195279 15.3611 0.58577 16.1421C1.36682 16.9232 2.63315 16.9232 3.4142 16.1421L14.7279 4.82843L26.0416 16.1421C26.8227 16.9232 28.089 16.9232 28.87 16.1421C29.6511 15.3611 29.6511 14.0948 28.87 13.3137L16.1421 0.585786ZM14.7279 107H16.7279V2H14.7279H12.7279V107H14.7279Z" fill="white"/>
       </svg>
     </div>
     )}
 
-    <!-- Tipología 3 - bottom left -->
+    <!-- Tipología 3 - bottom left: left:202/1280=15.78%, top:1509/2085=72.37% -->
     {t3.tipo && (
-    <div class="absolute left-[202px] top-[1509px] text-white font-display">
-      <p class="text-[32px] leading-[0.959] mobile:text-[44px]">Tipología {t3.tipo}</p>
-      <p class="mt-[8px] text-[64px] font-medium leading-[0.959] mobile:text-[88px]">{t3.areaTotal}</p>
+    <div class="absolute left-[15.78%] top-[72.37%] text-white font-display">
+      <p class="text-[clamp(20px,2.5vw,32px)] leading-[0.959]">Tipología {t3.tipo}</p>
+      <p class="mt-[8px] text-[clamp(40px,5vw,64px)] font-medium leading-[0.959]">{t3.areaTotal}</p>
       <svg class="absolute left-[104px] top-[-75px]" xmlns="http://www.w3.org/2000/svg" width="30" height="71" viewBox="0 0 30 71" fill="none">
         <path d="M13.3138 70.4142C14.0949 71.1953 15.3612 71.1953 16.1422 70.4142L28.8702 57.6863C29.6512 56.9052 29.6512 55.6389 28.8702 54.8579C28.0891 54.0768 26.8228 54.0768 26.0417 54.8579L14.728 66.1716L3.41432 54.8579C2.63327 54.0768 1.36694 54.0768 0.585892 54.8579C-0.195157 55.6389 -0.195157 56.9052 0.585892 57.6863L13.3138 70.4142ZM16.728 2V0H12.728V2H14.728H16.728ZM14.728 69H16.728V2H14.728H12.728V69H14.728Z" fill="white"/>
       </svg>
     </div>
     )}
 
-    <!-- Tipología 5 - bottom right (movido 128px / 10% del canvas a la izquierda) -->
+    <!-- Tipología 5 - bottom right: left:825/1280=64.45%, top:1738/2085=83.36% -->
     {t5.tipo && (
-    <div class="absolute left-[825px] top-[1738px] text-white font-display">
-      <p class="text-[32px] leading-[0.959] mobile:text-[44px]">Tipología {t5.tipo}</p>
-      <p class="mt-[8px] text-[64px] font-medium leading-[0.959] mobile:text-[88px]">{t5.areaTotal}</p>
+    <div class="absolute left-[64.45%] top-[83.36%] text-white font-display">
+      <p class="text-[clamp(20px,2.5vw,32px)] leading-[0.959]">Tipología {t5.tipo}</p>
+      <p class="mt-[8px] text-[clamp(40px,5vw,64px)] font-medium leading-[0.959]">{t5.areaTotal}</p>
       <svg class="absolute left-[104px] top-[-75px]" xmlns="http://www.w3.org/2000/svg" width="30" height="71" viewBox="0 0 30 71" fill="none">
         <path d="M13.3138 70.4142C14.0949 71.1953 15.3612 71.1953 16.1422 70.4142L28.8702 57.6863C29.6512 56.9052 29.6512 55.6389 28.8702 54.8579C28.0891 54.0768 26.8228 54.0768 26.0417 54.8579L14.728 66.1716L3.41432 54.8579C2.63327 54.0768 1.36694 54.0768 0.585892 54.8579C-0.195157 55.6389 -0.195157 56.9052 0.585892 57.6863L13.3138 70.4142ZM16.728 2V0H12.728V2H14.728H16.728ZM14.728 69H16.728V2H14.728H12.728V69H14.728Z" fill="white"/>
       </svg>
     </div>
     )}
 
-    <!-- Tipología 6 - debajo del polígono (caja blanca a la derecha de t5).
-         Mismo estilo que t3/t5: flecha vertical apuntando hacia arriba a la
-         caja, texto "Tipología N" + área debajo. Polígono está en
-         top:1735+h:73=bottom 1808; dejamos ~70px de aire antes de la flecha. -->
+    <!-- Tipología 6 - debajo del polígono: left:1038/1280=81.09%, top:1880/2085=90.17% -->
     {t6.tipo && (
-    <div class="absolute left-[1038px] top-[1880px] text-white font-display">
-      <p class="whitespace-nowrap text-[32px] leading-[0.959] mobile:text-[44px]">Tipología {t6.tipo}</p>
-      <p class="whitespace-nowrap mt-[8px] text-[64px] font-medium leading-[0.959] mobile:text-[88px]">{t6.areaTotal}</p>
+    <div class="absolute left-[81.09%] top-[90.17%] text-white font-display">
+      <p class="whitespace-nowrap text-[clamp(20px,2.5vw,32px)] leading-[0.959]">Tipología {t6.tipo}</p>
+      <p class="whitespace-nowrap mt-[8px] text-[clamp(40px,5vw,64px)] font-medium leading-[0.959]">{t6.areaTotal}</p>
       <svg class="absolute left-[104px] top-[-75px]" xmlns="http://www.w3.org/2000/svg" width="30" height="71" viewBox="0 0 30 71" fill="none">
         <path d="M13.3138 70.4142C14.0949 71.1953 15.3612 71.1953 16.1422 70.4142L28.8702 57.6863C29.6512 56.9052 29.6512 55.6389 28.8702 54.8579C28.0891 54.0768 26.8228 54.0768 26.0417 54.8579L14.728 66.1716L3.41432 54.8579C2.63327 54.0768 1.36694 54.0768 0.585892 54.8579C-0.195157 55.6389 -0.195157 56.9052 0.585892 57.6863L13.3138 70.4142ZM16.728 2V0H12.728V2H14.728H16.728ZM14.728 69H16.728V2H14.728H12.728V69H14.728Z" fill="white"/>
       </svg>
@@ -232,13 +230,13 @@ const t6 = byTipo['6'] ?? EMPTY_TIPO;
     )}
   </div>
 
-  <!-- Mobile-only: horizontal auto-advancing carousel. Each of the 5 slides
-       holds BOTH views for one tipología (render on top, floor plan below)
-       so a single carousel step shows the full page for that tipología. -->
-  <div data-tipologia-carousel-mobile class="hidden mobile:block relative z-10 overflow-hidden w-[1280px] mx-auto">
+  <!-- Mobile-only: horizontal auto-advancing carousel. Cada slide ocupa el
+       100% del viewport mobile; el ancho real se lee en JS al iniciar para
+       calcular el translateX (antes era hardcoded 1280px). -->
+  <div data-tipologia-carousel-mobile class="hidden mobile:block relative z-10 overflow-hidden w-full mx-auto">
     <div data-tipologia-track class="flex will-change-transform [transition:transform_700ms_cubic-bezier(0.65,0,0.35,1)]">
       {tipologias.map((t) => (
-        <div class="w-[1280px] flex-shrink-0">
+        <div class="w-full flex-shrink-0">
           <TipologiaAbierta2
             tipo={t.tipo}
             nombre={t.nombre}
@@ -282,7 +280,9 @@ const t6 = byTipo['6'] ?? EMPTY_TIPO;
       document.querySelectorAll<HTMLButtonElement>('[data-tipologia-dot]'),
     );
     if (carousel && track && dots.length > 0) {
-      const SLIDE_W = 1280;
+      // Slide width = viewport width (carrusel ocupa 100% del viewport en
+      // mobile). Se recalcula en resize para que orientationchange/rotación
+      // siga funcionando correctamente.
       const SLIDE_MS = 5000;
       const RESUME_DELAY = 4000;
       const total = dots.length;
@@ -290,11 +290,16 @@ const t6 = byTipo['6'] ?? EMPTY_TIPO;
       let timer: ReturnType<typeof setInterval> | null = null;
       let resume: ReturnType<typeof setTimeout> | null = null;
       let visible = true;
+      let slideW = carousel.offsetWidth;
 
       function paint() {
-        track!.style.transform = `translateX(-${idx * SLIDE_W}px)`;
+        track!.style.transform = `translateX(-${idx * slideW}px)`;
         dots.forEach((d, i) => d.setAttribute('data-active', String(i === idx)));
       }
+      window.addEventListener('resize', () => {
+        slideW = carousel!.offsetWidth;
+        paint();
+      });
       function goto(n: number) {
         idx = ((n % total) + total) % total;
         paint();

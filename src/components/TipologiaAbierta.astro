@@ -48,60 +48,68 @@ const tituloMostrado = nombre && nombre.trim() ? nombre.trim() : `Tipo ${tipo}`;
 // y se desbordan. Cuando el nombre termina en "2" bajamos el tamaño.
 const tituloEndsIn2 = /2$/.test(tituloMostrado);
 ---
-<section class="relative w-full min-w-[1280px] min-h-screen h-[832px] overflow-hidden bg-black">
-  <!-- Bedroom photo + dark overlay -->
-  <img
-    data-gallery="0"
-    src="/sections/tipologia-abierta/bedroom-bg.webp"
-    alt="Habitación VECTA 98 — Tipo 3"
-    class="absolute inset-0 w-full h-full object-cover cursor-pointer"
-    loading="lazy"
-    decoding="async"
-  />
+<section class="relative w-full h-screen h-[832px] overflow-hidden bg-black">
+  <!-- Bedroom photo + dark overlay. <picture> emite .webp para navegadores
+       modernos (mejor compresión) y cae a .jpg para IE11/Safari <14 sin
+       romper layout — el <img> es el elemento que participa en el layout. -->
+  <picture>
+    <source srcset="/sections/tipologia-abierta/bedroom-bg.webp" type="image/webp" />
+    <img
+      data-gallery="0"
+      src="/sections/tipologia-abierta/bedroom-bg.jpg"
+      alt="Habitación VECTA 98 — Tipo 3"
+      class="absolute inset-0 w-full h-full max-w-full object-cover cursor-pointer"
+      loading="lazy"
+      decoding="async"
+    />
+  </picture>
   <div class="absolute inset-0 bg-[rgb(56_48_28_/_0.44)]"></div>
 
-  <!-- Inner 1280px canvas -->
-  <div class="relative w-[1280px] min-h-screen h-[832px] mx-auto">
-    <!-- Top horizontal rule of the frame (with rounded ends from the image asset) -->
-    <div class="absolute left-[110px] top-[244px] w-[917px] h-px bg-white"></div>
-
+  <!-- Inner canvas: tope 1280px en desktop, fluido por debajo -->
+  <div class="relative w-full max-w-[1280px] min-h-screen h-[832px] mx-auto">
+    <!-- Decoradores del marco (reglas + dots): visible en desktop, oculto
+         en mobile donde reorganizamos los textos en columna sin marco. -->
+    <!-- Top horizontal rule -->
+    <div class="absolute left-[110px] top-[244px] w-[917px] h-px bg-white mobile:hidden"></div>
     <!-- Vertical rules -->
-    <div class="absolute left-[140px] top-[198px] w-px h-[354px] bg-white"></div>
-    <div class="absolute left-[567px] top-[198px] w-px h-[354px] bg-white"></div>
-
+    <div class="absolute left-[140px] top-[198px] w-px h-[354px] bg-white mobile:hidden"></div>
+    <div class="absolute left-[567px] top-[198px] w-px h-[354px] bg-white mobile:hidden"></div>
     <!-- Corner dots (4) -->
-    <div class="absolute left-[134px] top-[238px] w-[12px] h-[12px] rounded-full bg-white"></div>
-    <div class="absolute left-[561px] top-[238px] w-[12px] h-[12px] rounded-full bg-white"></div>
-    <div class="absolute left-[134px] top-[465px] w-[12px] h-[12px] rounded-full bg-white"></div>
-    <div class="absolute left-[561px] top-[465px] w-[12px] h-[12px] rounded-full bg-white"></div>
+    <div class="absolute left-[134px] top-[238px] w-[12px] h-[12px] rounded-full bg-white mobile:hidden"></div>
+    <div class="absolute left-[561px] top-[238px] w-[12px] h-[12px] rounded-full bg-white mobile:hidden"></div>
+    <div class="absolute left-[134px] top-[465px] w-[12px] h-[12px] rounded-full bg-white mobile:hidden"></div>
+    <div class="absolute left-[561px] top-[465px] w-[12px] h-[12px] rounded-full bg-white mobile:hidden"></div>
 
-    <!-- "Tipo N" big title (text is set by TipologiaModal at open time) -->
+    <!-- "Tipo N" big title. Desktop: posición Figma. Mobile: centrado horizontalmente, top reducido para layout vertical apilado. -->
     <h2
       data-tipologia-title
       data-tipo-small={tituloEndsIn2 ? '' : undefined}
-      class="absolute left-[170px] top-[279px] w-[393px] whitespace-nowrap text-white font-semibold text-[115px] data-[tipo-small]:text-[95px] leading-[0.959] font-display [text-shadow:0px_5px_10px_rgba(0,0,0,0.1),0px_19px_19px_rgba(0,0,0,0.09),0px_42px_25px_rgba(0,0,0,0.05)]">
+      class="absolute left-[170px] top-[279px] w-[393px] whitespace-nowrap text-white font-semibold text-[clamp(48px,9vw,115px)] data-[tipo-small]:text-[clamp(44px,7.5vw,95px)] leading-[0.959] font-display [text-shadow:0px_5px_10px_rgba(0,0,0,0.1),0px_19px_19px_rgba(0,0,0,0.09),0px_42px_25px_rgba(0,0,0,0.05)]
+             mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[120px] mobile:w-auto mobile:text-center">
       {tituloMostrado}
     </h2>
 
-    <!-- "X mts²" with leading arrow (text is set by TipologiaModal at open time) -->
+    <!-- "X mts²". Desktop: posición Figma. Mobile: centrado debajo del título. -->
     <p
       data-tipologia-mts
-      class="absolute left-[373px] top-[404px] w-[167px] text-white font-medium text-[40px] leading-[0.959] font-display">
+      class="absolute left-[373px] top-[404px] w-[167px] text-white font-medium text-[clamp(22px,3.2vw,40px)] leading-[0.959] font-display
+             mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[260px] mobile:w-auto mobile:text-center">
       {mts} mts²
     </p>
-    <!-- Small horizontal arrow line that points at "35 mts²" (Figma Vector 73). -->
+    <!-- Small horizontal arrow line — solo decorativo, oculto en mobile (no aplica al layout vertical). -->
     <svg
-      class="absolute left-[166px] top-[417px]"
+      class="absolute left-[166px] top-[417px] mobile:hidden"
       width="180" height="12" viewBox="0 0 180 12" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M0 6 H170 M163 0 L170 6 L163 12" stroke="white" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
 
-    <!-- Description (lime) -->
+    <!-- Description (lime). Desktop: derecha. Mobile: centrada con padding lateral. -->
     <p
       data-tipologia-descripcion
-      class="absolute left-[607px] top-[294px] w-[457px] text-vecta-lime-text font-medium text-[32px] leading-[0.959] font-display">{descripcion}</p>
+      class="absolute left-[607px] top-[294px] w-[457px] text-vecta-lime-text font-medium text-[clamp(18px,2.5vw,32px)] leading-[0.959] font-display
+             mobile:left-[5%] mobile:right-[5%] mobile:top-[360px] mobile:w-auto mobile:text-center">{descripcion}</p>
 
-    <!-- Bottom-right horizontal rule that closes the lower band -->
-    <div class="absolute left-[620px] top-[665px] w-[610px] h-px bg-white"></div>
+    <!-- Bottom-right rule — decorativo, oculto en mobile. -->
+    <div class="absolute left-[620px] top-[665px] w-[610px] h-px bg-white mobile:hidden"></div>
   </div>
 </section>

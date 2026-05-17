@@ -46,11 +46,11 @@ const items = cmsItems.length > 0 ? cmsItems : fallback;
 // el script reemplaza estos valores en mobile.
 const CLOSED_TOPS = items.map((_, i) => 313 + i * 73);
 ---
-<section class="relative w-full min-w-[1280px] min-h-screen overflow-hidden bg-vecta-night mobile:block mobile:h-[90vh] mobile:min-h-[90vh]">
-  <div class="relative w-[1280px] h-[832px] mx-auto mobile:h-[90vh]">
+<section class="relative w-full min-h-screen overflow-hidden bg-vecta-night mobile:block mobile:overflow-visible mobile:h-auto mobile:min-h-[100vh] mobile:pb-20">
+  <div class="relative w-full max-w-[1280px] h-[832px] mx-auto mobile:h-auto mobile:pb-24">
     <!-- Title -->
-    <h2 class="absolute text-vecta-lime font-semibold text-[60px] leading-[0.959] font-display left-[68px] top-[103px] w-[639px]
-               mobile:text-[80px] mobile:left-0 mobile:right-0 mobile:w-full mobile:text-center">
+    <h2 class="absolute text-vecta-lime font-semibold text-[clamp(28px,4.7vw,60px)] leading-[0.959] font-display left-[68px] top-[103px] w-[639px]
+               mobile:text-[clamp(22px,5.5vw,30px)] mobile:left-0 mobile:right-0 mobile:w-full mobile:text-center">
       Algunas preguntas<br/>frecuentes
     </h2>
 
@@ -69,12 +69,14 @@ const CLOSED_TOPS = items.map((_, i) => 313 + i * 73);
 
     <!-- Building fascade — repositions on mobile to occupy the bottom half.
          Section is 100vh tall on mobile (10vh taller than before) so the
-         fachada gets the extra room to show the full building. Top shifted
-         up 10vh (40vh → 30vh) so the building sits higher in the slide. -->
+         fachada gets the extra room to show the full building. -->
     <div class="absolute pointer-events-none left-[604px] top-[-125px] w-[829px] h-[1037px]
-                mobile:left-0 mobile:top-[30vh] mobile:w-[1280px] mobile:h-[60vh]">
-      <img src="/sections/preguntas/fachada.webp" alt="Fachada VECTA 98"
-           class="w-full h-full object-cover" loading="lazy" decoding="async" />
+                mobile:left-0 mobile:right-0 mobile:top-[30vh] mobile:w-full mobile:h-[60vh]">
+      <picture>
+        <source srcset="/sections/preguntas/fachada.webp" type="image/webp" />
+        <img src="/sections/preguntas/fachada.jpg" alt="Fachada VECTA 98"
+             class="w-full h-full object-cover max-w-full" loading="lazy" decoding="async" />
+      </picture>
     </div>
 
     <!-- Carets — clickable, rotate when open. transition: top 300ms for the
@@ -97,8 +99,8 @@ const CLOSED_TOPS = items.map((_, i) => 313 + i * 73);
          Static dimensions/typography live as Tailwind classes so the mobile
          variant can override them. -->
     {items.map((item, idx) => (
-      <p class="absolute text-vecta-lime font-semibold leading-[1.09] font-display left-[81px] w-[600px] text-[32px] tracking-[-0.352px] [transition:top_0.3s_ease]
-                mobile:!text-[56px] mobile:!w-[1100px]"
+      <p class="absolute text-vecta-lime font-semibold leading-[1.09] font-display left-[81px] w-[600px] text-[clamp(18px,2.5vw,32px)] tracking-[-0.352px] [transition:top_0.3s_ease]
+                mobile:!text-[clamp(14px,4vw,17px)] mobile:!w-[calc(100vw-100px)]"
          data-faq-question={idx}
          style={`top: ${CLOSED_TOPS[idx]}px;`}>
         {item.q}
@@ -110,8 +112,8 @@ const CLOSED_TOPS = items.map((_, i) => 313 + i * 73);
          Offset 80px from the question top: deja margen para preguntas que
          wrappean a 2 líneas (línea 2 termina en ~70px) sin pisar la respuesta. -->
     {items.map((item, idx) => (
-      <p class="absolute text-white font-semibold leading-[1.09] pointer-events-none font-display left-[81px] w-[602px] text-[20px] tracking-[-0.22px] opacity-0 [transition:opacity_0.2s_ease,top_0.3s_ease]
-                mobile:!text-[40px] mobile:!w-[1100px]"
+      <p class="absolute text-white font-semibold leading-[1.09] pointer-events-none font-display left-[81px] w-[602px] text-[clamp(14px,1.6vw,20px)] tracking-[-0.22px] opacity-0 [transition:opacity_0.2s_ease,top_0.3s_ease]
+                mobile:!text-[clamp(12px,3.5vw,15px)] mobile:!w-[calc(100vw-100px)]"
          data-faq-answer={idx}
          style={`top: ${CLOSED_TOPS[idx] + 80}px;`}>
         {item.a}
@@ -136,19 +138,13 @@ const CLOSED_TOPS = items.map((_, i) => 313 + i * 73);
   // overlapping the next row. Aligned with the `mobile:` Tailwind variant
   // (html[data-device="phone"]) so JS positions match CSS layout.
   const isMobile = document.documentElement.getAttribute('data-device') === 'phone';
-  const ROW_SPACING = isMobile ? 110 : 73;
-  const CLOSED_TOPS = Array.from({ length: total }, (_, i) => 313 + i * ROW_SPACING);
-  const CARET_OFFSET          = isMobile ? 8  : 2;
-  // Gap visible entre el bottom real de la pregunta y el top de la respuesta.
-  // Antes era un ANSWER_OFFSET fijo (80 desktop / 175 mobile), que dejaba un
-  // hueco grande con preguntas de 1 línea. Ahora medimos la altura real de la
-  // pregunta y sumamos solo este gap pequeño.
-  const ANSWER_GAP            = isMobile ? 30 : 8;
-  const LINE_GAP_BELOW_ANSWER = isMobile ? 28 : 16;
-  const BUFFER_BELOW_LINE     = isMobile ? 36 : 22;
-  // LINE_OFFSET sólo se usa para items CERRADOS (línea con opacity 0 igual,
-  // pero mantenemos su posición previa por consistencia con el SSR).
-  const LINE_OFFSET           = isMobile ? 305 : 126;
+  const ROW_SPACING = isMobile ? 62 : 73;
+  const CLOSED_TOPS = Array.from({ length: total }, (_, i) => (isMobile ? 210 : 313) + i * ROW_SPACING);
+  const CARET_OFFSET          = isMobile ? 4  : 2;
+  const ANSWER_GAP            = isMobile ? 8 : 8;
+  const LINE_GAP_BELOW_ANSWER = isMobile ? 8 : 16;
+  const BUFFER_BELOW_LINE     = isMobile ? 12 : 22;
+  const LINE_OFFSET           = isMobile ? 110 : 126;
   const FADE_MS = 200;
   const SHIFT_MS = 300;
 

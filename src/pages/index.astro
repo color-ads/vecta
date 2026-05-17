@@ -15,12 +15,12 @@ import Formulario from '../sections/Formulario.astro';
 <Layout title="VECTA 98">
 	<!-- Single, fixed nav that stays visible while the user scrolls between blocks.
 	     data-nav-theme is updated by the script below as the user scrolls so the
-	     nav text/lines flip dark over light-background sections (2, 3, 4, 11). -->
+	     nav text/lines flip dark over light-background sections (2, 3, 4, 11).
+	     `pointer-events-none` on the bar lets clicks pass through empty areas;
+	     interactive clusters inside Header.astro re-enable pointer events. -->
 	<header id="site-nav" data-nav-theme="light"
 	        class="fixed top-0 left-0 right-0 z-[120] h-[130px] pointer-events-none">
-		<div class="relative w-[1280px] h-full mx-auto pointer-events-auto">
-			<Header variant="light" />
-		</div>
+		<Header variant="light" />
 	</header>
 
 	<main class="bg-vecta-bg max-w-[1600px] mx-auto">

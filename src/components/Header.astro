@@ -1,14 +1,24 @@
 ---
-// Header — replicates Figma "Group 10" (id 2030:52)
-// Position in HOME canvas: x=139, y=59, w=1002.5, h=36
-// Top line (Vector "Vector"): x=139, y=59, w=1002.5
-// Bottom line (Vector 16): x=139, y=95, w=1002.5
-// Vertical dividers (Vector 21,22,23,24): y=60, h=34, at x=388, 534, 684, 842 (canvas)
-// Frame 18 (nav text): x=318, y=66, w=645, h=21
-// Nav items (Frame 18 local x): HOME 0/55, ABOUT US 105/90, ESPACIOS 245/87, TIPOLOGÍAS 382/111, INVERSIÓN 543/102
-// Hamburger: x=20, y=30, 100x100 (mobile)
-// Caret Up: x=50, y=36, 36x36 (desktop)
-// Caret Down: x=50, y=83, 36x36 (desktop)
+// Header — Floating nav. Desktop (≥769px) is a 3-zone layout that adapts
+// fluidly from 1024 hasta 1920+; mobile (≤768) usa el hamburger + drawer
+// fullscreen sin cambios respecto a la versión Figma original.
+//
+// Layout desktop:
+//   ┌────────────────────────────────────────────────────────────────────┐
+//   │ [↑↓]              [── HOME · NOSOTROS · ESPACIOS · … ──]      [AC] │
+//   │ pegado al                  strip centrado en viewport          pegado│
+//   │ borde izq                  max-w-1003px, fluido                al der│
+//   └────────────────────────────────────────────────────────────────────┘
+//
+// Ancho del strip = min(viewport - 280px, 1003px) → a 1024px se reduce a
+// 744px, a 1280px topa en 1000px, a 1920px+ se queda en 1003px y se
+// centra. 280px = reserva total para los clusters laterales (carets +
+// logo + padding hacia el borde) de modo que jamás se solapan con el strip.
+//
+// Theming (data-nav-theme): los rules en global.css cambian background-
+// color y color sobre selectores .bg-white / .text-white / .border-white,
+// más los atributos [data-nav-rule], [data-nav-divider] y
+// [data-actualcorp-logo]. Esos selectores se preservan exactamente.
 
 interface Props {
   active?: "HOME" | "NOSOTROS" | "ESPACIOS" | "TIPOLOGÍAS" | "INVERSIÓN";
@@ -18,57 +28,92 @@ const { active, variant = "light" } = Astro.props;
 const stroke = variant === "light" ? "bg-white/70" : "bg-vecta-dark/70";
 const inactive = variant === "light" ? "text-white" : "text-vecta-dark";
 const burger = variant === "light" ? "bg-white" : "bg-vecta-dark";
-// Caret circle buttons (up/down). Both default to white lines in the light
-// variant (Hero) until pressed. Pressed state is toggled via JS below.
 const caretBorder = variant === "light" ? "border-white text-white" : "border-vecta-dark text-vecta-dark";
 
-// Frame 18 sits at canvas x=318 inside the 1280px hero. Items are absolutely
-// positioned within it. Each maps to a section id so the nav scroll-jumps to
-// the right block; smooth-scroll + scroll-padding-top live in Layout.astro.
+// Cada item mapea a un section id. La navegación es por hash; smooth-scroll
+// + scroll-padding-top viven en Layout.astro.
 const navItems = [
-  { label: "HOME",       x: 0,   w: 55,  href: "#hero" },
-  { label: "NOSOTROS",   x: 105, w: 90,  href: "#about-carousel" },
-  { label: "ESPACIOS",   x: 245, w: 87,  href: "#espacios" },
-  { label: "TIPOLOGÍAS", x: 382, w: 111, href: "#tipologias" },
-  { label: "INVERSIÓN",  x: 543, w: 102, href: "#inversion" },
+  { label: "HOME",       href: "#hero" },
+  { label: "NOSOTROS",   href: "#about-carousel" },
+  { label: "ESPACIOS",   href: "#espacios" },
+  { label: "TIPOLOGÍAS", href: "#tipologias" },
+  { label: "INVERSIÓN",  href: "#inversion" },
 ] as const;
-
-// Dividers absolute x within the 1280px canvas
-const dividers = [388, 534, 684, 842];
 ---
 
-<!-- Top + bottom horizontal lines. The .desktop-nav class is kept because
-     index.astro's per-section nav-theme CSS targets it; everything inside is
-     hidden on mobile via the `mobile:hidden` Tailwind variant (touch devices
-     OR layout viewport ≤1280 — see @custom-variant in global.css). -->
-<div data-nav-rule="top" class={`desktop-nav absolute left-[139px] top-[59px] w-[1003px] h-px ${stroke} z-30 mobile:hidden`}></div>
-<div data-nav-rule="bottom" class={`desktop-nav absolute left-[139px] top-[95px] w-[1003px] h-px ${stroke} z-30 mobile:hidden`}></div>
+<!-- ============================================================
+     DESKTOP NAV (≥769px) — carets a la izquierda, strip centrado,
+     logo a la derecha. Hidden en mobile vía global.css.
+     ============================================================ -->
+<div class="desktop-nav absolute inset-0 pointer-events-none mobile:hidden">
 
-<!-- Vertical dividers between nav items (y=60, h=34) -->
-{dividers.map((x, i) => (
-  <div data-nav-divider={i} class={`desktop-nav absolute top-[60px] w-px h-[34px] ${stroke} z-30 mobile:hidden`} style={`left:${x}px`}></div>
-))}
-
-<!-- Frame 18 nav items (Albert Sans / Afacad Regular 22px). Default = white in
-     light variant / vecta-dark in dark variant. Hover and active both use
-     vecta-lime (#EAFC9D) — the project's yellow accent. Anchors with native
-     hash navigation; smooth scroll handled at the html level. -->
-<nav class="desktop-nav absolute left-[318px] top-[66px] w-[645px] h-[21px] z-30 font-nav mobile:hidden">
-  {navItems.map((item) => (
-    <a
-      href={item.href}
-      class={`absolute top-0 text-[22px] leading-[0.959] whitespace-nowrap cursor-pointer transition-colors ${active === item.label ? "text-vecta-lime" : `${inactive} hover:text-vecta-lime`}`}
-      style={`left:${item.x}px;width:${item.w}px;`}
+  <!-- Carets cluster (up/down) — pegado al borde izquierdo del viewport -->
+  <div class="absolute top-[36px] left-[clamp(20px,3vw,50px)] flex flex-col gap-[11px] z-30 pointer-events-auto">
+    <button
+      aria-label="Subir"
+      data-caret="up"
+      type="button"
+      class={`caret-btn w-[36px] h-[36px] rounded-full border ${caretBorder} flex items-center justify-center cursor-pointer transition-colors`}
     >
-      {item.label}
-    </a>
-  ))}
-</nav>
+      <svg viewBox="0 0 24 24" class="w-[14px] h-[14px]" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
+      </svg>
+    </button>
+    <button
+      aria-label="Bajar"
+      data-caret="down"
+      type="button"
+      class={`caret-btn w-[36px] h-[36px] rounded-full border ${caretBorder} flex items-center justify-center cursor-pointer transition-colors`}
+    >
+      <svg viewBox="0 0 24 24" class="w-[14px] h-[14px]" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+      </svg>
+    </button>
+  </div>
 
-<!-- Hamburger menu (Menu / Hamburger_MD). Hidden on desktop, shown on mobile.
-     `mobile:` variant fires for touch devices and viewports ≤1280px. -->
+  <!-- actualcorp logo — pegado al borde derecho del viewport. Es un PNG
+       blanco estático; en bloques de fondo claro (inversion/ubicacion/
+       formulario) global.css le aplica filter:invert. -->
+  <img
+    src="/Logo%20Actual%20Corp.png"
+    alt="actualcorp"
+    data-actualcorp-logo
+    class="absolute top-[49px] right-[clamp(20px,2vw,40px)] w-[102px] h-[102px] z-30 pointer-events-auto"
+  />
+
+  <!-- Nav strip — centrado en viewport, ancho fluido tope 1003px.
+       Contiene las 2 líneas horizontales + 5 items + 4 dividers verticales. -->
+  <div class="absolute top-[59px] left-1/2 -translate-x-1/2 w-[min(calc(100vw-280px),1003px)] h-[36px] z-30 pointer-events-auto">
+    <!-- Líneas horizontales superior + inferior; abarcan todo el strip. -->
+    <div data-nav-rule="top"    class={`absolute inset-x-0 top-0    h-px ${stroke}`}></div>
+    <div data-nav-rule="bottom" class={`absolute inset-x-0 bottom-0 h-px ${stroke}`}></div>
+
+    <!-- Items + dividers con flex justify-between. Tipografía fluida con
+         clamp() para que a 1024 se reduzca sin romper el layout. -->
+    <nav class="relative h-full flex items-center justify-between gap-[clamp(8px,1.2vw,16px)] px-[clamp(20px,3vw,60px)] font-nav">
+      {navItems.map((item, idx) => (
+        <Fragment>
+          {idx > 0 && (
+            <span data-nav-divider={idx - 1} class={`shrink-0 w-px h-[34px] ${stroke}`}></span>
+          )}
+          <a
+            href={item.href}
+            class={`text-[clamp(14px,1.5vw,22px)] leading-[0.959] whitespace-nowrap cursor-pointer transition-colors ${active === item.label ? "text-vecta-lime" : `${inactive} hover:text-vecta-lime`}`}
+          >
+            {item.label}
+          </a>
+        </Fragment>
+      ))}
+    </nav>
+  </div>
+</div>
+
+<!-- ============================================================
+     MOBILE NAV (≤768) — Hamburger + drawer fullscreen.
+     Visibilidad forzada por global.css (@media + data-device).
+     ============================================================ -->
 <button
-  class={`mobile-hamburger absolute left-[20px] top-[30px] w-[100px] h-[100px] z-50 hidden mobile:flex flex-col items-center justify-center gap-[12px]`}
+  class={`mobile-hamburger absolute left-[20px] top-[30px] w-[100px] h-[100px] z-50 hidden mobile:flex flex-col items-center justify-center gap-[12px] pointer-events-auto`}
   aria-label="Abrir menú"
   aria-expanded="false"
   data-mobile-toggle
@@ -78,12 +123,9 @@ const dividers = [388, 534, 684, 842];
   <span class={`burger-line block w-[60px] h-[4px] ${burger}`}></span>
 </button>
 
-<!-- Mobile drawer: full-viewport overlay shown when the hamburger is open.
-     Lives in the same fixed container as the header; uses position:fixed so
-     it expands beyond the 130px nav strip. Visibility is gated on both
-     `mobile:` AND `data-[open=true]:` so it stays hidden on desktop. -->
+<!-- Drawer fullscreen. position:fixed para cubrir más allá del nav strip. -->
 <div
-  class="mobile-menu fixed inset-0 z-40 bg-vecta-night/95 backdrop-blur-sm hidden mobile:data-[open=true]:flex items-center justify-center"
+  class="mobile-menu fixed inset-0 z-40 bg-vecta-night/95 backdrop-blur-sm hidden mobile:data-[open=true]:flex items-center justify-center pointer-events-auto"
   data-mobile-menu
   hidden
 >
@@ -92,7 +134,7 @@ const dividers = [388, 534, 684, 842];
       <li>
         <a
           href={item.href}
-          class={`text-[72px] leading-[1.2] tracking-[0.02em] whitespace-nowrap text-white hover:text-vecta-lime transition-colors ${active === item.label ? "text-vecta-lime" : ""}`}
+          class={`text-[clamp(36px,6vw,72px)] leading-[1.2] tracking-[0.02em] whitespace-nowrap text-white hover:text-vecta-lime transition-colors ${active === item.label ? "text-vecta-lime" : ""}`}
           data-mobile-link
         >
           {item.label}
@@ -101,21 +143,6 @@ const dividers = [388, 534, 684, 842];
     ))}
   </ul>
 </div>
-
-<script is:inline>
-  // Redundant device-detection guard. Layout.astro runs the same logic in
-  // <head>, but if for any reason that script didn't classify (cache,
-  // ordering, error), do it again here from screen.width alone.
-  (function () {
-    if (typeof screen === 'undefined' || !document.documentElement) return;
-    var w = screen.width || Infinity;
-    var current = document.documentElement.getAttribute('data-device');
-    if (current && current !== 'desktop') return;
-    if (w <= 600) document.documentElement.setAttribute('data-device', 'phone');
-    else if (w <= 768) document.documentElement.setAttribute('data-device', 'tablet');
-    else if (w <= 1024) document.documentElement.setAttribute('data-device', 'pc-small');
-  })();
-</script>
 
 <script>
   const toggle = document.querySelector<HTMLButtonElement>('[data-mobile-toggle]');
@@ -141,45 +168,11 @@ const dividers = [388, 534, 684, 842];
     setOpen(!isOpen);
   });
 
-  // Close when any link is tapped (lets the hash scroll happen first).
+  // Cierre al tocar un link (deja que el hash scroll se ejecute primero).
   links.forEach((a) => a.addEventListener('click', () => setOpen(false)));
 
-  // Close on Escape.
+  // Cierre con Escape.
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') setOpen(false);
   });
 </script>
-
-<!-- Caret Up + Caret Down circle buttons. Default state (not pressed) uses
-     white lines in the light variant; pressing toggles a "is-pressed" class
-     handled by the script in Layout.astro / index.astro. -->
-<button
-  aria-label="Subir"
-  data-caret="up"
-  class={`desktop-nav caret-btn absolute left-[50px] top-[36px] w-[36px] h-[36px] rounded-full border ${caretBorder} flex items-center justify-center z-30 cursor-pointer transition-colors mobile:hidden`}
->
-  <svg viewBox="0 0 24 24" class="w-[14px] h-[14px]" fill="none" stroke="currentColor" stroke-width="2">
-    <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
-  </svg>
-</button>
-<button
-  aria-label="Bajar"
-  data-caret="down"
-  class={`desktop-nav caret-btn absolute left-[50px] top-[83px] w-[36px] h-[36px] rounded-full border ${caretBorder} flex items-center justify-center z-30 cursor-pointer transition-colors mobile:hidden`}
->
-  <svg viewBox="0 0 24 24" class="w-[14px] h-[14px]" fill="none" stroke="currentColor" stroke-width="2">
-    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-  </svg>
-</button>
-
-<!-- actualcorp logo on the right side of the floating nav (mirrors the
-     caret cluster at left-[50px]). Static white PNG with transparent bg —
-     replaces the previous inline SVG. Lives inside #site-nav so it scrolls
-     with the fixed nav. NOTE: this image is solid white, so it stays white
-     across all sections regardless of data-nav-theme. -->
-<img
-  src="/Logo%20Actual%20Corp.png"
-  alt="actualcorp"
-  data-actualcorp-logo
-  class="desktop-nav absolute right-[-14px] top-[49px] w-[102px] h-[102px] z-30 mobile:hidden"
-/>

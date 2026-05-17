@@ -28,7 +28,7 @@ const parsed = parseBloque2(bloque2);
 const ubicacion = parsed?.ubicacion ?? 'Bogotá, Colombia';
 const area = parsed?.area ?? '40 mts²';
 ---
-<section id="inversion" class="relative w-full min-w-[1280px] min-h-screen overflow-hidden">
+<section id="inversion" class="relative w-full min-h-screen overflow-hidden">
   <!-- Apartment render bleeds full-width across the viewport -->
   <img
     src={bgSrc}
@@ -38,15 +38,17 @@ const area = parsed?.area ?? '40 mts²';
     decoding="async"
   />
 
-  <!-- Inner 1280px canvas keeps Figma absolute positions intact for the overlay text -->
-  <div class="relative w-[1280px] h-full mx-auto">
-    <!-- Right-side info card text (Group 11 in Figma). Mobile widens the box
-         and bumps the text sizes so labels + figures read on small screens. -->
-    <div class="absolute right-[58px] top-[231px] w-[300px] text-vecta-dark text-right font-display mobile:w-[500px]">
-      <p class="text-[32px] leading-[0.959] mobile:text-[48px]">{ubicacion}</p>
+  <!-- Inner canvas: tope 1280px, fluido por debajo. El overlay text-right se
+       ancla al borde derecho del canvas con padding-right en clamp() para
+       que respire en cualquier viewport. -->
+  <div class="relative w-full max-w-[1280px] h-full mx-auto px-[clamp(20px,4vw,58px)]">
+    <!-- Right-side info card text (Group 11 en Figma). En móvil el ancho
+         crece y la tipografía escala. -->
+    <div class="absolute right-[clamp(20px,4vw,58px)] top-[231px] w-[clamp(260px,30vw,300px)] text-vecta-dark text-right font-display mobile:w-[clamp(280px,80vw,500px)]">
+      <p class="text-[clamp(22px,2.6vw,32px)] leading-[0.959] mobile:text-[clamp(24px,4vw,48px)]">{ubicacion}</p>
 
-      <p class="mt-[50px] text-[32px] leading-[0.959] mobile:text-[48px]">Aptos desde</p>
-      <p class="mt-[12px] text-[64px] font-medium leading-[0.959] mobile:text-[88px]">{area}</p>
+      <p class="mt-[50px] text-[clamp(22px,2.6vw,32px)] leading-[0.959] mobile:text-[clamp(24px,4vw,48px)]">Aptos desde</p>
+      <p class="mt-[12px] text-[clamp(44px,5vw,64px)] font-medium leading-[0.959] mobile:text-[clamp(40px,7vw,88px)]">{area}</p>
     </div>
   </div>
 </section>

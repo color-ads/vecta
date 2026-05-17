@@ -15,10 +15,16 @@
 
 /* ============================================================
    Per-resolution variants (scoped — edits in one don't leak to others).
-   Layout.astro reads screen.width + innerWidth and tags <html> with
-   `data-device` so we distinguish phones from 1280-layout desktops (the
-   meta viewport=1280 forces the layout viewport on real mobile devices,
-   hiding their device size from media queries).
+
+   Each variant matches on TWO conditions so it fires reliably in every
+   environment:
+     1. native @media query  → works at first paint, before JS runs,
+                                and on any device whether or not the
+                                Layout.astro script executed
+     2. html[data-device="…"] → set by Layout.astro's script; covers any
+                                future case where JS classification needs
+                                to override the raw viewport bucket
+   Both routes use the SAME thresholds, so they agree.
 
    ISOLATION RULE
    ─ Every per-resolution edit MUST go in one of these variants. Never
@@ -27,22 +33,50 @@
    ─ JS that branches on "isMobile" must read `data-device === 'phone'`
      so its definition of mobile matches the `mobile:` variant exactly.
 
-   ┌────────────────┬─────────────────────────────────────────────┐
-   │ phone (≤768)   │ mobile:property                             │
-   │ 1024 PC        │ pc-small:property (or pc-small:!) │
-   │ 1440 PC        │ desktop:property                            │
-   │ 600-768 narrow │ tablet:property (only when needed)          │
-   └────────────────┴─────────────────────────────────────────────┘
+   ┌────────────────────┬──────────────────────────────────────────┐
+   │ ≤ 600  phone       │ mobile:property                          │
+   │ 601-768 tablet     │ tablet-device:property                   │
+   │ 769-1024 small PC  │ pc-small:property (or pc-small:!)        │
+   │ ≥ 1025 full PC     │ desktop:property                         │
+   │ ≤ 768 phone+tablet │ narrow:property (use for stacked layouts)│
+   └────────────────────┴──────────────────────────────────────────┘
    ============================================================ */
-@custom-variant mobile (html[data-device="phone"] &);
-@custom-variant tablet (@media (min-width: 600px) and (max-width: 768px));
-@custom-variant tablet-device (html[data-device="tablet"] &);
-@custom-variant pc-small (html[data-device="pc-small"] &);
-@custom-variant desktop (html[data-device="desktop"] &);
-/* `narrow` — phone OR tablet (≤768). Use it on a section that should keep
-   the mobile-stacked layout at 768 (e.g. Formulario), instead of `mobile:`
-   which only fires at phone (≤600). */
-@custom-variant narrow (html[data-device="phone"] &, html[data-device="tablet"] &);
+/* `narrow` defined FIRST so that `mobile:` (defined below) appears later in
+   the stylesheet and wins the cascade whenever both target the same phone
+   element. Order matters: later rule wins at equal specificity. */
+@custom-variant narrow {
+  @media (min-width: 601px) and (max-width: 768px) { @slot; }
+  html[data-device="phone"] & { @slot; }
+  html[data-device="tablet"] & { @slot; }
+}
+@custom-variant tablet {
+  @media (min-width: 601px) and (max-width: 768px) { @slot; }
+  html[data-device="tablet"] & { @slot; }
+}
+/* `tablet-device` kept as an alias of `tablet` for backwards compat with
+   existing usages — both fire on the 601-768 bucket. */
+@custom-variant tablet-device {
+  @media (min-width: 601px) and (max-width: 768px) { @slot; }
+  html[data-device="tablet"] & { @slot; }
+}
+@custom-variant pc-small {
+  @media (min-width: 769px) and (max-width: 1024px) { @slot; }
+  html[data-device="pc-small"] & { @slot; }
+}
+@custom-variant desktop {
+  @media (min-width: 1025px) { @slot; }
+  html[data-device="desktop"] & { @slot; }
+}
+/* `mobile` defined LAST so it wins the cascade over `narrow:` on phones.
+   Double attribute selector [data-device][data-device="phone"] gives it
+   higher specificity ([0,2,1]) than narrow's single attr ([0,1,1]), which
+   guarantees mobile: wins even if any future reordering occurs.
+   Media query is max-width:600px (narrow's media query is now 601-768, so
+   they no longer overlap at first paint). */
+@custom-variant mobile {
+  @media (max-width: 600px) { @slot; }
+  html[data-device][data-device="phone"] & { @slot; }
+}
 
 /* Resolution buckets driven by `data-device` (set by Layout.astro reading
    screen.width + visualViewport.width):

@@ -13,14 +13,14 @@ import TipologiaAbierta2 from './TipologiaAbierta2.astro';
   role="dialog"
   aria-modal="true"
   aria-labelledby="tipologia-modal-title"
-  class="fixed inset-0 z-[100] bg-black/80 overflow-y-auto overscroll-contain">
+  class="fixed inset-0 z-[100] bg-black/80 overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch]">
 
   <!-- Close button (fixed top right of viewport, sits above the global nav). -->
   <button
     data-tipologia-close
     aria-label="Cerrar"
     type="button"
-    class="fixed top-[24px] right-[24px] z-[130] w-[48px] h-[48px] rounded-full bg-white text-vecta-dark flex items-center justify-center text-[28px] leading-none hover:bg-vecta-lime transition-colors cursor-pointer">
+    class="fixed top-[24px] right-[24px] z-[130] w-[48px] h-[48px] rounded-full bg-white text-vecta-dark flex items-center justify-center text-[clamp(16px,2.2vw,28px)] leading-none hover:bg-vecta-lime transition-colors cursor-pointer">
     ×
   </button>
 
@@ -52,7 +52,7 @@ import TipologiaAbierta2 from './TipologiaAbierta2.astro';
     data-gallery-close
     aria-label="Cerrar visor"
     type="button"
-    class="fixed top-[24px] right-[24px] z-[150] w-[48px] h-[48px] rounded-full bg-white text-vecta-dark flex items-center justify-center text-[28px] leading-none hover:bg-vecta-lime transition-colors cursor-pointer">
+    class="fixed top-[24px] right-[24px] z-[150] w-[48px] h-[48px] rounded-full bg-white text-vecta-dark flex items-center justify-center text-[clamp(16px,2.2vw,28px)] leading-none hover:bg-vecta-lime transition-colors cursor-pointer">
     ×
   </button>
 
@@ -60,14 +60,14 @@ import TipologiaAbierta2 from './TipologiaAbierta2.astro';
     data-gallery-prev
     aria-label="Imagen anterior"
     type="button"
-    class="fixed left-[24px] top-1/2 -translate-y-1/2 z-[150] w-[64px] h-[64px] rounded-full bg-white/90 text-vecta-dark flex items-center justify-center text-[40px] leading-none hover:bg-vecta-lime transition-colors cursor-pointer">
+    class="fixed left-[24px] top-1/2 -translate-y-1/2 z-[150] w-[64px] h-[64px] rounded-full bg-white/90 text-vecta-dark flex items-center justify-center text-[clamp(22px,3.2vw,40px)] leading-none hover:bg-vecta-lime transition-colors cursor-pointer">
     ‹
   </button>
   <button
     data-gallery-next
     aria-label="Imagen siguiente"
     type="button"
-    class="fixed right-[24px] top-1/2 -translate-y-1/2 z-[150] w-[64px] h-[64px] rounded-full bg-white/90 text-vecta-dark flex items-center justify-center text-[40px] leading-none hover:bg-vecta-lime transition-colors cursor-pointer">
+    class="fixed right-[24px] top-1/2 -translate-y-1/2 z-[150] w-[64px] h-[64px] rounded-full bg-white/90 text-vecta-dark flex items-center justify-center text-[clamp(22px,3.2vw,40px)] leading-none hover:bg-vecta-lime transition-colors cursor-pointer">
     ›
   </button>
 
@@ -248,13 +248,19 @@ import TipologiaAbierta2 from './TipologiaAbierta2.astro';
   // Opens when any [data-gallery] image is clicked; arrow buttons /
   // arrow keys navigate between the images; Escape / × / backdrop close.
   // ------------------------------------------------------------------
+  // Las URLs del lightbox se setean dinámicamente como `img.src` (no via
+  // <picture>), así que no hay fallback automático para WebP. Usamos .jpg
+  // como fallback universal — IE11 / Safari < 14 funcionan; navegadores
+  // modernos cargan jpg en el lightbox (pierden compresión WebP pero solo
+  // afecta a la galería abierta, no al fondo principal del modal que sí
+  // usa <picture> en TipologiaAbierta.astro).
   const galleryItems = [
     {
-      src: '/sections/tipologia-abierta/bedroom-bg.webp',
+      src: '/sections/tipologia-abierta/bedroom-bg.jpg',
       alt: 'Habitación VECTA 98',
     },
     {
-      src: '/sections/tipologia-abierta/floor-plan.webp',
+      src: '/sections/tipologia-abierta/floor-plan.jpg',
       alt: 'Plano de tipología VECTA 98',
     },
   ];

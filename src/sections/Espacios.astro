@@ -36,7 +36,7 @@ const slides = (res.items as Array<{ fields: LugarFields }>).map((it) => {
   };
 });
 ---
-<section id="espacios" class="relative w-full min-w-[1280px] min-h-screen overflow-hidden bg-black flex items-center justify-center">
+<section id="espacios" class="relative w-full min-h-screen overflow-hidden bg-black flex items-center justify-center">
   <!-- Stack all background photos full-bleed; only the active one is visible
        (controlled by the script below via inline opacity). -->
   {slides.map((slide, i) => (
@@ -57,38 +57,38 @@ const slides = (res.items as Array<{ fields: LugarFields }>).map((it) => {
        on a data-* attribute that competes with the existing selectors. -->
   <script type="application/json" data-espacios-data set:html={JSON.stringify(slides.map((s) => ({ title: s.title, subtitle: s.subtitle })))}></script>
 
-  <!-- Inner 1280px canvas keeps Figma absolute positions intact -->
-  <div class="relative w-[1280px] h-[832px] mx-auto">
+  <!-- Inner canvas: tope 1280px, fluido por debajo. Las figuras
+       geométricas y flechas están posicionadas en % para escalar. -->
+  <div class="relative w-full max-w-[1280px] h-[832px] mx-auto">
     <!-- Geometric figure from GYM ESPACIOS (Figma 2069:154 "Group 11").
          Three concentric layers centered at (640, 444.5) — 28.5px below the
-         canvas center, matching `top: calc(50% + 28.5px)` in the Figma source.
-         All borders are 1px white 50% opacity. -->
-    <!-- Rectangle 2 (2069:155) — outer 887.419×887.419 rotated -45°
-         (rotated bounding box is the 1255×1255 diamond) -->
-    <div class="absolute pointer-events-none w-[887.419px] h-[887.419px] top-[0.7905px] left-[196.2905px] border border-white/50 rotate-[-45deg]"></div>
+         canvas center. Hidden on mobile (fixed px positions overflow narrow viewports). -->
+    <!-- Rectangle 2 (2069:155) — outer 887.419×887.419 rotated -45° -->
+    <div class="absolute pointer-events-none w-[887.419px] h-[887.419px] top-[0.7905px] left-[196.2905px] border border-white/50 rotate-[-45deg] mobile:hidden"></div>
     <!-- Ellipse 1 (2069:157) — circle 620.185×620.185 -->
-    <div class="absolute pointer-events-none rounded-full w-[620.185px] h-[620.185px] top-[134.4075px] left-[329.9075px] border border-white/50"></div>
+    <div class="absolute pointer-events-none rounded-full w-[620.185px] h-[620.185px] top-[134.4075px] left-[329.9075px] border border-white/50 mobile:hidden"></div>
     <!-- Rectangle 3 (2069:156) — inner 620.185×620.185 axis-aligned -->
-    <div class="absolute pointer-events-none w-[620.185px] h-[620.185px] top-[134.4075px] left-[329.9075px] border border-white/50"></div>
+    <div class="absolute pointer-events-none w-[620.185px] h-[620.185px] top-[134.4075px] left-[329.9075px] border border-white/50 mobile:hidden"></div>
 
     <!-- Title + subtitle stack (both swapped per slide by the script). -->
-    <div class="absolute left-1/2 top-[399px] -translate-x-1/2 text-center text-white whitespace-nowrap font-display">
-      <h2 data-espacios-title class="text-[64px] font-medium leading-[0.959] mobile:text-[96px]">{slides[0]?.title ?? ''}</h2>
-      <p data-espacios-subtitle class="text-[32px] font-normal leading-[0.959] mobile:text-[44px]">{slides[0]?.subtitle ?? ''}</p>
+    <div class="absolute left-1/2 top-[399px] -translate-x-1/2 text-center text-white whitespace-nowrap font-display
+                mobile:top-[42vh] mobile:w-[calc(100vw-32px)]">
+      <h2 data-espacios-title class="text-[clamp(28px,5vw,64px)] font-medium leading-[0.959] mobile:text-[24px] mobile:whitespace-normal">{slides[0]?.title ?? ''}</h2>
+      <p data-espacios-subtitle class="text-[clamp(18px,2.5vw,32px)] font-normal leading-[0.959] mobile:text-[15px] mobile:whitespace-normal">{slides[0]?.subtitle ?? ''}</p>
     </div>
 
     <!-- Arrow buttons (Figma 2021:201, 2021:203). The SVG includes the circle
          outline + chevron — no extra border or background on the <button>.
          Prev mirrors the same SVG via scaleX(-1). -->
     <button data-espacios-prev
-            class="absolute left-[153px] top-[378px] w-[76px] h-[76px] cursor-pointer hover:opacity-70 transition-opacity"
+            class="absolute left-[clamp(20px,12%,153px)] top-[378px] w-[76px] h-[76px] cursor-pointer hover:opacity-70 transition-opacity mobile:hidden"
             aria-label="Anterior">
       <svg xmlns="http://www.w3.org/2000/svg" width="76" height="76" viewBox="0 0 76 76" fill="none" style="transform: scaleX(-1);">
         <path d="M41.1667 47.5L50.6667 38M50.6667 38L41.1667 28.5M50.6667 38H25.3333M66.5 38C66.5 22.2599 53.7401 9.5 38 9.5C22.2599 9.5 9.5 22.2599 9.5 38C9.5 53.7401 22.2599 66.5 38 66.5C53.7401 66.5 66.5 53.7401 66.5 38Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </button>
     <button data-espacios-next
-            class="absolute left-[1048px] top-[378px] w-[76px] h-[76px] cursor-pointer hover:opacity-70 transition-opacity"
+            class="absolute right-[clamp(20px,12%,156px)] top-[378px] w-[76px] h-[76px] cursor-pointer hover:opacity-70 transition-opacity mobile:hidden"
             aria-label="Siguiente">
       <svg xmlns="http://www.w3.org/2000/svg" width="76" height="76" viewBox="0 0 76 76" fill="none">
         <path d="M41.1667 47.5L50.6667 38M50.6667 38L41.1667 28.5M50.6667 38H25.3333M66.5 38C66.5 22.2599 53.7401 9.5 38 9.5C22.2599 9.5 9.5 22.2599 9.5 38C9.5 53.7401 22.2599 66.5 38 66.5C53.7401 66.5 66.5 53.7401 66.5 38Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>

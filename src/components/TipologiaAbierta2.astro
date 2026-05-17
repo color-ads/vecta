@@ -44,7 +44,10 @@ const {
   salaComedor = "1",
   baos = "2",
   piso = "",
-  imagen = "/sections/tipologia-abierta/floor-plan.webp",
+  // Default a .jpg (fallback universal). El servidor Contentful suele
+  // entregar .webp directamente cuando el asset original lo es; este
+  // default solo se usa si el campo `imagen` del entry está vacío.
+  imagen = "/sections/tipologia-abierta/floor-plan.jpg",
 } = Astro.props;
 // `nombre` viene de Contentful (campo `tipologia.nombre`) con valores como
 // "Tipo A1", "Tipo B", etc. Si no se pasó, fallback al formato legacy
@@ -85,22 +88,21 @@ const SEP_MOBILE_CLASSES = [
   'mobile:!top-[720px]',
 ];
 ---
-<section class="relative w-full min-w-[1280px] min-h-screen h-[832px] overflow-hidden bg-vecta-bg mobile:h-[2055px] mobile:min-h-0">
-  <!-- Inner 1280px canvas -->
-  <div class="relative w-[1280px] min-h-screen h-[832px] mx-auto mobile:h-[2055px] mobile:min-h-0">
-    <!-- Floor plan image (desktop: right side; mobile: centered in the
-         bottom half of the 2055px-tall slide).
-         Image is 1035x1035 (was 900, +15%). Horizontally: left=122, w=1035
-         places the image center at 640 = canvas/2. Vertically: top=990
-         keeps the same gap below the specs table. -->
+<section class="relative w-full min-h-screen h-[832px] overflow-hidden bg-vecta-bg mobile:h-[2055px] mobile:min-h-0">
+  <!-- Inner canvas: tope 1280px en desktop, fluido por debajo -->
+  <div class="relative w-full max-w-[1280px] min-h-screen h-[832px] mx-auto mobile:h-[2055px] mobile:min-h-0">
+    <!-- Floor plan image. Desktop: right side fijo. Mobile: centrado
+         horizontalmente con ancho fluido (90% del viewport) y alto auto
+         con aspect-square — escala al ancho real del device (antes
+         `mobile:w-[1035px]` desbordaba en viewports <1035px). -->
     <div class="absolute left-[544px] top-[94px] w-[686px] h-[702px] overflow-hidden
-                mobile:left-[122px] mobile:top-[990px] mobile:w-[1035px] mobile:h-[1035px]">
+                mobile:left-[5%] mobile:right-[5%] mobile:top-[920px] mobile:w-auto mobile:h-auto mobile:aspect-square">
       <img
         data-gallery="1"
         data-tipologia-image
         src={imagen}
         alt="Plano de tipología — VECTA 98"
-        class="block w-full h-full object-contain cursor-pointer"
+        class="block w-full h-full max-w-full object-contain cursor-pointer"
         loading="lazy"
         decoding="async"
       />
@@ -111,8 +113,8 @@ const SEP_MOBILE_CLASSES = [
     <h2
       data-tipologia-title
       data-tipo-small={tituloEndsIn2 ? '' : undefined}
-      class="absolute left-[92px] top-[272px] w-[311px] whitespace-nowrap text-vecta-dark font-semibold text-[100px] data-[tipo-small]:text-[85px] leading-[0.959] font-display
-             mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[230px] mobile:w-auto mobile:text-[140px] mobile:data-[tipo-small]:text-[115px] mobile:text-center">
+      class="absolute left-[92px] top-[272px] w-[311px] whitespace-nowrap text-vecta-dark font-semibold text-[clamp(48px,8vw,100px)] data-[tipo-small]:text-[clamp(40px,6.7vw,85px)] leading-[0.959] font-display
+             mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[230px] mobile:w-auto mobile:text-[clamp(56px,11vw,140px)] mobile:data-[tipo-small]:text-[clamp(48px,9vw,115px)] mobile:text-center">
       {tituloMostrado}
     </h2>
 
@@ -123,22 +125,25 @@ const SEP_MOBILE_CLASSES = [
          a centered block above the floor plan image. -->
     {rows.map((row, idx) => (
       <Fragment>
+        {/* Label: izquierda fija desktop; mobile a 5% del viewport con ancho 45% */}
         <p
-          class={`absolute left-[93px] w-[194px] text-vecta-dark text-[24px] leading-[1.008] font-['Istok_Web',sans-serif] mobile:left-[280px] mobile:w-[300px] mobile:text-[36px] ${ROW_MOBILE_CLASSES[idx]}`}
+          class={`absolute left-[93px] w-[194px] text-vecta-dark text-[clamp(15px,1.9vw,24px)] leading-[1.008] font-['Istok_Web',sans-serif] mobile:left-[5%] mobile:w-[45%] mobile:text-[clamp(20px,2.8vw,36px)] ${ROW_MOBILE_CLASSES[idx]}`}
           style={`top: ${ROW_TOPS[idx]}px;`}>
           {row.label}
         </p>
+        {/* Value: derecha del label desktop; mobile a 50% con ancho 45% (queda contra el borde derecho con 5% de margen) */}
         <p
           data-tipologia-row={row.key}
           {...(row.key === "mts" ? { "data-tipologia-mts": true } : {})}
-          class={`absolute left-[345px] w-[133px] text-vecta-dark text-[24px] leading-[1.008] text-center font-bold font-['Istok_Web',sans-serif] mobile:left-[700px] mobile:w-[300px] mobile:text-[36px] ${ROW_MOBILE_CLASSES[idx]}`}
+          class={`absolute left-[345px] w-[133px] text-vecta-dark text-[clamp(15px,1.9vw,24px)] leading-[1.008] text-center font-bold font-['Istok_Web',sans-serif] mobile:left-[50%] mobile:w-[45%] mobile:text-[clamp(20px,2.8vw,36px)] ${ROW_MOBILE_CLASSES[idx]}`}
           style={`top: ${ROW_TOPS[idx]}px;`}>
           {row.value}
         </p>
       </Fragment>
     ))}
+    {/* Separadores: width fluido desktop (390px) y mobile (90% del viewport con 5% margen lateral) */}
     {SEP_TOPS.map((y, idx) => (
-      <div class={`absolute left-[88px] w-[390px] h-px bg-vecta-dark/60 mobile:left-[280px] mobile:w-[720px] ${SEP_MOBILE_CLASSES[idx]}`} style={`top: ${y}px;`}></div>
+      <div class={`absolute left-[88px] w-[390px] h-px bg-vecta-dark/60 mobile:left-[5%] mobile:right-[5%] mobile:w-auto ${SEP_MOBILE_CLASSES[idx]}`} style={`top: ${y}px;`}></div>
     ))}
   </div>
 </section>

@@ -63,7 +63,7 @@ const slide3TitleHtml = slide3Title.includes('vendemos ')
   : slide3Title;
 const items = extractHeadingPairs(ws?.fields?.bloque3seccion3textos, 'heading-3');
 ---
-<section id="about-carousel" data-active-slide="0" class="relative w-full min-w-[1280px] min-h-screen bg-vecta-bg overflow-hidden">
+<section id="about-carousel" data-active-slide="0" class="relative w-full min-h-screen bg-vecta-bg overflow-hidden">
   <!-- Slide indicator dots — clickable, centered along the left strip. Only
        navigation control for this carousel on desktop. Hidden on mobile, where
        slides auto-advance every 5s instead. -->
@@ -79,12 +79,21 @@ const items = extractHeadingPairs(ws?.fields?.bloque3seccion3textos, 'heading-3'
        ============================================================ -->
   <div data-about-slide="manifesto"
        class="absolute inset-0 transition-opacity duration-500 flex items-center justify-center opacity-100">
-    <!-- Lime rounded card grows with viewport. White side strips reduced ~75%
-         relative to a 1280-capped layout. -->
-    <div class="absolute rounded-[10px] bg-vecta-lime top-[calc((100vw-1270px)/8)] bottom-[calc((100vw-1270px)/8)] right-[calc((100vw-1270px)/8)] w-[calc(75vw+317.5px)] min-w-[1270px]"></div>
+    <!-- Lime rounded card. Las fórmulas originales (width = 75vw+317.5px,
+         right/top/bottom = (100vw-1270)/8) están derivadas matemáticamente
+         para autocentrar el card horizontalmente en cualquier viewport
+         (margen simétrico, crece con la pantalla). En móvil los offsets
+         se vuelven negativos y el card overflowea la sección — el
+         `overflow-hidden` del section lo recorta, dando un efecto
+         edge-to-edge sin bordes asimétricos.
+         REGLA: NO añadir min-w ni max() sobre estas fórmulas; rompen la simetría. -->
+    <div class="absolute rounded-[10px] bg-vecta-lime top-[calc((100vw-1270px)/8)] bottom-[calc((100vw-1270px)/8)] right-[calc((100vw-1270px)/8)] w-[calc(75vw+317.5px)]"></div>
 
-    <!-- Right photo card — anchored to the lime card's right edge -->
-    <div class="absolute w-[551px] rounded-r-[10px] overflow-hidden top-[calc((100vw-1270px)/8)] bottom-[calc((100vw-1270px)/8)] right-[calc((100vw-1270px)/8)]">
+    <!-- Right photo card — anchored to the lime card's right edge.
+         Mismo offset right/top/bottom que el lime card (comparten esquina
+         derecha). El ancho del photo card se reduce en pantallas pequeñas
+         con clamp() para no dominar la sección. -->
+    <div class="absolute w-[clamp(200px,43vw,551px)] rounded-r-[10px] overflow-hidden top-[calc((100vw-1270px)/8)] bottom-[calc((100vw-1270px)/8)] right-[calc((100vw-1270px)/8)]">
       <img
         src={slide1ImgSrc}
         alt="Persona observando proyecto VECTA 98"
@@ -95,15 +104,18 @@ const items = extractHeadingPairs(ws?.fields?.bloque3seccion3textos, 'heading-3'
     </div>
 
     <!-- Inner 1280px canvas keeps Figma absolute positions intact for text -->
-    <div class="relative w-[1280px] h-[812px] mx-auto">
-      <h2 class="absolute left-[74px] top-[42px] w-[639px] text-vecta-dark font-semibold text-[84px] leading-[0.95853] font-display
-                 narrow:text-[120px]
-                 pc-small:!text-[60px]">{slide1Title}</h2>
-      <div class="absolute left-[80px] top-[126px] w-[495px] h-px bg-vecta-dark"></div>
-      <div class="absolute left-[74px] top-[189px] w-[475px] text-vecta-dark font-normal text-[24px] leading-[0.95853] space-y-[1em] font-display
-                  narrow:text-[38px] narrow:w-[560px]
-                  [&>p:first-child]:text-[60px] [&>p:first-child]:font-semibold
-                  narrow:[&>p:first-child]:text-[90px]" set:html={slide1BodyHtml}></div>
+    <div class="relative w-full max-w-[1280px] h-[812px] mx-auto">
+      <h2 class="absolute left-[74px] top-[42px] w-[639px] text-vecta-dark font-semibold text-[clamp(40px,6.7vw,84px)] leading-[0.95853] font-display
+                 narrow:text-[clamp(52px,9.5vw,120px)]
+                 pc-small:!text-[clamp(28px,4.7vw,60px)]
+                 mobile:left-[20px] mobile:top-[48px] mobile:w-[calc(100vw-40px)] mobile:text-[28px] mobile:leading-[1.1]">{slide1Title}</h2>
+      <div class="absolute left-[80px] top-[126px] w-[495px] h-px bg-vecta-dark mobile:hidden"></div>
+      <div class="absolute left-[74px] top-[189px] w-[475px] text-vecta-dark font-normal text-[clamp(15px,1.9vw,24px)] leading-[0.95853] space-y-[1em] font-display
+                  narrow:text-[clamp(20px,3vw,38px)] narrow:w-[560px]
+                  [&>p:first-child]:text-[clamp(28px,4.7vw,60px)] [&>p:first-child]:font-semibold
+                  narrow:[&>p:first-child]:text-[clamp(40px,7vw,90px)]
+                  mobile:left-[20px] mobile:top-[140px] mobile:w-[calc(100vw-40px)] mobile:text-[14px] mobile:leading-[1.4]
+                  mobile:[&>p:first-child]:text-[20px] mobile:[&>p:first-child]:leading-[1.2]" set:html={slide1BodyHtml}></div>
     </div>
   </div>
 
@@ -112,29 +124,28 @@ const items = extractHeadingPairs(ws?.fields?.bloque3seccion3textos, 'heading-3'
        ============================================================ -->
   <div data-about-slide="cards"
        class="absolute inset-0 transition-opacity duration-500 flex items-center justify-center opacity-0">
-    <!-- Lime card with overflow-hidden + the geometric figures nested inside.
-         Anything bleeding past the lime card's rounded edges gets clipped, so
-         the strokes never leak onto the bg-vecta-bg side strips. -->
-    <div class="absolute left-1/2 -translate-x-1/2 bg-vecta-lime overflow-hidden top-[calc((100vw-1270px)/8)] bottom-[calc((100vw-1270px)/8)] w-[calc(75vw+317.5px)] min-w-[1270px]">
-      <!-- Geometric figure background (Figma 2021:189 "Group 11"):
-           - Rectangle 2 (outer)  — 724.78×724.78 rotated -45° → 1025 diamond
-           - Rectangle 3 (inner)  — 506.53×506.53 axis-aligned
-           - Ellipse 1            — 506.53×506.53 circle inscribed in the square
-           All three concentric, centered horizontally on the lime card and
-           shifted +37% down from its mid (50% + 37% = 87% on the y-axis).
-           Clipped by the lime card's overflow-hidden. -->
-      <div class="absolute pointer-events-none w-[724.78px] h-[724.78px] left-[calc(50%-362.39px)] top-[calc(107%-362.39px)] border border-vecta-dark rotate-[-45deg]"></div>
-      <div class="absolute pointer-events-none rounded-full w-[506.53px] h-[506.53px] left-[calc(50%-253.265px)] top-[calc(107%-253.265px)] border border-vecta-dark"></div>
-      <div class="absolute pointer-events-none w-[506.53px] h-[506.53px] left-[calc(50%-253.265px)] top-[calc(107%-253.265px)] border border-vecta-dark"></div>
+    <!-- Lime card con overflow-hidden + figuras geométricas anidadas.
+         Mismas fórmulas que slide 1 (preserva la simetría auto-centrada).
+         Las figuras hijas se dimensionan en % del lime card para escalar
+         proporcionalmente en cualquier viewport. -->
+    <div class="absolute left-1/2 -translate-x-1/2 bg-vecta-lime overflow-hidden top-[calc((100vw-1270px)/8)] bottom-[calc((100vw-1270px)/8)] w-[calc(75vw+317.5px)]">
+      <!-- Figuras geométricas (Figma 2021:189 "Group 11"):
+           - Rombo exterior (724.78/1270 = 57.07% del lime card)
+           - Círculo + cuadrado interior (506.53/1270 = 39.88% del lime card)
+           Las tres concéntricas, centro en (50%, 107%) del lime card,
+           recortadas por el overflow-hidden. -->
+      <div class="absolute pointer-events-none aspect-square w-[57%] left-1/2 top-[107%] -translate-x-1/2 -translate-y-1/2 border border-vecta-dark rotate-[-45deg]"></div>
+      <div class="absolute pointer-events-none rounded-full aspect-square w-[40%] left-1/2 top-[107%] -translate-x-1/2 -translate-y-1/2 border border-vecta-dark"></div>
+      <div class="absolute pointer-events-none aspect-square w-[40%] left-1/2 top-[107%] -translate-x-1/2 -translate-y-1/2 border border-vecta-dark"></div>
     </div>
 
-    <div class="relative w-[1280px] h-[832px] mx-auto mobile:h-auto mobile:min-h-screen">
-      <div class="absolute left-[84px] top-[237px] flex gap-[10px] mobile:grid mobile:grid-cols-[600px_600px] mobile:gap-[20px] mobile:left-1/2 mobile:top-1/2 mobile:-translate-x-1/2 mobile:-translate-y-1/2 mobile:w-[1220px]">
+    <div class="relative w-full max-w-[1280px] h-[832px] mx-auto mobile:h-auto mobile:min-h-screen">
+      <div class="absolute left-[84px] top-[237px] flex gap-[10px] mobile:grid mobile:grid-cols-1 mobile:gap-[20px] mobile:left-1/2 mobile:top-1/2 mobile:-translate-x-1/2 mobile:-translate-y-1/2 mobile:w-[calc(100vw-32px)] mobile:max-w-[440px]">
         {cards.map((c) => (
-          <article class="relative w-[271px] h-[436px] rounded-[10px] bg-[#0a0a0a] text-white mobile:w-[600px] mobile:h-[760px]">
-            <span class="absolute left-[24px] top-[11px] text-[105px] leading-none font-bold text-white font-display mobile:left-[36px] mobile:top-[18px] mobile:text-[180px]">{c.number}</span>
-            <div class="absolute right-[20px] top-[22px] w-[55px] h-[55px] rounded-full bg-white flex items-center justify-center mobile:right-[36px] mobile:top-[36px] mobile:w-[100px] mobile:h-[100px]">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" fill="none" class="w-[28px] h-[28px] mobile:w-[50px] mobile:h-[50px]">
+          <article class="relative w-[271px] h-[436px] rounded-[10px] bg-[#0a0a0a] text-white mobile:w-full mobile:h-[clamp(540px,140vw,760px)]">
+            <span class="absolute left-[24px] top-[11px] text-[clamp(48px,8.5vw,105px)] leading-none font-bold text-white font-display mobile:left-[clamp(20px,8vw,36px)] mobile:top-[18px] mobile:text-[clamp(120px,32vw,180px)]">{c.number}</span>
+            <div class="absolute right-[20px] top-[22px] w-[55px] h-[55px] rounded-full bg-white flex items-center justify-center mobile:right-[clamp(20px,8vw,36px)] mobile:top-[36px] mobile:w-[clamp(72px,18vw,100px)] mobile:h-[clamp(72px,18vw,100px)]">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" fill="none" class="w-[28px] h-[28px] mobile:w-[clamp(36px,9vw,50px)] mobile:h-[clamp(36px,9vw,50px)]">
                 <path d="M10.4954 17.4921V20.9905C10.4954 22.9226 8.92908 24.4889 6.99696 24.4889C5.06483 24.4889 3.49854 22.9226 3.49854 20.9905C3.49854 19.0584 5.06483 17.4921 6.99696 17.4921H10.4954ZM10.4954 17.4921H17.4922M10.4954 17.4921V10.4953M17.4922 17.4921V20.9905C17.4922 22.9226 19.0585 24.4889 20.9906 24.4889C22.9228 24.4889 24.4891 22.9226 24.4891 20.9905C24.4891 19.0584 22.9228 17.4921 20.9906 17.4921H17.4922ZM17.4922 17.4921V10.4953M17.4922 10.4953H10.4954M17.4922 10.4953V6.99683C17.4922 5.06471 19.0585 3.49841 20.9906 3.49841C22.9228 3.49841 24.4891 5.06471 24.4891 6.99683C24.4891 8.92896 22.9228 10.4953 20.9906 10.4953H17.4922ZM10.4954 10.4953V6.99683C10.4954 5.06471 8.92908 3.49841 6.99696 3.49841C5.06483 3.49841 3.49854 5.06471 3.49854 6.99683C3.49854 8.92896 5.06483 10.4953 6.99696 10.4953H10.4954Z" stroke="#151515" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </div>
@@ -142,9 +153,9 @@ const items = extractHeadingPairs(ws?.fields?.bloque3seccion3textos, 'heading-3'
                  (Claridad, Ciudad activa) and 2-line (Arquitectura funcional,
                  Coherencia a largo plazo) titles all sit ~13px above the line
                  (≈ 3% of the 436px card height). -->
-            <h3 class="absolute left-[24px] bottom-[127px] w-[217px] text-[36px] font-semibold leading-[0.95] font-display mobile:left-[36px] mobile:bottom-[240px] mobile:w-[460px] mobile:text-[56px]">{c.title}</h3>
-            <span class="absolute left-[24px] top-[322px] w-[126px] h-px bg-white mobile:left-[36px] mobile:top-[530px] mobile:w-[220px]"></span>
-            <p class="absolute left-[24px] top-[343px] w-[218px] text-[18px] leading-[1.3] font-bold font-display mobile:left-[36px] mobile:top-[565px] mobile:w-[480px] mobile:text-[28px]">{c.description}</p>
+            <h3 class="absolute left-[24px] bottom-[127px] w-[217px] text-[clamp(20px,2.8vw,36px)] font-semibold leading-[0.95] font-display mobile:left-[clamp(20px,8vw,36px)] mobile:bottom-[clamp(160px,42vw,240px)] mobile:w-[calc(100%-clamp(40px,16vw,72px))] mobile:text-[clamp(36px,9vw,56px)]">{c.title}</h3>
+            <span class="absolute left-[24px] top-[322px] w-[126px] h-px bg-white mobile:left-[clamp(20px,8vw,36px)] mobile:top-[clamp(360px,90vw,530px)] mobile:w-[clamp(140px,40vw,220px)]"></span>
+            <p class="absolute left-[24px] top-[343px] w-[218px] text-[clamp(13px,1.4vw,18px)] leading-[1.3] font-bold font-display mobile:left-[clamp(20px,8vw,36px)] mobile:top-[clamp(380px,96vw,565px)] mobile:w-[calc(100%-clamp(40px,16vw,72px))] mobile:text-[clamp(18px,4.5vw,28px)]">{c.description}</p>
           </article>
         ))}
       </div>
@@ -156,13 +167,18 @@ const items = extractHeadingPairs(ws?.fields?.bloque3seccion3textos, 'heading-3'
        ============================================================ -->
   <div data-about-slide="amenidades"
        class="absolute inset-0 transition-opacity duration-500 flex items-center justify-center mobile:items-start mobile:pt-[208px] opacity-0">
-    <div class="absolute left-1/2 -translate-x-1/2 bg-[#0a0a0a] overflow-hidden top-[calc((100vw-1270px)/8)] bottom-[calc((100vw-1270px)/8)] w-[calc(75vw+317.5px)] min-w-[1270px]">
+    <div class="absolute left-1/2 -translate-x-1/2 bg-[#0a0a0a] overflow-hidden top-[calc((100vw-1270px)/8)] bottom-[calc((100vw-1270px)/8)] w-[calc(75vw+317.5px)]">
+      <!-- Círculo decorativo (arco en esquina superior-izquierda del card).
+           Posición y tamaño en px del Figma original; el card es lo
+           suficientemente ancho en cualquier breakpoint para mantener
+           el arco visible en la esquina, y el overflow-hidden del card
+           recorta el resto. -->
       <div class="absolute -left-[207px] -top-[157px] w-[620px] h-[620px] rounded-full border border-vecta-lime-text/40"></div>
     </div>
 
-    <div class="relative w-[1280px] h-[832px] mx-auto">
-      <h2 class="absolute left-[68px] top-[103px] w-[639px] text-vecta-lime-text font-semibold text-[60px] leading-[0.959] font-display
-                 mobile:left-0 mobile:right-0 mobile:top-[200px] mobile:w-full mobile:text-center mobile:px-[40px] mobile:text-[100px] mobile:leading-[1.05]" set:html={slide3TitleHtml}></h2>
+    <div class="relative w-full max-w-[1280px] h-[832px] mx-auto">
+      <h2 class="absolute left-[68px] top-[103px] w-[639px] text-vecta-lime-text font-semibold text-[clamp(28px,4.7vw,60px)] leading-[0.959] font-display
+                 mobile:left-0 mobile:right-0 mobile:top-[200px] mobile:w-full mobile:text-center mobile:px-[40px] mobile:text-[clamp(48px,8vw,100px)] mobile:leading-[1.05]" set:html={slide3TitleHtml}></h2>
 
       <!-- Wrapper for everything below the title — mobile shifts this whole
            block down 160px (≈20% of slide height) so the title up top has air. -->
@@ -180,29 +196,29 @@ const items = extractHeadingPairs(ws?.fields?.bloque3seccion3textos, 'heading-3'
       <span class="absolute left-[845px] top-[542px] w-[12px] h-[12px] rounded-full bg-white mobile:hidden"></span>
 
       <div class="absolute left-[908px] top-[91px] w-[280px] font-display
-                  mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[320px] mobile:w-[700px] mobile:text-center">
-        <h3 class="text-vecta-lime-text font-semibold text-[28px] leading-[0.959] mobile:text-[72px]">{items[0].title}</h3>
-        <p class="mt-[28px] text-white text-[18px] leading-[1.35] font-semibold mobile:text-[40px] mobile:mt-[36px]">{items[0].description}</p>
+                  mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[320px] mobile:w-[calc(100vw-32px)] mobile:max-w-[700px] mobile:text-center">
+        <h3 class="text-vecta-lime-text font-semibold text-[clamp(16px,2.2vw,28px)] leading-[0.959] mobile:text-[clamp(36px,6vw,72px)]">{items[0].title}</h3>
+        <p class="mt-[28px] text-white text-[clamp(13px,1.4vw,18px)] leading-[1.35] font-semibold mobile:text-[clamp(22px,3.2vw,40px)] mobile:mt-[36px]">{items[0].description}</p>
       </div>
       <div class="absolute left-[502px] top-[354px] w-[260px] font-display
-                  mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[640px] mobile:w-[700px] mobile:text-center">
-        <h3 class="text-vecta-lime-text font-semibold text-[28px] leading-[0.959] mobile:text-[72px]">{items[1].title}</h3>
-        <p class="mt-[28px] text-white text-[18px] leading-[1.35] font-semibold mobile:text-[40px] mobile:mt-[36px]">{items[1].description}</p>
+                  mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[640px] mobile:w-[calc(100vw-32px)] mobile:max-w-[700px] mobile:text-center">
+        <h3 class="text-vecta-lime-text font-semibold text-[clamp(16px,2.2vw,28px)] leading-[0.959] mobile:text-[clamp(36px,6vw,72px)]">{items[1].title}</h3>
+        <p class="mt-[28px] text-white text-[clamp(13px,1.4vw,18px)] leading-[1.35] font-semibold mobile:text-[clamp(22px,3.2vw,40px)] mobile:mt-[36px]">{items[1].description}</p>
       </div>
       <div class="absolute left-[908px] top-[354px] w-[260px] font-display
-                  mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[960px] mobile:w-[700px] mobile:text-center">
-        <h3 class="text-vecta-lime-text font-semibold text-[28px] leading-[0.959] mobile:text-[72px]">{items[2].title}</h3>
-        <p class="mt-[28px] text-white text-[18px] leading-[1.35] font-semibold mobile:text-[40px] mobile:mt-[36px]">{items[2].description}</p>
+                  mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[960px] mobile:w-[calc(100vw-32px)] mobile:max-w-[700px] mobile:text-center">
+        <h3 class="text-vecta-lime-text font-semibold text-[clamp(16px,2.2vw,28px)] leading-[0.959] mobile:text-[clamp(36px,6vw,72px)]">{items[2].title}</h3>
+        <p class="mt-[28px] text-white text-[clamp(13px,1.4vw,18px)] leading-[1.35] font-semibold mobile:text-[clamp(22px,3.2vw,40px)] mobile:mt-[36px]">{items[2].description}</p>
       </div>
       <div class="absolute left-[68px] top-[598px] w-[300px] font-display
-                  mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[1280px] mobile:w-[700px] mobile:text-center">
-        <h3 class="text-vecta-lime-text font-semibold text-[28px] leading-[0.959] mobile:text-[72px]">{items[3].title}</h3>
-        <p class="mt-[28px] text-white text-[18px] leading-[1.35] font-semibold mobile:text-[40px] mobile:mt-[36px]">{items[3].description}</p>
+                  mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[1280px] mobile:w-[calc(100vw-32px)] mobile:max-w-[700px] mobile:text-center">
+        <h3 class="text-vecta-lime-text font-semibold text-[clamp(16px,2.2vw,28px)] leading-[0.959] mobile:text-[clamp(36px,6vw,72px)]">{items[3].title}</h3>
+        <p class="mt-[28px] text-white text-[clamp(13px,1.4vw,18px)] leading-[1.35] font-semibold mobile:text-[clamp(22px,3.2vw,40px)] mobile:mt-[36px]">{items[3].description}</p>
       </div>
       <div class="absolute left-[502px] top-[598px] w-[260px] font-display
-                  mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[1600px] mobile:w-[700px] mobile:text-center">
-        <h3 class="text-vecta-lime-text font-semibold text-[28px] leading-[0.959] mobile:text-[72px]">{items[4].title}</h3>
-        <p class="mt-[28px] text-white text-[18px] leading-[1.35] font-semibold mobile:text-[40px] mobile:mt-[36px]">{items[4].description}</p>
+                  mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[1600px] mobile:w-[calc(100vw-32px)] mobile:max-w-[700px] mobile:text-center">
+        <h3 class="text-vecta-lime-text font-semibold text-[clamp(16px,2.2vw,28px)] leading-[0.959] mobile:text-[clamp(36px,6vw,72px)]">{items[4].title}</h3>
+        <p class="mt-[28px] text-white text-[clamp(13px,1.4vw,18px)] leading-[1.35] font-semibold mobile:text-[clamp(22px,3.2vw,40px)] mobile:mt-[36px]">{items[4].description}</p>
       </div>
 
       <img

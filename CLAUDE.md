@@ -22,6 +22,7 @@ Single-page Astro marketing site for the "VECTA 98" real-estate project (Spanish
 
 - **Astro 6** (static, no SSR adapter, no integrations besides Tailwind).
 - **Tailwind CSS v4** wired via `@tailwindcss/vite` in `astro.config.mjs`. There is **no `tailwind.config.*` file** — all theme tokens and custom variants live in `src/styles/global.css` inside `@theme { ... }` and `@custom-variant ...` blocks.
+- **Contentful CMS** — several sections fetch live content at build time using `@contentful/rich-text-html-renderer` and the Contentful JS SDK. Credentials live in `.env` (see `.env.example`). Sections that call Contentful do so in their Astro frontmatter; do not add Contentful fetches to client-side `<script>` blocks.
 
 ### Page composition
 
@@ -54,23 +55,27 @@ The site IS responsive, but media queries alone don't work because `<meta viewpo
 
 Listeners on `window.resize`, `orientationchange`, `DOMContentLoaded`, AND `visualViewport.resize` keep the attribute fresh — the `visualViewport.resize` listener is essential because DevTools "Toggle device toolbar" pins `innerWidth` to 1280 even when you drag narrower, and only `visualViewport.width` reflects the actual visible width in that mode.
 
-`global.css` defines four custom Tailwind variants tied to those attributes:
+`global.css` defines custom Tailwind variants. **Definition order is load-bearing** — `narrow:` is defined first so `mobile:` (defined last) appears later in the CSS output and wins the cascade on phones:
 
 ```css
-@custom-variant mobile      (html[data-device="phone"] &);
-@custom-variant tablet      (@media (min-width: 600px) and (max-width: 768px));
-@custom-variant pc-small    (html[data-device="pc-small"] &);
-@custom-variant desktop     (html[data-device="desktop"] &);
+/* defined first — loses cascade to mobile: on phones */
+@custom-variant narrow   (media:601-768px + data-device phone|tablet)
+/* … tablet, pc-small, desktop … */
+/* defined last — always wins over narrow: on phones */
+@custom-variant mobile   (@media max-width:600px + html[data-device][data-device="phone"])
 ```
+
+The `mobile:` data-device selector uses a **double attribute** `html[data-device][data-device="phone"]` giving it [0,2,1] specificity vs narrow's [0,1,1]. This guarantees `mobile:` beats `narrow:` on phones even if stylesheet order shifts. **Never swap the definition order and never simplify the double-attribute selector.**
 
 **Per-resolution isolation rule (user-enforced — see also `MEMORY.md`):**
 
 | Edit target | Use |
 |---|---|
 | Phone | `mobile:property` |
+| 601–768 tablet | `tablet:property` or `tablet-device:property` |
 | 1024 small PC | `pc-small:property` (or `pc-small:!` to override base) |
 | 1440 PC | `desktop:property` |
-| 600–768 narrow tablet | `tablet:property` |
+| Phone + tablet (≤768) | `narrow:property` — but `mobile:` overrides it on phones |
 
 **Never** modify a base (no-prefix) class for a single-resolution tweak — base classes apply at every resolution where there's no override and bleed across breakpoints. **Always** use a scoped variant.
 
@@ -107,6 +112,10 @@ Exposed via `@theme` in `src/styles/global.css`:
 Each section has a sibling folder under `public/sections/<section>/` containing reference content/assets. Sections currently hardcode the Spanish copy in their `.astro` files — the `content.json` files (where present) are reference data, not a runtime data source. Don't introduce a fetch/import wiring unless asked. Asset paths in markup are absolute (`/sections/about-us/man-phone.webp`).
 
 Hero uses `/herobg.mp4` as a full-bleed background video. A gradient + scanline overlay below the video provides the same moody fallback if it fails to load.
+
+### Form integration
+
+`Formulario.astro` submits to HubSpot via a client-side `fetch` POST. The portal ID and form GUID are embedded directly in the script — there is no server-side proxy. Do not move form submission to a server endpoint unless explicitly requested.
 
 ### Tipologías modal
 
