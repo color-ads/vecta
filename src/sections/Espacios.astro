@@ -75,7 +75,11 @@ const slides = (res.items as Array<{ fields: LugarFields }>).map((it) => {
          sin trucos de translate (más robusto que left-1/2 + translateX). -->
     <div class="absolute left-1/2 top-[47.96%] -translate-x-1/2 text-center text-white whitespace-nowrap font-display
                 max-sm:left-0 max-sm:right-0 max-sm:translate-x-0 max-sm:top-[42vh] max-sm:px-[16px]">
-      <h2 data-espacios-title class="text-[clamp(28px,5vw,64px)] font-medium leading-[0.959] max-sm:text-[24px] max-sm:whitespace-normal">{slides[0]?.title ?? ''}</h2>
+      <h2 data-espacios-title class="text-[clamp(22px,4vw,51px)] font-medium leading-[0.959] max-sm:text-[19px] max-sm:whitespace-normal" set:html={(() => {
+        const t = slides[0]?.title ?? '';
+        const words = t.trim().split(/\s+/);
+        return words.length >= 3 ? words.slice(0, -1).join(' ') + '<br/>' + words[words.length - 1] : t;
+      })()}></h2>
       <p data-espacios-subtitle class="text-[clamp(18px,2.5vw,32px)] font-normal leading-[0.959] max-sm:text-[15px] max-sm:whitespace-normal">{slides[0]?.subtitle ?? ''}</p>
     </div>
 
@@ -122,10 +126,18 @@ const slides = (res.items as Array<{ fields: LugarFields }>).map((it) => {
   let autoTimer: number | null = null;
   let resumeTimer: number | null = null;
 
+  // Si el título tiene 3+ palabras, mete la última en una línea nueva.
+  // Ej: "Nebula jacuzzi lounge" → "Nebula jacuzzi" + <br> + "lounge".
+  function formatTitle(t: string): string {
+    const words = t.trim().split(/\s+/);
+    if (words.length < 3) return t;
+    return words.slice(0, -1).join(' ') + '<br>' + words[words.length - 1];
+  }
+
   function show(i: number) {
     if (slides.length === 0) return;
     active = (i + slides.length) % slides.length;
-    if (titleEl) titleEl.textContent = slides[active].title;
+    if (titleEl) titleEl.innerHTML = formatTitle(slides[active].title);
     if (subtitleEl) subtitleEl.textContent = slides[active].subtitle;
     slideImgs.forEach((img, idx) => {
       img.style.opacity = idx === active ? '1' : '0';

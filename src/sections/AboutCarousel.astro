@@ -85,19 +85,16 @@ const items = extractHeadingPairs(ws?.fields?.bloque3seccion3textos, 'heading-3'
     <!-- Lime panel con texto en flujo natural -->
     <div class="flex-1 bg-vecta-lime flex flex-col justify-center gap-[3vh] px-[8%] rounded-l-[10px]
                 max-sm:rounded-none max-sm:flex-none max-sm:h-[75vh] max-sm:gap-[2vh] max-sm:py-[6vh] max-sm:text-center">
-      <h2 class="text-vecta-dark font-semibold leading-[0.95853] font-display text-[clamp(40px,6.7vw,84px)]
-                 max-md:text-[clamp(52px,9.5vw,120px)]
-                 md:max-lg:!text-[clamp(28px,4.7vw,60px)]
-                 max-sm:!text-[clamp(20px,6.5vw,36px)] max-sm:leading-[1.1]">{slide1Title}</h2>
+      <!-- Ambos "títulos" (h2 + primer párrafo bold) usan el mismo clamp con vw
+           para que se vean del mismo tamaño y escalen con el viewport. -->
+      <h2 class="text-vecta-dark font-semibold leading-[1.05] font-display text-[clamp(20px,5vw,60px)]">{slide1Title}</h2>
 
       <div class="w-[60%] h-px bg-vecta-dark max-sm:hidden"></div>
 
       <div class="text-vecta-dark font-normal text-[clamp(15px,1.9vw,24px)] leading-[0.95853] space-y-[1em] font-display
                   max-md:text-[clamp(20px,3vw,38px)]
-                  [&>p:first-child]:text-[clamp(28px,4.7vw,60px)] [&>p:first-child]:font-semibold
-                  max-md:[&>p:first-child]:text-[clamp(40px,7vw,90px)]
                   max-sm:text-[4vw] max-sm:leading-[1.5]
-                  max-sm:[&>p:first-child]:!text-[6vw]" set:html={slide1BodyHtml}></div>
+                  [&>p:first-child]:text-[clamp(20px,5vw,60px)] [&>p:first-child]:font-semibold [&>p:first-child]:leading-[1.05]" set:html={slide1BodyHtml}></div>
     </div>
 
     <!-- Photo panel -->
@@ -175,7 +172,7 @@ const items = extractHeadingPairs(ws?.fields?.bloque3seccion3textos, 'heading-3'
             <span class={`absolute left-[8.86%] ${sepTop} w-[46.49%] h-px bg-white
                          sm:max-md:left-[6%] sm:max-md:top-[73%] sm:max-md:w-[25%]
                          max-sm:left-[6%] max-sm:top-[65%] max-sm:w-[25%]`}></span>
-            <p class={`absolute left-[8.86%] ${descTop} w-[80.44%] text-[clamp(10px,1vw,18px)] leading-[1.3] font-bold font-display
+            <p class={`absolute left-[8.86%] ${descTop} w-[80.44%] text-[clamp(10px,1vw,18px)] leading-[1.3] font-display
                       sm:max-md:left-[6%] sm:max-md:top-[79%] sm:max-md:w-[88%] sm:max-md:text-[2.4vw]
                       max-sm:left-[6%] max-sm:top-[71%] max-sm:w-[88%] max-sm:text-[3.2vw]`}>{c.description}</p>
           </article>
@@ -206,7 +203,7 @@ const items = extractHeadingPairs(ws?.fields?.bloque3seccion3textos, 'heading-3'
       {items.map((item) => (
         <div class="w-full">
           <h3 class="text-vecta-lime-text font-semibold font-display text-[3.3vw] leading-[0.959]">{item.title}</h3>
-          <p class="mt-[1vh] text-white font-semibold font-display text-[2.8vw] leading-[1.35]">{item.description}</p>
+          <p class="mt-[1vh] text-white font-display text-[2.8vw] leading-[1.35]">{item.description}</p>
         </div>
       ))}
     </div>
@@ -232,34 +229,36 @@ const items = extractHeadingPairs(ws?.fields?.bloque3seccion3textos, 'heading-3'
       <div class="absolute left-[70.94%] top-[10.94%] w-[21.88%] font-display
                   max-sm:left-1/2 max-sm:-translate-x-1/2 max-sm:top-[11vh] max-sm:w-[90%] max-sm:max-w-[54.69%] max-sm:text-center">
         <h3 class="text-vecta-lime-text font-semibold text-[clamp(16px,2.2vw,28px)] leading-[0.959] max-sm:text-[3.3vw]">{items[0].title}</h3>
-        <p class="mt-[28px] text-white text-[clamp(13px,1.4vw,18px)] leading-[1.35] font-semibold max-sm:text-[2.8vw] max-sm:mt-[1vh]">{items[0].description}</p>
+        <p class="mt-[28px] text-white text-[clamp(13px,1.4vw,18px)] leading-[1.35] max-sm:text-[2.8vw] max-sm:mt-[1vh]">{items[0].description}</p>
       </div>
       <div class="absolute left-[39.22%] top-[42.55%] w-[20.31%] font-display
                   max-sm:left-1/2 max-sm:-translate-x-1/2 max-sm:top-[25vh] max-sm:w-[90%] max-sm:max-w-[54.69%] max-sm:text-center">
         <h3 class="text-vecta-lime-text font-semibold text-[clamp(16px,2.2vw,28px)] leading-[0.959] max-sm:text-[3.3vw]">{items[1].title}</h3>
-        <p class="mt-[28px] text-white text-[clamp(13px,1.4vw,18px)] leading-[1.35] font-semibold max-sm:text-[2.8vw] max-sm:mt-[1vh]">{items[1].description}</p>
+        <p class="mt-[28px] text-white text-[clamp(13px,1.4vw,18px)] leading-[1.35] max-sm:text-[2.8vw] max-sm:mt-[1vh]">{items[1].description}</p>
       </div>
       <div class="absolute left-[70.94%] top-[42.55%] w-[20.31%] font-display
                   max-sm:left-1/2 max-sm:-translate-x-1/2 max-sm:top-[38vh] max-sm:w-[90%] max-sm:max-w-[54.69%] max-sm:text-center">
         <h3 class="text-vecta-lime-text font-semibold text-[clamp(16px,2.2vw,28px)] leading-[0.959] max-sm:text-[3.3vw]">{items[2].title}</h3>
-        <p class="mt-[28px] text-white text-[clamp(13px,1.4vw,18px)] leading-[1.35] font-semibold max-sm:text-[2.8vw] max-sm:mt-[1vh]">{items[2].description}</p>
+        <p class="mt-[28px] text-white text-[clamp(13px,1.4vw,18px)] leading-[1.35] max-sm:text-[2.8vw] max-sm:mt-[1vh]">{items[2].description}</p>
       </div>
       <div class="absolute left-[5.31%] top-[71.88%] w-[23.44%] font-display
                   max-sm:left-1/2 max-sm:-translate-x-1/2 max-sm:top-[51vh] max-sm:w-[90%] max-sm:max-w-[54.69%] max-sm:text-center">
         <h3 class="text-vecta-lime-text font-semibold text-[clamp(16px,2.2vw,28px)] leading-[0.959] max-sm:text-[3.3vw]">{items[3].title}</h3>
-        <p class="mt-[28px] text-white text-[clamp(13px,1.4vw,18px)] leading-[1.35] font-semibold max-sm:text-[2.8vw] max-sm:mt-[1vh]">{items[3].description}</p>
+        <p class="mt-[28px] text-white text-[clamp(13px,1.4vw,18px)] leading-[1.35] max-sm:text-[2.8vw] max-sm:mt-[1vh]">{items[3].description}</p>
       </div>
       <div class="absolute left-[39.22%] top-[71.88%] w-[20.31%] font-display
                   max-sm:left-1/2 max-sm:-translate-x-1/2 max-sm:top-[64vh] max-sm:w-[90%] max-sm:max-w-[54.69%] max-sm:text-center">
         <h3 class="text-vecta-lime-text font-semibold text-[clamp(16px,2.2vw,28px)] leading-[0.959] max-sm:text-[3.3vw]">{items[4].title}</h3>
-        <p class="mt-[28px] text-white text-[clamp(13px,1.4vw,18px)] leading-[1.35] font-semibold max-sm:text-[2.8vw] max-sm:mt-[1vh]">{items[4].description}</p>
+        <p class="mt-[28px] text-white text-[clamp(13px,1.4vw,18px)] leading-[1.35] max-sm:text-[2.8vw] max-sm:mt-[1vh]">{items[4].description}</p>
       </div>
 
+      <!-- actualcorp logo — esquina inferior-derecha del canvas. Solo PC. -->
       <img
-        src="/Logo%20Actual%20Corp.png"
+        src="/Logo_Blanco.png"
         alt="actualcorp"
-        class="absolute right-[6.25%] bottom-[10.82%] w-[12.03%] h-[18.51%] max-sm:hidden"
+        class="absolute right-[6.25%] bottom-[10.82%] w-[12.03%] h-[18.51%] object-contain max-sm:hidden"
       />
+
       </div>
     </div>
   </div>

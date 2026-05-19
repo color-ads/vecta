@@ -159,7 +159,7 @@ const lastQuestionParts = splitForMobile(items[lastIdx].q);
          Offset 80px from the question top: deja margen para preguntas que
          wrappean a 2 líneas (línea 2 termina en ~70px) sin pisar la respuesta. -->
     {items.map((item, idx) => (
-      <p class="absolute text-white font-semibold leading-[1.09] pointer-events-none font-display left-[6.33%] w-[47.03%] text-[clamp(14px,1.6vw,20px)] tracking-[-0.22px] py-[2%] opacity-0 [transition:opacity_0.2s_ease,top_0.3s_ease]
+      <p class="absolute text-white leading-[1.09] pointer-events-none font-display left-[6.33%] w-[47.03%] text-[clamp(14px,1.6vw,20px)] tracking-[-0.22px] max-md:py-[2%] opacity-0 [transition:opacity_0.2s_ease,top_0.3s_ease]
                 max-sm:!left-[4%] max-sm:!right-[4%] max-sm:!w-auto max-sm:!text-[clamp(12px,3.5vw,15px)] max-sm:!leading-[1.3]"
          data-faq-answer={idx}
          style={`top: ${CLOSED_TOPS[idx] + 80}px;`}>
@@ -195,9 +195,9 @@ const lastQuestionParts = splitForMobile(items[lastIdx].q);
   const CARET_BTN_HEIGHT = 36;
   const ANSWER_GAP            = isMobile ? 8 : 8;
   const LINE_GAP_BELOW_ANSWER = isMobile ? 8 : 16;
-  // +2% del canvas (832px ≈ 17px) sumado al buffer original para mayor
-  // separación entre la línea separadora y la siguiente pregunta.
-  const BUFFER_BELOW_LINE     = isMobile ? 29 : 39;
+  // +1% del canvas (832px ≈ 8px) sumado al buffer original. Antes era +2%
+  // pero se redujo 1% para acercar la siguiente pregunta a la línea.
+  const BUFFER_BELOW_LINE     = isMobile ? 21 : 31;
   const LINE_OFFSET           = isMobile ? 110 : 126;
   const FADE_MS = 200;
   const SHIFT_MS = 300;
