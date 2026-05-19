@@ -44,11 +44,12 @@ const { title = 'VECTA 98' } = Astro.props;
 			/>
 		</noscript>
 
-		<!-- Tag <html> with the real device-width bucket so per-resolution
-		     Tailwind variants (mobile:/tablet:/pc-small:/desktop:) and JS that
-		     branches on "isMobile" share the same definition. Native @media
-		     queries in global.css cover first paint; this script keeps the
-		     attribute fresh on resize/orientation change. -->
+		<!-- Tag <html> with the real device-width bucket so JS that branches
+		     on "isMobile" stays in sync with the device classification used
+		     for nav visibility and other data-device CSS rules. Tailwind's
+		     native sm:/md:/lg:/xl:/2xl: variants cover responsive layout via
+		     @media queries; this attribute is used by JS and by nav visibility
+		     selectors in global.css. -->
 		<script is:inline>
 			(function () {
 				function setDevice() {

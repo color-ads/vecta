@@ -45,10 +45,10 @@ const navItems = [
      DESKTOP NAV (≥769px) — carets a la izquierda, strip centrado,
      logo a la derecha. Hidden en mobile vía global.css.
      ============================================================ -->
-<div class="desktop-nav absolute inset-0 pointer-events-none mobile:hidden">
+<div class="desktop-nav absolute inset-0 pointer-events-none max-sm:hidden">
 
   <!-- Carets cluster (up/down) — pegado al borde izquierdo del viewport -->
-  <div class="absolute top-[36px] left-[clamp(20px,3vw,50px)] flex flex-col gap-[11px] z-30 pointer-events-auto">
+  <div class="absolute top-[27.69%] left-[clamp(20px,3vw,50px)] flex flex-col gap-[11px] z-30 pointer-events-auto">
     <button
       aria-label="Subir"
       data-caret="up"
@@ -78,12 +78,12 @@ const navItems = [
     src="/Logo%20Actual%20Corp.png"
     alt="actualcorp"
     data-actualcorp-logo
-    class="absolute top-[49px] right-[2vw] w-[clamp(80px,8vw,120px)] aspect-square z-30 pointer-events-auto"
+    class="absolute top-[37.69%] right-[2vw] w-[clamp(80px,8vw,120px)] aspect-square z-30 pointer-events-auto"
   />
 
   <!-- Nav strip — centrado en viewport, ancho fluido tope 1003px.
        Contiene las 2 líneas horizontales + 5 items + 4 dividers verticales. -->
-  <div class="absolute top-[59px] left-1/2 -translate-x-1/2 w-[min(calc(100vw-280px),1003px)] h-[36px] z-30 pointer-events-auto">
+  <div class="absolute top-[45.38%] left-1/2 -translate-x-1/2 w-[min(calc(100vw-280px),1003px)] h-[36px] z-30 pointer-events-auto">
     <!-- Líneas horizontales superior + inferior; abarcan todo el strip. -->
     <div data-nav-rule="top"    class={`absolute inset-x-0 top-0    h-px ${stroke}`}></div>
     <div data-nav-rule="bottom" class={`absolute inset-x-0 bottom-0 h-px ${stroke}`}></div>
@@ -113,7 +113,7 @@ const navItems = [
      Visibilidad forzada por global.css (@media + data-device).
      ============================================================ -->
 <button
-  class={`mobile-hamburger absolute left-[20px] top-[30px] w-[100px] h-[100px] z-50 hidden mobile:flex flex-col items-center justify-center gap-[12px] pointer-events-auto`}
+  class={`mobile-hamburger absolute left-[20px] top-[23.08%] w-[100px] h-[100px] z-50 hidden max-sm:flex flex-col items-center justify-center gap-[12px] pointer-events-auto`}
   aria-label="Abrir menú"
   aria-expanded="false"
   data-mobile-toggle
@@ -125,7 +125,7 @@ const navItems = [
 
 <!-- Drawer fullscreen. position:fixed para cubrir más allá del nav strip. -->
 <div
-  class="mobile-menu fixed inset-0 z-40 bg-vecta-night/95 backdrop-blur-sm hidden mobile:data-[open=true]:flex items-center justify-center pointer-events-auto"
+  class="mobile-menu fixed inset-0 z-40 bg-vecta-night/95 backdrop-blur-sm hidden max-sm:data-[open=true]:flex items-center justify-center pointer-events-auto"
   data-mobile-menu
   hidden
 >

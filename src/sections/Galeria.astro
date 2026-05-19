@@ -51,9 +51,9 @@ const totalImages = sources.length;
   {totalImages > 3 && (
     <button type="button" data-gal-trigger data-gal-index="0"
             class="absolute bottom-[40px] left-[40px] z-20 inline-flex items-center gap-[10px] rounded-[10px] bg-vecta-dark text-white px-[22px] py-[14px] font-display font-semibold text-[clamp(13px,1.4vw,18px)] cursor-pointer hover:bg-vecta-night transition-colors
-                   narrow:bottom-[60px] narrow:left-[60px] narrow:text-[clamp(18px,2.5vw,32px)] narrow:px-[36px] narrow:py-[22px] narrow:gap-[16px]
-                   mobile:bottom-[20px] mobile:left-[16px] mobile:text-[13px] mobile:px-[14px] mobile:py-[10px] mobile:gap-[8px]">
-      <svg viewBox="0 0 24 24" class="w-[20px] h-[20px] narrow:w-[32px] narrow:h-[32px] mobile:w-[16px] mobile:h-[16px]" fill="none" stroke="currentColor" stroke-width="2">
+                   max-md:bottom-[60px] max-md:left-[60px] max-md:text-[clamp(18px,2.5vw,32px)] max-md:px-[36px] max-md:py-[22px] max-md:gap-[16px]
+                   max-sm:bottom-[20px] max-sm:left-[16px] max-sm:text-[13px] max-sm:px-[14px] max-sm:py-[10px] max-sm:gap-[8px]">
+      <svg viewBox="0 0 24 24" class="w-[20px] h-[20px] max-md:w-[32px] max-md:h-[32px] max-sm:w-[16px] max-sm:h-[16px]" fill="none" stroke="currentColor" stroke-width="2">
         <rect x="3" y="3" width="7" height="7" rx="1"/>
         <rect x="14" y="3" width="7" height="7" rx="1"/>
         <rect x="3" y="14" width="7" height="7" rx="1"/>
@@ -76,35 +76,35 @@ const totalImages = sources.length;
     <!-- Imagen activa: object-contain para no recortar. -->
     <img data-gal-image src="" alt=""
          class="max-w-[calc(100vw-200px)] max-h-[calc(100vh-160px)] object-contain rounded-[6px] shadow-[0_20px_60px_rgba(0,0,0,0.5)]
-                narrow:max-w-[calc(100vw-60px)] narrow:max-h-[calc(100vh-220px)]
-                mobile:max-w-[calc(100vw-24px)] mobile:max-h-[calc(100vh-120px)]" />
+                max-md:max-w-[calc(100vw-60px)] max-md:max-h-[calc(100vh-220px)]
+                max-sm:max-w-[calc(100vw-24px)] max-sm:max-h-[calc(100vh-120px)]" />
 
     <!-- Cerrar -->
     <button type="button" data-gal-close aria-label="Cerrar galería"
             class="absolute top-[24px] right-[24px] w-[48px] h-[48px] rounded-full border-2 border-vecta-lime text-vecta-lime flex items-center justify-center cursor-pointer hover:bg-vecta-lime hover:text-vecta-dark transition-colors
-                   narrow:top-[40px] narrow:right-[40px] narrow:w-[80px] narrow:h-[80px]
-                   mobile:top-[12px] mobile:right-[12px] mobile:w-[40px] mobile:h-[40px]">
-      <svg viewBox="0 0 24 24" class="w-[18px] h-[18px] narrow:w-[30px] narrow:h-[30px] mobile:w-[16px] mobile:h-[16px]" fill="none" stroke="currentColor" stroke-width="2.5">
+                   max-md:top-[40px] max-md:right-[40px] max-md:w-[80px] max-md:h-[80px]
+                   max-sm:top-[12px] max-sm:right-[12px] max-sm:w-[40px] max-sm:h-[40px]">
+      <svg viewBox="0 0 24 24" class="w-[18px] h-[18px] max-md:w-[30px] max-md:h-[30px] max-sm:w-[16px] max-sm:h-[16px]" fill="none" stroke="currentColor" stroke-width="2.5">
         <path stroke-linecap="round" d="M6 6l12 12M18 6l-12 12"/>
       </svg>
     </button>
 
-    <!-- Prev -->
+    <!-- Prev — oculto en max-sm: el usuario navega con swipe -->
     <button type="button" data-gal-prev aria-label="Imagen anterior"
             class="absolute left-[24px] top-1/2 -translate-y-1/2 w-[56px] h-[56px] rounded-full border-2 border-vecta-lime text-vecta-lime flex items-center justify-center cursor-pointer hover:bg-vecta-lime hover:text-vecta-dark transition-colors
-                   narrow:left-[40px] narrow:w-[88px] narrow:h-[88px]
-                   mobile:left-[8px] mobile:w-[40px] mobile:h-[40px]">
-      <svg viewBox="0 0 24 24" class="w-[22px] h-[22px] narrow:w-[36px] narrow:h-[36px] mobile:w-[18px] mobile:h-[18px]" fill="none" stroke="currentColor" stroke-width="2.5">
+                   max-md:left-[40px] max-md:w-[88px] max-md:h-[88px]
+                   max-sm:hidden">
+      <svg viewBox="0 0 24 24" class="w-[22px] h-[22px] max-md:w-[36px] max-md:h-[36px]" fill="none" stroke="currentColor" stroke-width="2.5">
         <path stroke-linecap="round" stroke-linejoin="round" d="M15 6l-7 6 7 6"/>
       </svg>
     </button>
 
-    <!-- Next -->
+    <!-- Next — oculto en max-sm: el usuario navega con swipe -->
     <button type="button" data-gal-next aria-label="Imagen siguiente"
             class="absolute right-[24px] top-1/2 -translate-y-1/2 w-[56px] h-[56px] rounded-full border-2 border-vecta-lime text-vecta-lime flex items-center justify-center cursor-pointer hover:bg-vecta-lime hover:text-vecta-dark transition-colors
-                   narrow:right-[40px] narrow:w-[88px] narrow:h-[88px]
-                   mobile:right-[8px] mobile:w-[40px] mobile:h-[40px]">
-      <svg viewBox="0 0 24 24" class="w-[22px] h-[22px] narrow:w-[36px] narrow:h-[36px] mobile:w-[18px] mobile:h-[18px]" fill="none" stroke="currentColor" stroke-width="2.5">
+                   max-md:right-[40px] max-md:w-[88px] max-md:h-[88px]
+                   max-sm:hidden">
+      <svg viewBox="0 0 24 24" class="w-[22px] h-[22px] max-md:w-[36px] max-md:h-[36px]" fill="none" stroke="currentColor" stroke-width="2.5">
         <path stroke-linecap="round" stroke-linejoin="round" d="M9 6l7 6-7 6"/>
       </svg>
     </button>
@@ -112,8 +112,8 @@ const totalImages = sources.length;
     <!-- Contador "N / Total" -->
     <p data-gal-counter
        class="absolute bottom-[28px] left-1/2 -translate-x-1/2 text-vecta-lime font-display font-semibold text-[16px] tracking-[0.12em]
-              narrow:text-[clamp(16px,2.1vw,26px)] narrow:bottom-[44px]
-              mobile:text-[13px] mobile:bottom-[14px]">1 / {totalImages}</p>
+              max-md:text-[clamp(16px,2.1vw,26px)] max-md:bottom-[44px]
+              max-sm:text-[13px] max-sm:bottom-[14px]">1 / {totalImages}</p>
   </div>
 
   <!-- Data island: las URLs de todas las imágenes serializadas para el

@@ -71,22 +71,22 @@ const tituloEndsIn2 = /2$/.test(tituloMostrado);
          en mobile donde reorganizamos los textos en columna sin marco. -->
     <!-- Posiciones a % del canvas 1280×832 (Figma frame 2053:115) -->
     <!-- Top horizontal rule -->
-    <div class="absolute left-[8.59%] top-[29.33%] w-[71.64%] h-px bg-white mobile:hidden"></div>
+    <div class="absolute left-[8.59%] top-[29.33%] w-[71.64%] h-px bg-white max-sm:hidden"></div>
     <!-- Vertical rules -->
-    <div class="absolute left-[10.94%] top-[23.80%] w-px h-[42.55%] bg-white mobile:hidden"></div>
-    <div class="absolute left-[44.30%] top-[23.80%] w-px h-[42.55%] bg-white mobile:hidden"></div>
+    <div class="absolute left-[10.94%] top-[23.80%] w-px h-[42.55%] bg-white max-sm:hidden"></div>
+    <div class="absolute left-[44.30%] top-[23.80%] w-px h-[42.55%] bg-white max-sm:hidden"></div>
     <!-- Corner dots (4) — w/h 12px se mantiene (UI control) -->
-    <div class="absolute left-[10.47%] top-[28.61%] w-[12px] h-[12px] rounded-full bg-white mobile:hidden"></div>
-    <div class="absolute left-[43.83%] top-[28.61%] w-[12px] h-[12px] rounded-full bg-white mobile:hidden"></div>
-    <div class="absolute left-[10.47%] top-[55.89%] w-[12px] h-[12px] rounded-full bg-white mobile:hidden"></div>
-    <div class="absolute left-[43.83%] top-[55.89%] w-[12px] h-[12px] rounded-full bg-white mobile:hidden"></div>
+    <div class="absolute left-[10.47%] top-[28.61%] w-[12px] h-[12px] rounded-full bg-white max-sm:hidden"></div>
+    <div class="absolute left-[43.83%] top-[28.61%] w-[12px] h-[12px] rounded-full bg-white max-sm:hidden"></div>
+    <div class="absolute left-[10.47%] top-[55.89%] w-[12px] h-[12px] rounded-full bg-white max-sm:hidden"></div>
+    <div class="absolute left-[43.83%] top-[55.89%] w-[12px] h-[12px] rounded-full bg-white max-sm:hidden"></div>
 
     <!-- "Tipo N" big title. Desktop: posición Figma en %. Mobile: centrado. -->
     <h2
       data-tipologia-title
       data-tipo-small={tituloEndsIn2 ? '' : undefined}
       class="absolute left-[13.28%] top-[33.53%] w-[30.70%] whitespace-nowrap text-white font-semibold text-[clamp(48px,9vw,115px)] data-[tipo-small]:text-[clamp(44px,7.5vw,95px)] leading-[0.959] font-display [text-shadow:0px_5px_10px_rgba(0,0,0,0.1),0px_19px_19px_rgba(0,0,0,0.09),0px_42px_25px_rgba(0,0,0,0.05)]
-             mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[120px] mobile:w-auto mobile:text-center">
+             max-sm:left-1/2 max-sm:-translate-x-1/2 max-sm:top-[14.42%] max-sm:w-auto max-sm:text-center">
       {tituloMostrado}
     </h2>
 
@@ -94,12 +94,12 @@ const tituloEndsIn2 = /2$/.test(tituloMostrado);
     <p
       data-tipologia-mts
       class="absolute left-[29.14%] top-[48.56%] w-[13.05%] text-white font-medium text-[clamp(22px,3.2vw,40px)] leading-[0.959] font-display
-             mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[260px] mobile:w-auto mobile:text-center">
+             max-sm:left-1/2 max-sm:-translate-x-1/2 max-sm:top-[31.25%] max-sm:w-auto max-sm:text-center">
       {mts} mts²
     </p>
     <!-- Small horizontal arrow line — SVG decorativo, dejamos px (icon). -->
     <svg
-      class="absolute left-[12.97%] top-[50.12%] mobile:hidden"
+      class="absolute left-[12.97%] top-[50.12%] max-sm:hidden"
       width="180" height="12" viewBox="0 0 180 12" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M0 6 H170 M163 0 L170 6 L163 12" stroke="white" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
@@ -108,9 +108,9 @@ const tituloEndsIn2 = /2$/.test(tituloMostrado);
     <p
       data-tipologia-descripcion
       class="absolute left-[47.42%] top-[35.34%] w-[35.70%] text-vecta-lime-text font-medium text-[clamp(18px,2.5vw,32px)] leading-[0.959] font-display
-             mobile:left-[5%] mobile:right-[5%] mobile:top-[360px] mobile:w-auto mobile:text-center">{descripcion}</p>
+             max-sm:left-[5%] max-sm:right-[5%] max-sm:top-[43.27%] max-sm:w-auto max-sm:text-center">{descripcion}</p>
 
     <!-- Bottom-right rule — decorativo, oculto en mobile. -->
-    <div class="absolute left-[48.44%] top-[79.93%] w-[47.66%] h-px bg-white mobile:hidden"></div>
+    <div class="absolute left-[48.44%] top-[79.93%] w-[47.66%] h-px bg-white max-sm:hidden"></div>
   </div>
 </section>

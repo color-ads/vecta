@@ -4,7 +4,28 @@
       "mcp__plugin_figma_figma__whoami",
       "mcp__plugin_figma_figma__get_metadata",
       "mcp__plugin_figma_figma__get_screenshot",
-      "mcp__plugin_figma_figma__get_design_context"
+      "mcp__plugin_figma_figma__get_design_context",
+      "Bash(curl -s --max-time 10 http://18.191.146.114/api/bot/status)",
+      "Bash(curl -s --max-time 10 http://18.191.146.114/api/cycles)",
+      "Bash(curl -s --max-time 10 http://18.191.146.114/api/bandwidth-estimate)",
+      "Bash(curl -s --max-time 10 -I http://18.191.146.114/)",
+      "Bash(curl -s --max-time 10 http://18.191.146.114/)",
+      "Bash(curl -sv --max-time 8 http://18.191.146.114:3000/api/bot/status)",
+      "Bash(curl -s --max-time 8 http://18.191.146.114:4000/api/bot/status)",
+      "Bash(curl -s --max-time 8 http://18.191.146.114:4000/)",
+      "Bash(curl -s --max-time 8 http://18.191.146.114:4000/api/bandwidth-estimate)",
+      "Bash(curl -s --max-time 8 http://18.191.146.114:4000/api/cycles)",
+      "Bash(curl -s --max-time 8 http://18.191.146.114:4000/api/summary)",
+      "Bash(curl -s --max-time 8 http://18.191.146.114:4002/api/bot/status)",
+      "Bash(curl -s --max-time 8 http://18.191.146.114:4002/api/cycles)",
+      "Bash(curl -s --max-time 8 http://18.191.146.114:4002/api/bandwidth-estimate)",
+      "Bash(curl -s --max-time 8 'http://18.191.146.114:4002/api/registered-count')",
+      "Bash(curl -s --max-time 8 'http://18.191.146.114:4002/api/capsolver/balance')",
+      "Bash(curl -s --max-time 8 'http://18.191.146.114:4002/api/schedule')",
+      "Bash(curl -s --max-time 8 'http://18.191.146.114:4002/api/summary')",
+      "Bash(node --check src/db.js)",
+      "Bash(node --check src/worker-pool.js)",
+      "Bash(node --check src/server.js)"
     ]
   }
 }

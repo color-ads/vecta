@@ -46,8 +46,8 @@ const items = cmsItems.length > 0 ? cmsItems : fallback;
 // el script reemplaza estos valores en mobile.
 const CLOSED_TOPS = items.map((_, i) => 313 + i * 73);
 
-// Para la ÚLTIMA pregunta en mobile: parte la pregunta en 2 trozos para
-// renderizar la segunda mitad en un <span class="mobile:block"> — `block`
+// Para la ÚLTIMA pregunta en max-sm: parte la pregunta en 2 trozos para
+// renderizar la segunda mitad en un <span class="max-sm:block"> — `block`
 // fuerza un salto de línea real (a diferencia de <br> con display tricks
 // que browsers manejan de forma inconsistente). En desktop el span sigue
 // inline → el texto queda en 1 sola línea. Intenta partir antes de
@@ -68,31 +68,31 @@ function splitForMobile(q: string): { first: string; second: string } {
 const lastIdx = items.length - 1;
 const lastQuestionParts = splitForMobile(items[lastIdx].q);
 ---
-<section class="relative w-full min-h-screen overflow-hidden bg-vecta-night tablet:min-h-[95vh] mobile:block mobile:overflow-visible mobile:h-auto mobile:min-h-[100vh] mobile:pb-20">
-  <div class="relative w-full max-w-[1280px] h-[832px] mx-auto mobile:h-auto mobile:pb-24">
+<section class="relative w-full min-h-screen overflow-hidden bg-vecta-night sm:max-md:min-h-[95vh] max-sm:block max-sm:overflow-visible max-sm:h-auto max-sm:min-h-[100vh] max-sm:pb-20">
+  <div class="relative w-full max-w-[1280px] h-[832px] mx-auto max-sm:h-auto max-sm:pb-24">
     <!-- Title — canvas 1280×832, posiciones en %.
          Mobile: baja a 18% para no quedar pegado arriba (FAQ items
          arrancan ~30% en mobile vía JS). -->
     <h2 class="absolute text-vecta-lime font-semibold text-[clamp(28px,4.7vw,60px)] 
     leading-[0.959] font-display left-[5.31%] top-[12.38%] w-[49.92%]
-               mobile:top-[50%] mobile:text-[clamp(22px,5.5vw,30px)] 
-               mobile:left-0 mobile:right-0 mobile:w-full mobile:text-center">
+               max-sm:top-[50%] max-sm:text-[clamp(22px,5.5vw,30px)] 
+               max-sm:left-0 max-sm:right-0 max-sm:w-full max-sm:text-center">
       Algunas preguntas<br/>frecuentes
     </h2>
 
     <!-- Decorative large lime ring (hidden on mobile). Conserva calc() porque
          ancla el centro respecto al 50% del canvas + offset Figma. -->
     <div class="absolute rounded-full border border-vecta-lime/40 pointer-events-none w-[620.185px] h-[620.185px]
-                left-[calc(50%+151.09px-310.0925px)] top-[calc(50%+455.09px-310.0925px)] mobile:hidden"></div>
+                left-[calc(50%+151.09px-310.0925px)] top-[calc(50%+455.09px-310.0925px)] max-sm:hidden"></div>
 
     <!-- Cross-grid (1px solid #FFF) — hidden on mobile -->
-    <div class="absolute w-px bg-white pointer-events-none left-[59.30%] top-[-3.13%] h-[97.96%] mobile:hidden"></div>
-    <div class="absolute h-px bg-white pointer-events-none left-[-13.98%] top-[33.53%] w-[119.38%] mobile:hidden"></div>
-    <div class="absolute h-px bg-white pointer-events-none left-[59.30%] top-[60.10%] w-[43.98%] mobile:hidden"></div>
+    <div class="absolute w-px bg-white pointer-events-none left-[59.30%] top-[-3.13%] h-[97.96%] max-sm:hidden"></div>
+    <div class="absolute h-px bg-white pointer-events-none left-[-13.98%] top-[33.53%] w-[119.38%] max-sm:hidden"></div>
+    <div class="absolute h-px bg-white pointer-events-none left-[59.30%] top-[60.10%] w-[43.98%] max-sm:hidden"></div>
 
     <!-- Dots — hidden on mobile (tamaño se conserva en px: UI control) -->
-    <span class="absolute rounded-full bg-white pointer-events-none left-[58.75%] top-[32.81%] w-[13px] h-[12px] mobile:hidden"></span>
-    <span class="absolute rounded-full bg-white pointer-events-none left-[58.75%] top-[59.38%] w-[13px] h-[12px] mobile:hidden"></span>
+    <span class="absolute rounded-full bg-white pointer-events-none left-[58.75%] top-[32.81%] w-[13px] h-[12px] max-sm:hidden"></span>
+    <span class="absolute rounded-full bg-white pointer-events-none left-[58.75%] top-[59.38%] w-[13px] h-[12px] max-sm:hidden"></span>
 
     <!-- Building fascade — repositions on mobile to occupy the bottom half.
          Section is 100vh tall on mobile (10vh taller than before) so the
@@ -101,8 +101,8 @@ const lastQuestionParts = splitForMobile(items[lastIdx].q);
          la sección min-h-screen es más alta que el canvas 832 (≈1024px en
          tablet portrait → 112px vacíos al fondo). -->
     <div class="absolute pointer-events-none left-[47.19%] top-[-19.64%] w-[64.77%] h-[124.64%]
-                tablet:top-[-2%]
-                mobile:left-0 mobile:right-0 mobile:top-[38vh] mobile:w-full mobile:h-[62vh]">
+                sm:max-md:top-[-2%]
+                max-sm:left-0 max-sm:right-0 max-sm:top-[38vh] max-sm:w-full max-sm:h-[62vh]">
       <picture>
         <source srcset="/sections/preguntas/fachada.webp" type="image/webp" />
         <img src="/sections/preguntas/fachada.jpg" alt="Fachada VECTA 98"
@@ -138,16 +138,16 @@ const lastQuestionParts = splitForMobile(items[lastIdx].q);
       //    haría wrap natural a 4+ líneas).
       //  - Resto: ancho fijo basado en viewport + nowrap (1 línea forzada).
       const widthAndWrap = isLast
-        ? 'mobile:!w-auto'
-        : 'mobile:!w-[calc(100vw-228px)] mobile:!whitespace-nowrap';
+        ? 'max-sm:!w-auto'
+        : 'max-sm:!w-[calc(100vw-228px)] max-sm:!whitespace-nowrap';
       const classes = `absolute text-vecta-lime font-semibold leading-[1.09] font-display left-[6.33%] w-[46.88%] text-[clamp(18px,2.5vw,32px)] tracking-[-0.352px] [transition:top_0.3s_ease]
-                mobile:!left-[16.33%] mobile:!text-[clamp(14px,4vw,17px)] ${widthAndWrap}`;
-      // Última pregunta: la segunda mitad va en un <span class="mobile:!block">
+                max-sm:!left-[16.33%] max-sm:!text-[clamp(14px,4vw,17px)] ${widthAndWrap}`;
+      // Última pregunta: la segunda mitad va en un <span class="max-sm:!block">
       // que en mobile se vuelve display:block → salto de línea garantizado.
       // En desktop el span sigue inline → toda la pregunta en una línea.
       return isLast && lastQuestionParts.second ? (
         <p class={classes} data-faq-question={idx} style={`top: ${CLOSED_TOPS[idx]}px;`}>
-          {lastQuestionParts.first}{' '}<span class="mobile:!block">{lastQuestionParts.second}</span>
+          {lastQuestionParts.first}{' '}<span class="max-sm:!block">{lastQuestionParts.second}</span>
         </p>
       ) : (
         <p class={classes} data-faq-question={idx} style={`top: ${CLOSED_TOPS[idx]}px;`}>{item.q}</p>
@@ -160,7 +160,7 @@ const lastQuestionParts = splitForMobile(items[lastIdx].q);
          wrappean a 2 líneas (línea 2 termina en ~70px) sin pisar la respuesta. -->
     {items.map((item, idx) => (
       <p class="absolute text-white font-semibold leading-[1.09] pointer-events-none font-display left-[6.33%] w-[47.03%] text-[clamp(14px,1.6vw,20px)] tracking-[-0.22px] opacity-0 [transition:opacity_0.2s_ease,top_0.3s_ease]
-                mobile:!left-[4%] mobile:!right-[4%] mobile:!w-auto mobile:!text-[clamp(12px,3.5vw,15px)] mobile:!leading-[1.3]"
+                max-sm:!left-[4%] max-sm:!right-[4%] max-sm:!w-auto max-sm:!text-[clamp(12px,3.5vw,15px)] max-sm:!leading-[1.3]"
          data-faq-answer={idx}
          style={`top: ${CLOSED_TOPS[idx] + 80}px;`}>
         {item.a}
@@ -170,7 +170,7 @@ const lastQuestionParts = splitForMobile(items[lastIdx].q);
     <!-- Per-item separator lines -->
     {items.map((item, idx) => (
       <div class="absolute h-px bg-white pointer-events-none left-[-3.83%] w-[38.67%] opacity-0 [transition:opacity_0.2s_ease,top_0.3s_ease]
-                  mobile:left-[16px] mobile:w-[calc(100vw-32px)]"
+                  max-sm:left-[16px] max-sm:w-[calc(100vw-32px)]"
            data-faq-line={idx}
            style={`top: ${CLOSED_TOPS[idx] + 126}px;`}></div>
     ))}
@@ -183,7 +183,7 @@ const lastQuestionParts = splitForMobile(items[lastIdx].q);
   const total = document.querySelectorAll('[data-faq-caret]').length;
   // Mobile (true phone, screen ≤768) uses larger spacing because the
   // question/answer fonts are bumped up — keeps an open answer from
-  // overlapping the next row. Aligned with the `mobile:` Tailwind variant
+  // overlapping the next row. Aligned with the `max-sm:` Tailwind variant
   // (html[data-device="phone"]) so JS positions match CSS layout.
   const isMobile = document.documentElement.getAttribute('data-device') === 'phone';
   const ROW_SPACING = isMobile ? 62 : 73;
