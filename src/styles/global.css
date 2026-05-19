@@ -46,6 +46,10 @@ html, body {
   background-color: var(--color-vecta-bg);
   color: var(--color-vecta-dark);
   font-family: var(--font-display);
+  /* Evita la "rubber-band" de iOS al hacer overscroll. Sin esto, al final
+     de la página (después del form) iOS muestra el bg del body en un
+     espacio blanco que rompe la continuidad visual con la sección lime. */
+  overscroll-behavior-y: none;
 }
 
 /* :user-invalid border (red) for form inputs. The `:user-invalid` pseudo
@@ -179,10 +183,10 @@ html[data-layout="tablet"] .mobile-hamburger { display: flex !important; }
   filter: invert(1);
 }
 
-/* AboutCarousel: slides 1 (theme="about") y 2 (theme="dark") tienen fondo
-   lime → invertir el logo a negro. Slide 3 (theme="lime") tiene fondo negro
-   → logo se queda blanco (sin filter, color natural del PNG). */
-#site-nav[data-active-section="about-carousel"][data-nav-theme="about"] [data-actualcorp-logo],
+/* AboutCarousel: solo slide 2 (theme="dark") invierte el logo a negro
+   (card lime sin foto). Slide 1 (theme="about") tiene una foto a la derecha
+   detrás del logo → logo blanco natural para mejor contraste sobre la foto.
+   Slide 3 (theme="lime") tiene fondo negro → logo blanco natural. */
 #site-nav[data-active-section="about-carousel"][data-nav-theme="dark"] [data-actualcorp-logo] {
   filter: invert(1);
 }
