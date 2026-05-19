@@ -186,18 +186,21 @@ const items = extractHeadingPairs(ws?.fields?.bloque3seccion3textos, 'heading-3'
 
   <!-- ============================================================
        SLIDE 3 — Amenidades grid on black (formerly AboutAmenidades.astro)
-       ============================================================ -->
+       Mobile: 100% flex flow (sin absolute). El wrapper queda absolute
+       solo por requerimiento del carrusel.
+       PC: layout absolute con la grid Figma (sin cambios). -->
   <div data-about-slide="amenidades"
-       class="absolute inset-0 transition-opacity duration-500 flex items-center justify-center opacity-0">
-    <div class="absolute left-1/2 -translate-x-1/2 bg-[#0a0a0a] overflow-hidden top-[calc((100vw-1270px)/8)] bottom-[calc((100vw-1270px)/8)] w-[calc(75vw+317.5px)]">
-      <!-- Círculo decorativo (arco en esquina superior-izquierda del card).
-           Posición y tamaño en % del canvas (1280×832) — escala con la card. -->
+       class="absolute inset-0 transition-opacity duration-500 opacity-0 flex items-center justify-center
+              max-sm:flex-col max-sm:bg-[#0a0a0a]">
+
+    <!-- PC: black card + círculo decorativo. Hidden en mobile (el bg negro
+         lo pinta el slide wrapper directamente con max-sm:bg-[#0a0a0a]). -->
+    <div class="absolute left-1/2 -translate-x-1/2 bg-[#0a0a0a] overflow-hidden top-[calc((100vw-1270px)/8)] bottom-[calc((100vw-1270px)/8)] w-[calc(75vw+317.5px)] max-sm:hidden">
       <div class="absolute -left-[16.17%] -top-[18.87%] w-[48.44%] aspect-square rounded-full border border-vecta-lime-text/40"></div>
     </div>
 
-    <!-- Mobile-only: título + 5 ítems centrados vertical y horizontalmente.
-         justify-center + gap-[9.45%] (reducido 30% desde 13.5%). -->
-    <div class="hidden max-sm:flex max-sm:flex-col max-sm:items-center max-sm:justify-center max-sm:gap-[9.45%] absolute inset-0 z-10 px-[7%] py-[6%] text-center">
+    <!-- Mobile-only: contenido en flex flow puro, sin absolute. -->
+    <div class="hidden max-sm:flex max-sm:flex-col max-sm:items-center max-sm:justify-center max-sm:gap-[9.45%] max-sm:flex-1 max-sm:w-full max-sm:px-[7%] max-sm:py-[6%] max-sm:text-center">
       <h2 class="text-vecta-lime-text font-semibold font-display text-[6.5vw] leading-[1.05] w-full" set:html={slide3TitleHtml}></h2>
       {items.map((item) => (
         <div class="w-full">
