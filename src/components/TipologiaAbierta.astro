@@ -69,47 +69,48 @@ const tituloEndsIn2 = /2$/.test(tituloMostrado);
   <div class="relative w-full max-w-[1280px] min-h-screen h-[832px] mx-auto">
     <!-- Decoradores del marco (reglas + dots): visible en desktop, oculto
          en mobile donde reorganizamos los textos en columna sin marco. -->
+    <!-- Posiciones a % del canvas 1280×832 (Figma frame 2053:115) -->
     <!-- Top horizontal rule -->
-    <div class="absolute left-[110px] top-[244px] w-[917px] h-px bg-white mobile:hidden"></div>
+    <div class="absolute left-[8.59%] top-[29.33%] w-[71.64%] h-px bg-white mobile:hidden"></div>
     <!-- Vertical rules -->
-    <div class="absolute left-[140px] top-[198px] w-px h-[354px] bg-white mobile:hidden"></div>
-    <div class="absolute left-[567px] top-[198px] w-px h-[354px] bg-white mobile:hidden"></div>
-    <!-- Corner dots (4) -->
-    <div class="absolute left-[134px] top-[238px] w-[12px] h-[12px] rounded-full bg-white mobile:hidden"></div>
-    <div class="absolute left-[561px] top-[238px] w-[12px] h-[12px] rounded-full bg-white mobile:hidden"></div>
-    <div class="absolute left-[134px] top-[465px] w-[12px] h-[12px] rounded-full bg-white mobile:hidden"></div>
-    <div class="absolute left-[561px] top-[465px] w-[12px] h-[12px] rounded-full bg-white mobile:hidden"></div>
+    <div class="absolute left-[10.94%] top-[23.80%] w-px h-[42.55%] bg-white mobile:hidden"></div>
+    <div class="absolute left-[44.30%] top-[23.80%] w-px h-[42.55%] bg-white mobile:hidden"></div>
+    <!-- Corner dots (4) — w/h 12px se mantiene (UI control) -->
+    <div class="absolute left-[10.47%] top-[28.61%] w-[12px] h-[12px] rounded-full bg-white mobile:hidden"></div>
+    <div class="absolute left-[43.83%] top-[28.61%] w-[12px] h-[12px] rounded-full bg-white mobile:hidden"></div>
+    <div class="absolute left-[10.47%] top-[55.89%] w-[12px] h-[12px] rounded-full bg-white mobile:hidden"></div>
+    <div class="absolute left-[43.83%] top-[55.89%] w-[12px] h-[12px] rounded-full bg-white mobile:hidden"></div>
 
-    <!-- "Tipo N" big title. Desktop: posición Figma. Mobile: centrado horizontalmente, top reducido para layout vertical apilado. -->
+    <!-- "Tipo N" big title. Desktop: posición Figma en %. Mobile: centrado. -->
     <h2
       data-tipologia-title
       data-tipo-small={tituloEndsIn2 ? '' : undefined}
-      class="absolute left-[170px] top-[279px] w-[393px] whitespace-nowrap text-white font-semibold text-[clamp(48px,9vw,115px)] data-[tipo-small]:text-[clamp(44px,7.5vw,95px)] leading-[0.959] font-display [text-shadow:0px_5px_10px_rgba(0,0,0,0.1),0px_19px_19px_rgba(0,0,0,0.09),0px_42px_25px_rgba(0,0,0,0.05)]
+      class="absolute left-[13.28%] top-[33.53%] w-[30.70%] whitespace-nowrap text-white font-semibold text-[clamp(48px,9vw,115px)] data-[tipo-small]:text-[clamp(44px,7.5vw,95px)] leading-[0.959] font-display [text-shadow:0px_5px_10px_rgba(0,0,0,0.1),0px_19px_19px_rgba(0,0,0,0.09),0px_42px_25px_rgba(0,0,0,0.05)]
              mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[120px] mobile:w-auto mobile:text-center">
       {tituloMostrado}
     </h2>
 
-    <!-- "X mts²". Desktop: posición Figma. Mobile: centrado debajo del título. -->
+    <!-- "X mts²". -->
     <p
       data-tipologia-mts
-      class="absolute left-[373px] top-[404px] w-[167px] text-white font-medium text-[clamp(22px,3.2vw,40px)] leading-[0.959] font-display
+      class="absolute left-[29.14%] top-[48.56%] w-[13.05%] text-white font-medium text-[clamp(22px,3.2vw,40px)] leading-[0.959] font-display
              mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[260px] mobile:w-auto mobile:text-center">
       {mts} mts²
     </p>
-    <!-- Small horizontal arrow line — solo decorativo, oculto en mobile (no aplica al layout vertical). -->
+    <!-- Small horizontal arrow line — SVG decorativo, dejamos px (icon). -->
     <svg
-      class="absolute left-[166px] top-[417px] mobile:hidden"
+      class="absolute left-[12.97%] top-[50.12%] mobile:hidden"
       width="180" height="12" viewBox="0 0 180 12" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M0 6 H170 M163 0 L170 6 L163 12" stroke="white" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
 
-    <!-- Description (lime). Desktop: derecha. Mobile: centrada con padding lateral. -->
+    <!-- Description (lime). Desktop: derecha. Mobile: centrada con padding. -->
     <p
       data-tipologia-descripcion
-      class="absolute left-[607px] top-[294px] w-[457px] text-vecta-lime-text font-medium text-[clamp(18px,2.5vw,32px)] leading-[0.959] font-display
+      class="absolute left-[47.42%] top-[35.34%] w-[35.70%] text-vecta-lime-text font-medium text-[clamp(18px,2.5vw,32px)] leading-[0.959] font-display
              mobile:left-[5%] mobile:right-[5%] mobile:top-[360px] mobile:w-auto mobile:text-center">{descripcion}</p>
 
     <!-- Bottom-right rule — decorativo, oculto en mobile. -->
-    <div class="absolute left-[620px] top-[665px] w-[610px] h-px bg-white mobile:hidden"></div>
+    <div class="absolute left-[48.44%] top-[79.93%] w-[47.66%] h-px bg-white mobile:hidden"></div>
   </div>
 </section>

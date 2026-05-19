@@ -95,7 +95,7 @@ const SEP_MOBILE_CLASSES = [
          horizontalmente con ancho fluido (90% del viewport) y alto auto
          con aspect-square — escala al ancho real del device (antes
          `mobile:w-[1035px]` desbordaba en viewports <1035px). -->
-    <div class="absolute left-[544px] top-[94px] w-[686px] h-[702px] overflow-hidden
+    <div class="absolute left-[42.5%] top-[11.30%] w-[53.59%] h-[84.38%] overflow-hidden
                 mobile:left-[5%] mobile:right-[5%] mobile:top-[580px] mobile:w-auto mobile:h-auto mobile:aspect-square
                 tablet:left-[5%] tablet:right-[5%] tablet:top-[580px] tablet:w-auto tablet:h-auto tablet:aspect-square">
       <img
@@ -114,7 +114,7 @@ const SEP_MOBILE_CLASSES = [
     <h2
       data-tipologia-title
       data-tipo-small={tituloEndsIn2 ? '' : undefined}
-      class="absolute left-[92px] top-[272px] w-[311px] whitespace-nowrap text-vecta-dark font-semibold text-[clamp(48px,8vw,100px)] data-[tipo-small]:text-[clamp(40px,6.7vw,85px)] leading-[0.959] font-display
+      class="absolute left-[7.19%] top-[32.69%] w-[24.30%] whitespace-nowrap text-vecta-dark font-semibold text-[clamp(48px,8vw,100px)] data-[tipo-small]:text-[clamp(40px,6.7vw,85px)] leading-[0.959] font-display
              mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[90px] mobile:w-auto mobile:text-[clamp(56px,11vw,140px)] mobile:data-[tipo-small]:text-[clamp(48px,9vw,115px)] mobile:text-center
              tablet:left-1/2 tablet:-translate-x-1/2 tablet:top-[90px] tablet:w-auto tablet:text-[clamp(56px,11vw,140px)] tablet:data-[tipo-small]:text-[clamp(48px,9vw,115px)] tablet:text-center">
       {tituloMostrado}
@@ -129,7 +129,7 @@ const SEP_MOBILE_CLASSES = [
       <Fragment>
         {/* Label: izquierda fija desktop; mobile a 5% del viewport con ancho 45% */}
         <p
-          class={`absolute left-[93px] w-[194px] text-vecta-dark text-[clamp(15px,1.9vw,24px)] leading-[1.008] font-['Istok_Web',sans-serif] mobile:left-[5%] mobile:w-[45%] mobile:text-[clamp(20px,2.8vw,36px)] tablet:left-[5%] tablet:w-[45%] tablet:text-[clamp(20px,2.8vw,36px)] ${ROW_MOBILE_CLASSES[idx]}`}
+          class={`absolute left-[7.27%] w-[15.16%] text-vecta-dark text-[clamp(15px,1.9vw,24px)] leading-[1.008] font-['Istok_Web',sans-serif] mobile:left-[5%] mobile:w-[45%] mobile:text-[clamp(20px,2.8vw,36px)] tablet:left-[5%] tablet:w-[45%] tablet:text-[clamp(20px,2.8vw,36px)] ${ROW_MOBILE_CLASSES[idx]}`}
           style={`top: ${ROW_TOPS[idx]}px;`}>
           {row.label}
         </p>
@@ -137,7 +137,7 @@ const SEP_MOBILE_CLASSES = [
         <p
           data-tipologia-row={row.key}
           {...(row.key === "mts" ? { "data-tipologia-mts": true } : {})}
-          class={`absolute left-[345px] w-[133px] text-vecta-dark text-[clamp(15px,1.9vw,24px)] leading-[1.008] text-center font-bold font-['Istok_Web',sans-serif] mobile:left-[50%] mobile:w-[45%] mobile:text-[clamp(20px,2.8vw,36px)] tablet:left-[50%] tablet:w-[45%] tablet:text-[clamp(20px,2.8vw,36px)] ${ROW_MOBILE_CLASSES[idx]}`}
+          class={`absolute left-[26.95%] w-[10.39%] text-vecta-dark text-[clamp(15px,1.9vw,24px)] leading-[1.008] text-center font-bold font-['Istok_Web',sans-serif] mobile:left-[50%] mobile:w-[45%] mobile:text-[clamp(20px,2.8vw,36px)] tablet:left-[50%] tablet:w-[45%] tablet:text-[clamp(20px,2.8vw,36px)] ${ROW_MOBILE_CLASSES[idx]}`}
           style={`top: ${ROW_TOPS[idx]}px;`}>
           {row.value}
         </p>
@@ -145,7 +145,7 @@ const SEP_MOBILE_CLASSES = [
     ))}
     {/* Separadores: width fluido desktop (390px) y mobile (90% del viewport con 5% margen lateral) */}
     {SEP_TOPS.map((y, idx) => (
-      <div class={`absolute left-[88px] w-[390px] h-px bg-vecta-dark/60 mobile:left-[5%] mobile:right-[5%] mobile:w-auto tablet:left-[5%] tablet:right-[5%] tablet:w-auto ${SEP_MOBILE_CLASSES[idx]}`} style={`top: ${y}px;`}></div>
+      <div class={`absolute left-[6.88%] w-[30.47%] h-px bg-vecta-dark/60 mobile:left-[5%] mobile:right-[5%] mobile:w-auto tablet:left-[5%] tablet:right-[5%] tablet:w-auto ${SEP_MOBILE_CLASSES[idx]}`} style={`top: ${y}px;`}></div>
     ))}
   </div>
 </section>
