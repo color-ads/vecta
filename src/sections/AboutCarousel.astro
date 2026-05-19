@@ -76,26 +76,32 @@ const items = extractHeadingPairs(ws?.fields?.bloque3seccion3textos, 'heading-3'
 
   <!-- ============================================================
        SLIDE 1 — Manifesto on lime card (formerly AboutUs.astro)
-       ============================================================ -->
+       El wrapper queda `absolute inset-0` por requerimiento del carrusel
+       (los 3 slides se apilan y crossfadean). Su CONTENIDO está en flex
+       flow — cero hijos en absolute. -->
   <div data-about-slide="manifesto"
-       class="absolute inset-0 transition-opacity duration-500 flex items-center justify-center opacity-100">
-    <!-- Lime rounded card. Las fórmulas originales (width = 75vw+317.5px,
-         right/top/bottom = (100vw-1270)/8) están derivadas matemáticamente
-         para autocentrar el card horizontalmente en cualquier viewport
-         (margen simétrico, crece con la pantalla). En móvil los offsets
-         se vuelven negativos y el card overflowea la sección — el
-         `overflow-hidden` del section lo recorta, dando un efecto
-         edge-to-edge sin bordes asimétricos.
-         REGLA: NO añadir min-w ni max() sobre estas fórmulas; rompen la simetría. -->
-    <div class="absolute rounded-[10px] bg-vecta-lime top-[calc((100vw-1270px)/8)] bottom-[calc((100vw-1270px)/8)] right-[calc((100vw-1270px)/8)] w-[calc(75vw+317.5px)]
-                max-sm:top-0 max-sm:bottom-[40%] max-sm:left-0 max-sm:right-0 max-sm:w-auto max-sm:rounded-none"></div>
+       class="absolute inset-0 transition-opacity duration-500 opacity-100 flex max-sm:flex-col">
 
-    <!-- Right photo card — anchored to the lime card's right edge.
-         Mismo offset right/top/bottom que el lime card (comparten esquina
-         derecha). El ancho del photo card se reduce en pantallas pequeñas
-         con clamp() para no dominar la sección. -->
-    <div class="absolute w-[clamp(200px,43vw,551px)] rounded-r-[10px] overflow-hidden top-[calc((100vw-1270px)/8)] bottom-[calc((100vw-1270px)/8)] right-[calc((100vw-1270px)/8)]
-                max-sm:top-[47%] max-sm:-bottom-[13%] max-sm:left-0 max-sm:right-0 max-sm:w-full max-sm:rounded-none">
+    <!-- Lime panel con texto en flujo natural -->
+    <div class="flex-1 bg-vecta-lime flex flex-col justify-center gap-[3vh] px-[8%] rounded-l-[10px]
+                max-sm:rounded-none max-sm:flex-none max-sm:h-[75vh] max-sm:gap-[2vh] max-sm:py-[6vh] max-sm:text-center">
+      <h2 class="text-vecta-dark font-semibold leading-[0.95853] font-display text-[clamp(40px,6.7vw,84px)]
+                 max-md:text-[clamp(52px,9.5vw,120px)]
+                 md:max-lg:!text-[clamp(28px,4.7vw,60px)]
+                 max-sm:text-[8.5vw] max-sm:leading-[1.1]">{slide1Title}</h2>
+
+      <div class="w-[60%] h-px bg-vecta-dark max-sm:hidden"></div>
+
+      <div class="text-vecta-dark font-normal text-[clamp(15px,1.9vw,24px)] leading-[0.95853] space-y-[1em] font-display
+                  max-md:text-[clamp(20px,3vw,38px)]
+                  [&>p:first-child]:text-[clamp(28px,4.7vw,60px)] [&>p:first-child]:font-semibold
+                  max-md:[&>p:first-child]:text-[clamp(40px,7vw,90px)]
+                  max-sm:text-[4vw] max-sm:leading-[1.5]" set:html={slide1BodyHtml}></div>
+    </div>
+
+    <!-- Photo panel -->
+    <div class="w-[clamp(200px,43vw,551px)] overflow-hidden rounded-r-[10px]
+                max-sm:w-full max-sm:rounded-none max-sm:h-[50vh]">
       <img
         src={slide1ImgSrc}
         alt="Persona observando proyecto VECTA 98"
@@ -103,28 +109,6 @@ const items = extractHeadingPairs(ws?.fields?.bloque3seccion3textos, 'heading-3'
         loading="lazy"
         decoding="async"
       />
-    </div>
-
-    <!-- Mobile-only: texto posicionado en el centro del área lima (0–75vh).
-         Usa absolute + top en vh para no depender del canvas centrado por flex. -->
-    <div class="hidden max-sm:block absolute top-0 left-0 right-0 h-[75vh] z-10">
-      <h2 class="absolute left-0 right-0 top-[15vh] px-[8%] text-vecta-dark font-semibold font-display text-[8.5vw] leading-[1.1] text-center">{slide1Title}</h2>
-      <div class="absolute left-[8%] right-[8%] top-[23vh] text-vecta-dark font-normal font-display text-[4vw] leading-[1.5] text-center
-                  [&>p:first-child]:text-[6vw] [&>p:first-child]:font-semibold [&>p:first-child]:leading-[1.2]" set:html={slide1BodyHtml}></div>
-    </div>
-
-    <!-- Inner canvas: posiciones en % del canvas (1280×812 Figma) -->
-    <div class="relative w-full max-w-[1280px] h-[812px] mx-auto">
-      <h2 class="absolute left-[5.78%] top-[5.17%] w-[49.92%] text-vecta-dark font-semibold text-[clamp(40px,6.7vw,84px)] leading-[0.95853] font-display
-                 max-md:text-[clamp(52px,9.5vw,120px)]
-                 md:max-lg:!text-[clamp(28px,4.7vw,60px)]
-                 max-sm:hidden">{slide1Title}</h2>
-      <div class="absolute left-[6.25%] top-[15.52%] w-[38.67%] h-px bg-vecta-dark max-sm:hidden"></div>
-      <div class="absolute left-[5.78%] top-[23.28%] w-[37.11%] text-vecta-dark font-normal text-[clamp(15px,1.9vw,24px)] leading-[0.95853] space-y-[1em] font-display
-                  max-md:text-[clamp(20px,3vw,38px)] max-md:w-[43.75%]
-                  [&>p:first-child]:text-[clamp(28px,4.7vw,60px)] [&>p:first-child]:font-semibold
-                  max-md:[&>p:first-child]:text-[clamp(40px,7vw,90px)]
-                  max-sm:hidden" set:html={slide1BodyHtml}></div>
     </div>
   </div>
 
