@@ -44,9 +44,11 @@ const area = parsed?.area ?? '40 mts²';
        hijos absolutos resuelvan contra 100vh (h-full no funciona porque la
        sección solo tiene min-h, no height). -->
   <div class="relative w-full max-w-[1280px] h-screen mx-auto px-[clamp(20px,4vw,58px)]">
-    <!-- Right-side info card text (Group 11 en Figma). En móvil el ancho
-         crece y la tipografía escala. -->
-    <div class="absolute right-[clamp(20px,4vw,58px)] top-[37.76%] w-[clamp(260px,30vw,300px)] text-vecta-dark text-right font-display max-sm:top-[12.76%] max-sm:w-[clamp(280px,80vw,500px)]">
+    <!-- Right-side info card text (Group 11 en Figma). Envuelto en una
+         card lime con fade a transparente: sólida hasta el 30% superior
+         y luego se va desvaneciendo suavemente hacia abajo. -->
+    <div class="absolute right-[clamp(20px,4vw,58px)] top-[37.76%] w-[clamp(260px,30vw,300px)] bg-gradient-to-b from-vecta-lime from-30% to-transparent rounded-[10px] px-[clamp(20px,2.5vw,32px)] py-[clamp(24px,3vw,40px)] text-vecta-dark text-right font-display shadow-[0_20px_60px_rgba(0,0,0,0.18)]
+                max-sm:top-[12.76%] max-sm:w-[clamp(280px,80vw,500px)] max-sm:px-[24px] max-sm:py-[28px] max-sm:text-center">
       <p class="text-[clamp(22px,2.6vw,32px)] leading-[0.959] max-sm:text-[clamp(24px,4vw,48px)]">{ubicacion}</p>
 
       <p class="mt-[50px] text-[clamp(22px,2.6vw,32px)] leading-[0.959] max-sm:text-[clamp(24px,4vw,48px)]">Aptos desde</p>
