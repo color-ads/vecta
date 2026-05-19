@@ -63,7 +63,7 @@ const slide3TitleHtml = slide3Title.includes('vendemos ')
   : slide3Title;
 const items = extractHeadingPairs(ws?.fields?.bloque3seccion3textos, 'heading-3');
 ---
-<section id="about-carousel" data-active-slide="0" class="relative w-full min-h-screen bg-vecta-bg overflow-hidden max-sm:min-h-[125vh]">
+<section id="about-carousel" data-active-slide="0" class="relative w-full min-h-screen bg-vecta-bg overflow-hidden max-sm:min-h-[135vh]">
   <!-- Slide indicator dots — clickable, centered along the left strip. Only
        navigation control for this carousel on desktop. Hidden on mobile, where
        slides auto-advance every 5s instead. -->
@@ -88,7 +88,7 @@ const items = extractHeadingPairs(ws?.fields?.bloque3seccion3textos, 'heading-3'
       <h2 class="text-vecta-dark font-semibold leading-[0.95853] font-display text-[clamp(40px,6.7vw,84px)]
                  max-md:text-[clamp(52px,9.5vw,120px)]
                  md:max-lg:!text-[clamp(28px,4.7vw,60px)]
-                 max-sm:text-[8.5vw] max-sm:leading-[1.1]">{slide1Title}</h2>
+                 max-sm:!text-[clamp(20px,6.5vw,36px)] max-sm:leading-[1.1]">{slide1Title}</h2>
 
       <div class="w-[60%] h-px bg-vecta-dark max-sm:hidden"></div>
 
@@ -96,12 +96,13 @@ const items = extractHeadingPairs(ws?.fields?.bloque3seccion3textos, 'heading-3'
                   max-md:text-[clamp(20px,3vw,38px)]
                   [&>p:first-child]:text-[clamp(28px,4.7vw,60px)] [&>p:first-child]:font-semibold
                   max-md:[&>p:first-child]:text-[clamp(40px,7vw,90px)]
-                  max-sm:text-[4vw] max-sm:leading-[1.5]" set:html={slide1BodyHtml}></div>
+                  max-sm:text-[4vw] max-sm:leading-[1.5]
+                  max-sm:[&>p:first-child]:!text-[6vw]" set:html={slide1BodyHtml}></div>
     </div>
 
     <!-- Photo panel -->
     <div class="w-[clamp(200px,43vw,551px)] overflow-hidden rounded-r-[10px]
-                max-sm:w-full max-sm:rounded-none max-sm:h-[50vh]">
+                max-sm:w-full max-sm:rounded-none max-sm:h-[60vh]">
       <img
         src={slide1ImgSrc}
         alt="Persona observando proyecto VECTA 98"
@@ -144,20 +145,22 @@ const items = extractHeadingPairs(ws?.fields?.bloque3seccion3textos, 'heading-3'
       <div class="absolute left-[6.56%] top-[28.49%] flex gap-[10px] w-[87.03%]
                   sm:max-md:relative sm:max-md:top-auto sm:max-md:left-auto sm:max-md:grid sm:max-md:grid-cols-1 sm:max-md:gap-[16px] sm:max-md:w-[75%] sm:max-md:mx-auto
                   max-sm:relative max-sm:top-auto max-sm:left-auto max-sm:grid max-sm:grid-cols-1 max-sm:gap-[16px] max-sm:w-[92%] max-sm:mx-auto">
-        {cards.map((c) => (
-          <article class="relative w-[24.33%] h-[52.40%] rounded-[10px] bg-[#0a0a0a] text-white
-                          sm:max-md:w-full sm:max-md:h-[22vh]
-                          max-sm:w-full max-sm:h-[22vh]">
-            <!-- Posiciones en % del card (271×436 Figma → todos los valores
-                 derivados literalmente: 24/271=8.86%, 11/436=2.52%, etc.).
-                 Así escalan proporcionalmente cuando el card se reduce a
-                 ~217px en pc-small (1024px CSS viewport). El clamp() en text
-                 se encarga del font-size sin necesidad de variantes. -->
+        {cards.map((c, idx) => {
+          // Cards 1 y 4 (idx 0 y 3) tienen descripción de 2 líneas en PC.
+          // Subimos su título, separador y descripción ~4% para que el bloque
+          // de texto termine a la misma altura visual que las cards 2 y 3
+          // (que tienen descripción de 1 línea).
+          const isLongDesc = idx === 0 || idx === 3;
+          const titleBottom = isLongDesc ? 'bottom-[33%]' : 'bottom-[29.13%]';
+          const sepTop      = isLongDesc ? 'top-[70%]'    : 'top-[73.85%]';
+          const descTop     = isLongDesc ? 'top-[75%]'    : 'top-[78.67%]';
+          return (
+          <article class="relative w-[24.33%] aspect-[271/436] rounded-[10px] bg-[#0a0a0a] text-white
+                          sm:max-md:w-full sm:max-md:aspect-auto sm:max-md:h-[22vh]
+                          max-sm:w-full max-sm:aspect-auto max-sm:h-[22vh]">
             <span class="absolute left-[8.86%] top-[2.52%] text-[clamp(40px,7vw,105px)] leading-none font-bold text-white font-display
                          sm:max-md:left-[6%] sm:max-md:top-[3%] sm:max-md:text-[6.5vw]
                          max-sm:left-[6%] max-sm:top-[3%] max-sm:text-[9vw]">{c.number}</span>
-            <!-- Ícono: w=55/271=20.3% del card, aspect-square mantiene 1:1.
-                 271px card → 55px (Figma). 217px card (pc-small) → 44px. -->
             <div class="absolute right-[7.38%] top-[5.05%] w-[20.3%] aspect-square rounded-full bg-white flex items-center justify-center
                         sm:max-md:right-[6%] sm:max-md:top-[3%] sm:max-md:w-[3.5vh] sm:max-md:h-[3.5vh]
                         max-sm:right-[6%] max-sm:top-[3%] max-sm:w-[3.5vh] max-sm:h-[3.5vh]">
@@ -166,20 +169,18 @@ const items = extractHeadingPairs(ws?.fields?.bloque3seccion3textos, 'heading-3'
               </svg>
             </div>
 
-            <!-- Título: w=217/271=80.07% del card, bottom=127/436=29.13%. -->
-            <h3 class="absolute left-[8.86%] bottom-[29.13%] w-[80.07%] text-[clamp(15px,2vw,36px)] font-semibold leading-[0.95] font-display
+            <h3 class={`absolute left-[8.86%] ${titleBottom} w-[80.07%] text-[clamp(15px,2vw,36px)] font-semibold leading-[0.95] font-display
                        sm:max-md:left-[6%] sm:max-md:bottom-[32%] sm:max-md:w-[88%] sm:max-md:text-[2.8vw]
-                       max-sm:left-[6%] max-sm:bottom-[32%] max-sm:w-[88%] max-sm:text-[3.8vw]">{c.title}</h3>
-            <!-- Línea separadora: w=126/271=46.49%, top=322/436=73.85%. -->
-            <span class="absolute left-[8.86%] top-[73.85%] w-[46.49%] h-px bg-white
+                       max-sm:left-[6%] max-sm:bottom-[40%] max-sm:w-[88%] max-sm:text-[3.8vw]`}>{c.title}</h3>
+            <span class={`absolute left-[8.86%] ${sepTop} w-[46.49%] h-px bg-white
                          sm:max-md:left-[6%] sm:max-md:top-[73%] sm:max-md:w-[25%]
-                         max-sm:left-[6%] max-sm:top-[73%] max-sm:w-[25%]"></span>
-            <!-- Descripción: w=218/271=80.44%, top=343/436=78.67%. -->
-            <p class="absolute left-[8.86%] top-[78.67%] w-[80.44%] text-[clamp(10px,1vw,18px)] leading-[1.3] font-bold font-display
+                         max-sm:left-[6%] max-sm:top-[65%] max-sm:w-[25%]`}></span>
+            <p class={`absolute left-[8.86%] ${descTop} w-[80.44%] text-[clamp(10px,1vw,18px)] leading-[1.3] font-bold font-display
                       sm:max-md:left-[6%] sm:max-md:top-[79%] sm:max-md:w-[88%] sm:max-md:text-[2.4vw]
-                      max-sm:left-[6%] max-sm:top-[79%] max-sm:w-[88%] max-sm:text-[3.2vw]">{c.description}</p>
+                      max-sm:left-[6%] max-sm:top-[71%] max-sm:w-[88%] max-sm:text-[3.2vw]`}>{c.description}</p>
           </article>
-        ))}
+          );
+        })}
       </div>
     </div>
   </div>

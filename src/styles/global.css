@@ -170,23 +170,20 @@ html[data-layout="tablet"] .mobile-hamburger { display: flex !important; }
   background-color: #22291d !important;
 }
 
-/* actualcorp logo in the floating nav must stay white over the AboutCarousel
-   block (module 3) regardless of which slide is active. Decoupled from
-   data-nav-theme because slide 2 reuses the `dark` theme (also used by
-   Formulario, where the logo should stay dark). data-active-section is set
-   by index.astro's updateNavTheme to the id of the section under the nav line. */
-#site-nav[data-active-section="about-carousel"] [data-actualcorp-logo],
-#site-nav[data-active-section="about-carousel"] [data-actualcorp-logo] .text-white {
-  color: #fff !important;
-}
-
-/* actualcorp logo is a static white PNG. Over light-bg blocks (ProyectoIntro
-   #inversion = block 2, Ubicacion = block 6, Formulario = the form) we
-   invert it so the white pixels render as black. Transparent pixels stay
-   transparent; anti-aliased edges keep their alpha. */
+/* actualcorp logo is a static white PNG. Over light-bg blocks lo invertimos
+   con filter para que los píxeles blancos rendereen en negro. Transparent
+   pixels stay transparent; anti-aliased edges keep their alpha. */
 #site-nav[data-active-section="inversion"] [data-actualcorp-logo],
 #site-nav[data-active-section="ubicacion"] [data-actualcorp-logo],
 #site-nav[data-active-section="formulario"] [data-actualcorp-logo] {
+  filter: invert(1);
+}
+
+/* AboutCarousel: slides 1 (theme="about") y 2 (theme="dark") tienen fondo
+   lime → invertir el logo a negro. Slide 3 (theme="lime") tiene fondo negro
+   → logo se queda blanco (sin filter, color natural del PNG). */
+#site-nav[data-active-section="about-carousel"][data-nav-theme="about"] [data-actualcorp-logo],
+#site-nav[data-active-section="about-carousel"][data-nav-theme="dark"] [data-actualcorp-logo] {
   filter: invert(1);
 }
 
