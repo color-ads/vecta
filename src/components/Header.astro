@@ -77,12 +77,15 @@ const navItems = [
   <!-- Logo: en viewports anchos (≥1280) se acerca al borde derecho del nav
        strip (que está capado a 1003px centrado). El calc() resuelve a 20px
        del borde en viewports chicos (preserva el diseño Figma original) y
-       deja ~50px de gap con la strip cuando hay espacio sobrante. -->
+       deja ~50px de gap con la strip cuando hay espacio sobrante.
+       top-[45.38%] alinea el borde superior del logo con el del strip
+       (45.38% = top del strip) — el logo "cuelga" de la línea del strip
+       sin sobresalir por encima. -->
   <img
     src="/Logo_Blanco.png"
     alt="actualcorp"
     data-actualcorp-logo
-    class="absolute top-[37.69%] right-[max(20px,calc(50vw-671.5px))] w-[clamp(80px,8vw,120px)] aspect-square object-contain z-30 pointer-events-auto"
+    class="absolute top-[45.38%] right-[max(20px,calc(50vw-671.5px))] w-[clamp(80px,8vw,120px)] aspect-square object-contain z-30 pointer-events-auto"
   />
 
   <!-- Nav strip — centrado en viewport, ancho fluido tope 1003px.
