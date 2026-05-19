@@ -64,21 +64,29 @@ const initialMapSrc = `https://www.google.com/maps?q=${ADDRESS}&z=16&hl=es&outpu
               max-md:w-full max-md:min-h-0 max-md:h-[50vh] max-md:gap-[2vh]
               min-[2400px]:w-[30vw]">
 
-    <h2 class="text-vecta-dark font-semibold 
-              leading-[0.959] 
+    <!-- Bracket decorativo tipo annotation Figma. Solo PC (≥769).
+         Posicionado absolute sobre el panel; los textos siguen en flex flow. -->
+    <div class="absolute left-0 right-0 top-[15.3%] h-px bg-vecta-dark max-md:hidden"></div>
+    <div class="absolute left-0 right-0 top-[38%] h-px bg-vecta-dark max-md:hidden"></div>
+    <div class="absolute top-[10.6%] left-[calc(50%-171px)] w-px h-[72.8%] bg-vecta-dark max-md:hidden"></div>
+    <div class="absolute top-[14.7%] left-[calc(50%-177px)] w-[12px] h-[12px] rounded-full bg-vecta-dark max-md:hidden"></div>
+    <div class="absolute top-[37.4%] left-[calc(50%-177px)] w-[12px] h-[12px] rounded-full bg-vecta-dark max-md:hidden"></div>
+
+    <h2 class="text-vecta-dark font-semibold
+              leading-[0.959]
               text-[6vw]
               md:text-[4vw]
-              lg:text-[4.5vw]">{heading}</h2>
+              lg:text-[4.5vw] lg:pl-[18%]">{heading}</h2>
 
-    <p class="text-vecta-dark leading-[0.959] 
+    <p class="text-vecta-dark leading-[0.959]
               text-[4.5vw]
               md:text-[2.1vw]
-              lg:text-[2.2vw]">{subtitle}</p>
+              lg:text-[2.2vw] lg:pl-[18%]">{subtitle}</p>
 
-    <div class="text-vecta-dark leading-[0.959] 
+    <div class="text-vecta-dark leading-[0.959]
                 text-[4vw] space-y-[1.2em]
                 md:text-[2.1vw]
-                lg:text-[2.2vw]">
+                lg:text-[2.2vw] lg:pl-[18%]">
       <p>{description1}</p>
       <p set:html={description2}></p>
     </div>
