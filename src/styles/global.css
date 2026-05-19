@@ -191,3 +191,14 @@ html[data-layout="tablet"] .mobile-hamburger { display: flex !important; }
   filter: invert(1);
 }
 
+/* TipologiaModal: cuando el usuario scrollea a la segunda vista (plano),
+   el script del modal cambia data-nav-theme a "dark" (porque el bg de
+   TipologiaAbierta2 es claro). En ese estado el data-active-section sigue
+   siendo "tipologias" así que las reglas por sección no aplican — pero
+   queremos que el logo se invierta igual. Esta regla genérica lo cubre
+   sin afectar nada más (las otras secciones que usan dark/light se
+   manejan por sus reglas específicas más arriba). */
+#site-nav[data-active-section="tipologias"][data-nav-theme="dark"] [data-actualcorp-logo] {
+  filter: invert(1);
+}
+
