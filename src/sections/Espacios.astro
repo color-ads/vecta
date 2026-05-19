@@ -70,9 +70,11 @@ const slides = (res.items as Array<{ fields: LugarFields }>).map((it) => {
     <!-- Rectangle 3 (2069:156) — inner square ~48% of container width -->
     <div class="absolute pointer-events-none w-[48.45%] aspect-square top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border border-white/50 max-sm:hidden"></div>
 
-    <!-- Title + subtitle stack (both swapped per slide by the script). -->
+    <!-- Title + subtitle stack (both swapped per slide by the script).
+         Mobile: edge-to-edge con padding lateral; centrado por text-center,
+         sin trucos de translate (más robusto que left-1/2 + translateX). -->
     <div class="absolute left-1/2 top-[47.96%] -translate-x-1/2 text-center text-white whitespace-nowrap font-display
-                max-sm:top-[42vh] max-sm:w-[calc(100vw-32px)]">
+                max-sm:left-0 max-sm:right-0 max-sm:translate-x-0 max-sm:top-[42vh] max-sm:px-[16px]">
       <h2 data-espacios-title class="text-[clamp(28px,5vw,64px)] font-medium leading-[0.959] max-sm:text-[24px] max-sm:whitespace-normal">{slides[0]?.title ?? ''}</h2>
       <p data-espacios-subtitle class="text-[clamp(18px,2.5vw,32px)] font-normal leading-[0.959] max-sm:text-[15px] max-sm:whitespace-normal">{slides[0]?.subtitle ?? ''}</p>
     </div>
