@@ -14,7 +14,7 @@ import Header from '../components/Header.astro';
 
 <Layout title="VECTA 98 — Gracias">
   <header id="site-nav" data-nav-theme="light"
-          class="fixed top-0 left-0 right-0 z-[120] h-[130px] pointer-events-none">
+          class="fixed top-0 left-0 right-0 z-[120] h-[130px] pointer-events-none transform-gpu will-change-transform backface-hidden [-webkit-backface-visibility:hidden] [-webkit-transform:translateZ(0)]">
     <Header variant="light" />
   </header>
 

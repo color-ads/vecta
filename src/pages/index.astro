@@ -17,13 +17,16 @@ import Formulario from '../sections/Formulario.astro';
 	     data-nav-theme is updated by the script below as the user scrolls so the
 	     nav text/lines flip dark over light-background sections (2, 3, 4, 11).
 	     `pointer-events-none` on the bar lets clicks pass through empty areas;
-	     interactive clusters inside Header.astro re-enable pointer events. -->
+	     interactive clusters inside Header.astro re-enable pointer events.
+	     `translate-z-0` + `will-change-transform` + `backface-hidden` fuerzan
+	     hardware acceleration en iOS Safari para que el nav no lagee durante
+	     scrolls rápidos en mobile. -->
 	<header id="site-nav" data-nav-theme="light"
-	        class="fixed top-0 left-0 right-0 z-[120] h-[130px] pointer-events-none">
+	        class="fixed top-0 left-0 right-0 z-[120] h-[130px] pointer-events-none transform-gpu will-change-transform backface-hidden [-webkit-backface-visibility:hidden] [-webkit-transform:translateZ(0)]">
 		<Header variant="light" />
 	</header>
 
-	<main class="bg-vecta-bg max-w-[1600px] mx-auto">
+	<main class="bg-vecta-bg">
 		<!-- Hero spans the full viewport width -->
 		<Hero />
 

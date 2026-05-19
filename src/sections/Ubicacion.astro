@@ -75,15 +75,15 @@ const initialMapSrc = `https://www.google.com/maps?q=${ADDRESS}&z=16&hl=es&outpu
     <!-- Tamaños alineados con el slide 1 del bloque 3 (AboutCarousel):
          heading usa la talla "título" (20-60px), subtitle+descripción
          usan la talla "body" (15-24px PC, 20-38px tablet, 4vw mobile). -->
-    <h2 class="text-vecta-dark font-semibold leading-[0.959] text-[clamp(20px,5vw,60px)] lg:pl-[18%]">{heading}</h2>
+    <h2 class="text-vecta-dark font-semibold leading-[0.959] text-[clamp(20px,5vw,60px)] lg:pl-[18%] 2xl:pl-[28%]">{heading}</h2>
 
     <p class="text-vecta-dark leading-[0.959] text-[clamp(15px,1.9vw,24px)]
               max-md:text-[clamp(20px,3vw,38px)]
-              max-sm:text-[4vw] lg:pl-[18%]">{subtitle}</p>
+              max-sm:text-[4vw] lg:pl-[18%] 2xl:pl-[28%]">{subtitle}</p>
 
     <div class="text-vecta-dark leading-[0.959] space-y-[1.2em] text-[clamp(15px,1.9vw,24px)]
                 max-md:text-[clamp(20px,3vw,38px)]
-                max-sm:text-[4vw] lg:pl-[18%]">
+                max-sm:text-[4vw] lg:pl-[18%] 2xl:pl-[28%]">
       <p>{description1}</p>
       <p set:html={description2}></p>
     </div>
