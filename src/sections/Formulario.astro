@@ -4,11 +4,11 @@
 // title → form → comment label/box → consent → submit. All text scales up.
 ---
 <section id="formulario" class="relative w-full min-h-screen overflow-hidden bg-vecta-lime flex items-center justify-center
-                max-md:block max-md:h-auto max-md:min-h-[2050px] sm:max-md:min-h-[1400px] max-sm:min-h-[1320px]">
+                max-md:block max-md:h-auto max-md:min-h-[2050px] sm:max-md:min-h-[1400px] max-sm:min-h-[1100px]">
   <!-- Inner canvas: tope 1280px en desktop, fluido por debajo. En max-md:
        (≤768) cambia a layout vertical apilado. Tablet (601-768 device=tablet)
        usa valores compactos en lugar de los enormes de narrow. -->
-  <div class="relative w-full max-w-[1280px] h-[940px] mx-auto max-md:h-[2050px] sm:max-md:h-[1400px] max-sm:h-[1320px]">
+  <div class="relative w-full max-w-[1280px] h-[940px] mx-auto max-md:h-[2050px] sm:max-md:h-[1400px] max-sm:h-[1100px]">
     <!-- Title — canvas 1280×940 -->
     <h2 class="absolute left-[13.13%] top-[15.74%] text-vecta-dark font-semibold text-[clamp(24px,3.5vw,44px)] leading-[0.959] font-display
                max-md:left-0 max-md:right-0 max-md:top-[3.90%] max-md:w-full max-md:text-center max-md:text-[clamp(36px,6.5vw,80px)]
@@ -27,7 +27,7 @@
     <p class="absolute left-[55.16%] top-[27.66%] text-vecta-dark text-[clamp(15px,1.9vw,24px)] font-display
               max-md:left-1/2 max-md:top-[67.32%] max-md:-translate-x-1/2 max-md:text-[clamp(24px,3.5vw,44px)] max-md:whitespace-nowrap
               sm:max-md:top-[64.29%] sm:max-md:text-[22px]
-              max-sm:left-[24px] max-sm:top-[65.91%] max-sm:text-[14px] max-sm:whitespace-normal max-sm:font-semibold max-sm:translate-x-0">
+              max-sm:left-[24px] max-sm:top-[62.91%] max-sm:text-[14px] max-sm:whitespace-normal max-sm:font-semibold max-sm:translate-x-0">
       Deja tu comentario aquí:
     </p>
 
@@ -40,7 +40,7 @@
       class="absolute left-[55.16%] top-[32.98%] w-[30.63%] h-[35.64%] rounded-[10px] border-2 border-vecta-dark bg-transparent p-[14px] text-vecta-dark text-[clamp(13px,1.4vw,18px)] resize-none focus:outline-none focus:ring-2 focus:ring-vecta-dark/40 font-display
              max-md:left-1/2 max-md:top-[70.73%] max-md:-translate-x-1/2 max-md:w-[78.13%] max-md:h-[13.66%] max-md:text-[clamp(16px,2.2vw,28px)]
              sm:max-md:top-[67.86%] sm:max-md:w-[50%] sm:max-md:h-[12.86%] sm:max-md:text-[16px]
-             max-sm:left-[24px] max-sm:top-[68.94%] max-sm:w-[calc(100vw-48px)] max-sm:h-[13.64%] max-sm:text-[2.8vw] max-sm:translate-x-0"></textarea>
+             max-sm:left-[24px] max-sm:top-[65.94%] max-sm:w-[calc(100vw-48px)] max-sm:h-[13.64%] max-sm:text-[2.8vw] max-sm:translate-x-0"></textarea>
 
     <form
       id="contactForm"
@@ -172,7 +172,7 @@
     <label class="absolute left-[55.16%] top-[70.21%] w-[30.86%] flex gap-[12px] cursor-pointer
                   max-md:left-1/2 max-md:top-[85.85%] max-md:-translate-x-1/2 max-md:w-[78.13%] max-md:gap-[18px]
                   sm:max-md:top-[84.29%] sm:max-md:w-[50%] sm:max-md:gap-[14px]
-                  max-sm:top-[84.85%] max-sm:w-[calc(100vw-48px)] max-sm:gap-[10px]">
+                  max-sm:top-[81.85%] max-sm:w-[calc(100vw-48px)] max-sm:gap-[10px]">
       <input
         type="checkbox"
         form="contactForm"
@@ -194,7 +194,8 @@
       type="submit"
       form="contactForm"
       class="absolute left-[68.36%] top-[80.85%] w-[16.72%] h-[47px] rounded-[10px] bg-vecta-dark text-white text-[clamp(16px,2.2vw,28px)] font-semibold flex items-center justify-center hover:bg-vecta-dark/90 transition-colors disabled:opacity-50 font-display
-             max-md:left-1/2 max-md:-translate-x-1/2 max-md:top-[93%] max-md:w-[min(70%,360px)] max-md:h-[56px] max-md:text-[clamp(16px,4vw,22px)]">
+             max-md:left-1/2 max-md:-translate-x-1/2 max-md:top-[93%] max-md:w-[min(70%,360px)] max-md:h-[56px] max-md:text-[clamp(16px,4vw,22px)]
+             max-sm:top-[92.5%]">
       ENVIAR
     </button>
   </div>
