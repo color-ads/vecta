@@ -63,12 +63,12 @@ const slides = (res.items as Array<{ fields: LugarFields }>).map((it) => {
     <!-- Geometric figure from GYM ESPACIOS (Figma 2069:154 "Group 11").
          Three concentric layers centered at (640, 444.5) — 28.5px below the
          canvas center. Hidden on mobile (fixed px positions overflow narrow viewports). -->
-    <!-- Rectangle 2 (2069:155) — outer 887.419×887.419 rotated -45° -->
-    <div class="absolute pointer-events-none w-[887.419px] h-[887.419px] top-[0.7905px] left-[196.2905px] border border-white/50 rotate-[-45deg] mobile:hidden"></div>
-    <!-- Ellipse 1 (2069:157) — circle 620.185×620.185 -->
-    <div class="absolute pointer-events-none rounded-full w-[620.185px] h-[620.185px] top-[134.4075px] left-[329.9075px] border border-white/50 mobile:hidden"></div>
-    <!-- Rectangle 3 (2069:156) — inner 620.185×620.185 axis-aligned -->
-    <div class="absolute pointer-events-none w-[620.185px] h-[620.185px] top-[134.4075px] left-[329.9075px] border border-white/50 mobile:hidden"></div>
+    <!-- Rectangle 2 (2069:155) — outer ~69% of container width, rotated -45° -->
+    <div class="absolute pointer-events-none w-[69.33%] aspect-square top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border border-white/50 rotate-[-45deg] mobile:hidden"></div>
+    <!-- Ellipse 1 (2069:157) — circle ~48% of container width -->
+    <div class="absolute pointer-events-none rounded-full w-[48.45%] aspect-square top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border border-white/50 mobile:hidden"></div>
+    <!-- Rectangle 3 (2069:156) — inner square ~48% of container width -->
+    <div class="absolute pointer-events-none w-[48.45%] aspect-square top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border border-white/50 mobile:hidden"></div>
 
     <!-- Title + subtitle stack (both swapped per slide by the script). -->
     <div class="absolute left-1/2 top-[399px] -translate-x-1/2 text-center text-white whitespace-nowrap font-display

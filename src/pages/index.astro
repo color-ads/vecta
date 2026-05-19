@@ -63,6 +63,7 @@ import Formulario from '../sections/Formulario.astro';
 	const aboutSection = document.getElementById('about-carousel');
 	// Block order: 0 Hero, 1 ProyectoIntro, 2 AboutCarousel, 3 Espacios,
 	// 4 Tipologias, 5 Ubicacion, 6 Galeria, 7 Preguntas, 8 Formulario.
+	const tipologiasSection = sections[4];
 	const ubicacionSection = sections[5];
 
 	function updateNavTheme() {
@@ -81,6 +82,12 @@ import Formulario from '../sections/Formulario.astro';
 				// AboutCarousel (block 3) → `about` theme: dark base + INVERSIÓN cluster white.
 				if (section === aboutSection) {
 					theme = 'about';
+				}
+				// Tipologias (block 5) → mobile carousel has light bg (vecta-bg) so nav
+				// needs dark text on phone; PC keeps the default light theme (dark bg).
+				if (section === tipologiasSection &&
+					document.documentElement.getAttribute('data-device') === 'phone') {
+					theme = 'dark';
 				}
 				// Ubicacion (block 6) → `ubicacion` theme: light base, but HOME / ABOUT US /
 				// ESPACIOS flip to dark so they read over the lime panel on the left.

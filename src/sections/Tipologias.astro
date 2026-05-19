@@ -75,13 +75,14 @@ const t4 = byTipo['4'] ?? EMPTY_TIPO;
 const t5 = byTipo['5'] ?? EMPTY_TIPO;
 const t6 = byTipo['6'] ?? EMPTY_TIPO;
 ---
-<section id="tipologias" class="relative w-full overflow-hidden bg-black mobile:h-auto">
+<section id="tipologias" class="relative w-full overflow-hidden bg-black mobile:h-auto tablet:h-auto">
   <!-- Desktop wrapper: aspect-ratio 1280:2085 (~0.614) que mantiene la
        proporción del canvas Figma. Imagen + polígonos + callouts viven
        dentro de él, todos en posiciones %, así escalan juntos en cualquier
        viewport y los polígonos siguen alineados con la imagen.
-       Tope max-w-[1280px] en desktop; fluido por debajo. -->
-  <div class="relative w-full max-w-[1280px] mx-auto aspect-[1280/2085] mobile:hidden">
+       Tope max-w-[1280px] en desktop; fluido por debajo. Oculto en mobile
+       y tablet (ambos usan el carrusel de detalle de tipologías). -->
+  <div class="relative w-full max-w-[1280px] mx-auto aspect-[1280/2085] mobile:hidden tablet:hidden">
     <!-- Background image dentro del wrapper para compartir dimensiones con los polígonos -->
     <img
       src={bgSrc}
@@ -230,10 +231,10 @@ const t6 = byTipo['6'] ?? EMPTY_TIPO;
     )}
   </div>
 
-  <!-- Mobile-only: horizontal auto-advancing carousel. Cada slide ocupa el
-       100% del viewport mobile; el ancho real se lee en JS al iniciar para
+  <!-- Mobile + tablet: horizontal auto-advancing carousel. Cada slide ocupa el
+       100% del viewport; el ancho real se lee en JS al iniciar para
        calcular el translateX (antes era hardcoded 1280px). -->
-  <div data-tipologia-carousel-mobile class="hidden mobile:block relative z-10 overflow-hidden w-full mx-auto">
+  <div data-tipologia-carousel-mobile class="hidden mobile:block tablet:block relative z-10 overflow-hidden w-full mx-auto">
     <div data-tipologia-track class="flex will-change-transform [transition:transform_700ms_cubic-bezier(0.65,0,0.35,1)]">
       {tipologias.map((t) => (
         <div class="w-full flex-shrink-0">
@@ -260,7 +261,7 @@ const t6 = byTipo['6'] ?? EMPTY_TIPO;
           type="button"
           data-tipologia-dot={i}
           aria-label={`Ir a la tipología ${i + 1} de ${tipologias.length}`}
-          class="w-[20px] h-[20px] rounded-full border-2 border-white bg-transparent transition-colors data-[active=true]:bg-vecta-lime data-[active=true]:border-vecta-lime cursor-pointer"
+          class="w-[20px] h-[20px] rounded-full border-2 border-white mobile:border-black bg-transparent transition-colors data-[active=true]:bg-vecta-lime data-[active=true]:border-vecta-lime mobile:data-[active=true]:!border-black cursor-pointer"
         ></button>
       ))}
     </div>
@@ -269,11 +270,12 @@ const t6 = byTipo['6'] ?? EMPTY_TIPO;
 </section>
 
 <script>
-  // Auto-advancing carousel for the mobile tipología pages. Disabled on
-  // desktop (where the static building image is shown instead). Pauses
-  // briefly on user interaction and stops when scrolled out of view.
-  const isMobile = document.documentElement.getAttribute('data-device') === 'phone';
-  if (isMobile) {
+  // Auto-advancing carousel for the mobile + tablet tipología pages.
+  // Disabled on desktop/pc-small (where the static building image is shown).
+  // Pauses briefly on user interaction and stops when scrolled out of view.
+  const device = document.documentElement.getAttribute('data-device');
+  const useCarousel = device === 'phone' || device === 'tablet';
+  if (useCarousel) {
     const carousel = document.querySelector<HTMLElement>('[data-tipologia-carousel-mobile]');
     const track = document.querySelector<HTMLElement>('[data-tipologia-track]');
     const dots = Array.from(

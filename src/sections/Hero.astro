@@ -81,29 +81,37 @@ const tagline = richTextToPlain(ws?.fields?.textoPrincipal);
        histórica — los `mobile:hidden` los ocultan en pantallas estrechas. -->
   <div class="relative w-full max-w-[1280px] h-[832px] mx-auto">
     <!-- Vertical separators (Vector 25 left, Vector 26 right) — hidden on mobile. -->
-    <div class="absolute left-[102px] top-[163px] w-px h-[417px] bg-white/40 mobile:hidden"></div>
-    <div class="absolute left-[1196px] top-[210px] w-px h-[488px] bg-white/40 mobile:hidden"></div>
+    <!-- Figma: left x=102/1280, top y=163/832, h=417/832 -->
+    <div class="absolute left-[7.97%] top-[19.59%] w-px h-[50.12%] bg-white/40 mobile:hidden"></div>
+    <!-- Figma: left x=1196/1280, top y=210/832, h=488/832 -->
+    <div class="absolute left-[93.44%] top-[25.24%] w-px h-[58.65%] bg-white/40 mobile:hidden"></div>
 
     <!-- Small horizontal accents near the logo (Vector 27 + Vector 28) — hidden on mobile. -->
-    <div class="absolute left-[102px] top-[456px] w-[76px] h-px bg-white/70 mobile:hidden"></div>
-    <div class="absolute left-[102px] top-[483px] w-[163px] h-px bg-white/70 mobile:hidden"></div>
+    <!-- Figma: left x=102/1280, top y=456/832, w=76/1280 -->
+    <div class="absolute left-[7.97%] top-[54.81%] w-[5.94%] h-px bg-white/70 mobile:hidden"></div>
+    <!-- Figma: left x=102/1280, top y=483/832, w=163/1280 -->
+    <div class="absolute left-[7.97%] top-[58.05%] w-[12.73%] h-px bg-white/70 mobile:hidden"></div>
 
     <!-- VECTA 98 logo (image 11 [Vectorized] 2030:149)  Figma x=350, y=361, 580.84 x 133.
          Anchor with left-1/2 + -translate-x-1/2 so the logo stays visually
          centered on every viewport width — including when the 1280px canvas
          overflows a narrower window (overflow-hidden clips the sides) and
          on mobile devices where meta-viewport=1280 forces the layout. -->
-    <div class="absolute left-1/2 -translate-x-1/2 top-[361px] w-[581px] h-[133px]
+    <!-- Figma: top y=361/832, w=581/1280, h=133/832 -->
+    <div class="absolute left-1/2 -translate-x-1/2 top-[43.39%] w-[45.39%] h-[15.99%]
+                tablet:top-[50%] tablet:h-[15.19%]
                 mobile:w-[260px] mobile:h-[60px] mobile:top-[38vh]">
       <img src="/sections/hero/vecta-logo.svg" alt="VECTA 98" class="w-full h-full object-contain" decoding="async" fetchpriority="high" />
     </div>
 
     <!-- Tagline (text 2030:68): desktop x=74, y=605, w=360. Mobile re-anchors
          it below the logo centered on the canvas. -->
-    <p class="absolute left-[74px] top-[605px] w-[360px] text-vecta-lime-text font-medium text-[clamp(18px,2.5vw,32px)] leading-[0.959] whitespace-pre-line font-display
+    <!-- Figma: left x=74/1280, top y=605/832, w=360/1280 -->
+    <p class="absolute left-[5.78%] top-[72.72%] w-[28.13%] text-vecta-lime-text font-medium text-[clamp(18px,2.5vw,32px)] leading-[0.959] whitespace-pre-line font-display
               mobile:left-0 mobile:right-0 mobile:top-[52vh] mobile:w-full mobile:text-center mobile:text-[20px] mobile:leading-[1.3]">{tagline}</p>
 
     <!-- Bottom horizontal divider (Vector 20) x=138, y=800, w=1002.5 — hidden on mobile. -->
-    <div class="absolute left-[138px] top-[800px] w-[1003px] h-px bg-white/40 mobile:hidden"></div>
+    <!-- Figma: left x=138/1280, top y=800/832, w=1003/1280 -->
+    <div class="absolute left-[10.78%] top-[96.15%] w-[78.36%] h-px bg-white/40 mobile:hidden"></div>
   </div>
 </section>

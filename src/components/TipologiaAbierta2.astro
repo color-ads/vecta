@@ -75,28 +75,29 @@ const SEP_TOPS = [461, 525, 589, 653];
 // All values are shifted +150px so the cluster sits centered inside the
 // 1920px-tall mobile slide.
 const ROW_MOBILE_CLASSES = [
-  'mobile:!top-[430px]',
-  'mobile:!top-[510px]',
-  'mobile:!top-[590px]',
-  'mobile:!top-[670px]',
-  'mobile:!top-[750px]',
+  'mobile:!top-[240px] tablet:!top-[240px]',
+  'mobile:!top-[310px] tablet:!top-[310px]',
+  'mobile:!top-[380px] tablet:!top-[380px]',
+  'mobile:!top-[450px] tablet:!top-[450px]',
+  'mobile:!top-[520px] tablet:!top-[520px]',
 ];
 const SEP_MOBILE_CLASSES = [
-  'mobile:!top-[480px]',
-  'mobile:!top-[560px]',
-  'mobile:!top-[640px]',
-  'mobile:!top-[720px]',
+  'mobile:!top-[286px] tablet:!top-[286px]',
+  'mobile:!top-[356px] tablet:!top-[356px]',
+  'mobile:!top-[426px] tablet:!top-[426px]',
+  'mobile:!top-[496px] tablet:!top-[496px]',
 ];
 ---
-<section class="relative w-full min-h-screen h-[832px] overflow-hidden bg-vecta-bg mobile:h-[2055px] mobile:min-h-0">
+<section class="relative w-full min-h-screen h-[832px] overflow-hidden bg-vecta-bg mobile:h-[1050px] mobile:min-h-0 tablet:h-[1312px] tablet:min-h-0">
   <!-- Inner canvas: tope 1280px en desktop, fluido por debajo -->
-  <div class="relative w-full max-w-[1280px] min-h-screen h-[832px] mx-auto mobile:h-[2055px] mobile:min-h-0">
+  <div class="relative w-full max-w-[1280px] min-h-screen h-[832px] mx-auto mobile:h-[1050px] mobile:min-h-0 tablet:h-[1312px] tablet:min-h-0">
     <!-- Floor plan image. Desktop: right side fijo. Mobile: centrado
          horizontalmente con ancho fluido (90% del viewport) y alto auto
          con aspect-square — escala al ancho real del device (antes
          `mobile:w-[1035px]` desbordaba en viewports <1035px). -->
     <div class="absolute left-[544px] top-[94px] w-[686px] h-[702px] overflow-hidden
-                mobile:left-[5%] mobile:right-[5%] mobile:top-[920px] mobile:w-auto mobile:h-auto mobile:aspect-square">
+                mobile:left-[5%] mobile:right-[5%] mobile:top-[580px] mobile:w-auto mobile:h-auto mobile:aspect-square
+                tablet:left-[5%] tablet:right-[5%] tablet:top-[580px] tablet:w-auto tablet:h-auto tablet:aspect-square">
       <img
         data-gallery="1"
         data-tipologia-image
@@ -114,7 +115,8 @@ const SEP_MOBILE_CLASSES = [
       data-tipologia-title
       data-tipo-small={tituloEndsIn2 ? '' : undefined}
       class="absolute left-[92px] top-[272px] w-[311px] whitespace-nowrap text-vecta-dark font-semibold text-[clamp(48px,8vw,100px)] data-[tipo-small]:text-[clamp(40px,6.7vw,85px)] leading-[0.959] font-display
-             mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[230px] mobile:w-auto mobile:text-[clamp(56px,11vw,140px)] mobile:data-[tipo-small]:text-[clamp(48px,9vw,115px)] mobile:text-center">
+             mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-[90px] mobile:w-auto mobile:text-[clamp(56px,11vw,140px)] mobile:data-[tipo-small]:text-[clamp(48px,9vw,115px)] mobile:text-center
+             tablet:left-1/2 tablet:-translate-x-1/2 tablet:top-[90px] tablet:w-auto tablet:text-[clamp(56px,11vw,140px)] tablet:data-[tipo-small]:text-[clamp(48px,9vw,115px)] tablet:text-center">
       {tituloMostrado}
     </h2>
 
@@ -127,7 +129,7 @@ const SEP_MOBILE_CLASSES = [
       <Fragment>
         {/* Label: izquierda fija desktop; mobile a 5% del viewport con ancho 45% */}
         <p
-          class={`absolute left-[93px] w-[194px] text-vecta-dark text-[clamp(15px,1.9vw,24px)] leading-[1.008] font-['Istok_Web',sans-serif] mobile:left-[5%] mobile:w-[45%] mobile:text-[clamp(20px,2.8vw,36px)] ${ROW_MOBILE_CLASSES[idx]}`}
+          class={`absolute left-[93px] w-[194px] text-vecta-dark text-[clamp(15px,1.9vw,24px)] leading-[1.008] font-['Istok_Web',sans-serif] mobile:left-[5%] mobile:w-[45%] mobile:text-[clamp(20px,2.8vw,36px)] tablet:left-[5%] tablet:w-[45%] tablet:text-[clamp(20px,2.8vw,36px)] ${ROW_MOBILE_CLASSES[idx]}`}
           style={`top: ${ROW_TOPS[idx]}px;`}>
           {row.label}
         </p>
@@ -135,7 +137,7 @@ const SEP_MOBILE_CLASSES = [
         <p
           data-tipologia-row={row.key}
           {...(row.key === "mts" ? { "data-tipologia-mts": true } : {})}
-          class={`absolute left-[345px] w-[133px] text-vecta-dark text-[clamp(15px,1.9vw,24px)] leading-[1.008] text-center font-bold font-['Istok_Web',sans-serif] mobile:left-[50%] mobile:w-[45%] mobile:text-[clamp(20px,2.8vw,36px)] ${ROW_MOBILE_CLASSES[idx]}`}
+          class={`absolute left-[345px] w-[133px] text-vecta-dark text-[clamp(15px,1.9vw,24px)] leading-[1.008] text-center font-bold font-['Istok_Web',sans-serif] mobile:left-[50%] mobile:w-[45%] mobile:text-[clamp(20px,2.8vw,36px)] tablet:left-[50%] tablet:w-[45%] tablet:text-[clamp(20px,2.8vw,36px)] ${ROW_MOBILE_CLASSES[idx]}`}
           style={`top: ${ROW_TOPS[idx]}px;`}>
           {row.value}
         </p>
@@ -143,7 +145,7 @@ const SEP_MOBILE_CLASSES = [
     ))}
     {/* Separadores: width fluido desktop (390px) y mobile (90% del viewport con 5% margen lateral) */}
     {SEP_TOPS.map((y, idx) => (
-      <div class={`absolute left-[88px] w-[390px] h-px bg-vecta-dark/60 mobile:left-[5%] mobile:right-[5%] mobile:w-auto ${SEP_MOBILE_CLASSES[idx]}`} style={`top: ${y}px;`}></div>
+      <div class={`absolute left-[88px] w-[390px] h-px bg-vecta-dark/60 mobile:left-[5%] mobile:right-[5%] mobile:w-auto tablet:left-[5%] tablet:right-[5%] tablet:w-auto ${SEP_MOBILE_CLASSES[idx]}`} style={`top: ${y}px;`}></div>
     ))}
   </div>
 </section>

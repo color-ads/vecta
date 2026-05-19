@@ -4,26 +4,30 @@
 // title → form → comment label/box → consent → submit. All text scales up.
 ---
 <section id="formulario" class="relative w-full min-h-screen overflow-hidden bg-vecta-lime flex items-center justify-center
-                narrow:block narrow:h-auto narrow:min-h-[2050px] mobile:min-h-[1320px]">
+                narrow:block narrow:h-auto narrow:min-h-[2050px] tablet:min-h-[1400px] mobile:min-h-[1320px]">
   <!-- Inner canvas: tope 1280px en desktop, fluido por debajo. En narrow:
-       (≤768) cambia a layout vertical apilado controlado por overrides. -->
-  <div class="relative w-full max-w-[1280px] h-[940px] mx-auto narrow:h-[2050px] mobile:h-[1320px]">
-    <!-- Title -->
-    <h2 class="absolute left-[168px] top-[148px] text-vecta-dark font-semibold text-[clamp(24px,3.5vw,44px)] leading-[0.959] font-display
+       (≤768) cambia a layout vertical apilado. Tablet (601-768 device=tablet)
+       usa valores compactos en lugar de los enormes de narrow. -->
+  <div class="relative w-full max-w-[1280px] h-[940px] mx-auto narrow:h-[2050px] tablet:h-[1400px] mobile:h-[1320px]">
+    <!-- Title — canvas 1280×940 -->
+    <h2 class="absolute left-[13.13%] top-[15.74%] text-vecta-dark font-semibold text-[clamp(24px,3.5vw,44px)] leading-[0.959] font-display
                narrow:left-0 narrow:right-0 narrow:top-[80px] narrow:w-full narrow:text-center narrow:text-[clamp(36px,6.5vw,80px)]
+               tablet:text-[36px] tablet:top-[60px]
                mobile:text-[28px]">
       Quiero saber más
     </h2>
 
-    <p class="absolute left-[168px] top-[195px] text-vecta-dark text-[clamp(14px,1.6vw,20px)] leading-[1.2] font-display
+    <p class="absolute left-[13.13%] top-[20.74%] text-vecta-dark text-[clamp(14px,1.6vw,20px)] leading-[1.2] font-display
               narrow:left-0 narrow:right-0 narrow:top-[170px] narrow:w-full narrow:text-center narrow:text-[clamp(18px,2.5vw,32px)]
+              tablet:text-[18px] tablet:top-[130px]
               mobile:text-[14px]">
       Déjanos tus datos y nuestros asesores se<br />pondrán en contacto contigo.
     </p>
 
-    <p class="absolute left-[706px] top-[260px] text-vecta-dark text-[clamp(15px,1.9vw,24px)] font-display
+    <p class="absolute left-[55.16%] top-[27.66%] text-vecta-dark text-[clamp(15px,1.9vw,24px)] font-display
               narrow:left-1/2 narrow:top-[1380px] narrow:-translate-x-1/2 narrow:text-[clamp(24px,3.5vw,44px)] narrow:whitespace-nowrap
-              mobile:top-[890px] mobile:text-[15px] mobile:whitespace-normal">
+              tablet:top-[900px] tablet:text-[22px]
+              mobile:left-[24px] mobile:top-[870px] mobile:text-[14px] mobile:whitespace-normal mobile:font-semibold mobile:translate-x-0">
       Deja tu comentario aquí:
     </p>
 
@@ -33,17 +37,19 @@
       form="contactForm"
       name="comentario"
       maxlength="1000"
-      class="absolute left-[706px] top-[310px] w-[392px] h-[335px] rounded-[10px] border-2 border-vecta-dark bg-transparent p-[14px] text-vecta-dark text-[clamp(13px,1.4vw,18px)] resize-none focus:outline-none focus:ring-2 focus:ring-vecta-dark/40 font-display
+      class="absolute left-[55.16%] top-[32.98%] w-[30.63%] h-[35.64%] rounded-[10px] border-2 border-vecta-dark bg-transparent p-[14px] text-vecta-dark text-[clamp(13px,1.4vw,18px)] resize-none focus:outline-none focus:ring-2 focus:ring-vecta-dark/40 font-display
              narrow:left-1/2 narrow:top-[1450px] narrow:-translate-x-1/2 narrow:w-[1000px] narrow:h-[280px] narrow:text-[clamp(16px,2.2vw,28px)]
-             mobile:top-[920px] mobile:w-[calc(100vw-48px)] mobile:h-[160px] mobile:text-[15px]"></textarea>
+             tablet:top-[950px] tablet:w-[640px] tablet:h-[180px] tablet:text-[16px]
+             mobile:left-[24px] mobile:top-[910px] mobile:w-[calc(100vw-48px)] mobile:h-[180px] mobile:text-[2.8vw] mobile:translate-x-0"></textarea>
 
     <form
       id="contactForm"
       novalidate
-      class="absolute left-[175px] top-[280px] w-[451px] font-display
+      class="absolute left-[13.67%] top-[29.79%] w-[35.23%] font-display
              narrow:left-1/2 narrow:top-[290px] narrow:-translate-x-1/2 narrow:w-[1000px]
+             tablet:top-[210px] tablet:w-[640px]
              mobile:w-[calc(100vw-48px)]">
-      <label class="block text-vecta-dark text-[clamp(14px,1.6vw,20px)] font-semibold mb-[6px] narrow:text-[clamp(20px,2.8vw,36px)] narrow:mb-[12px] mobile:text-[14px] mobile:mb-[5px]" for="form-nombre">Nombre:</label>
+      <label class="block text-vecta-dark text-[clamp(14px,1.6vw,20px)] font-semibold mb-[6px] narrow:text-[clamp(20px,2.8vw,36px)] narrow:mb-[12px] tablet:text-[18px] tablet:mb-[8px] mobile:text-[14px] mobile:mb-[5px]" for="form-nombre">Nombre:</label>
       <input
         id="form-nombre"
         name="nombre"
@@ -53,10 +59,10 @@
         maxlength="80"
         autocomplete="given-name"
         class="w-full h-[47px] rounded-[10px] border-2 border-vecta-dark bg-transparent px-[14px] text-vecta-dark mb-[15px] focus:outline-none focus:ring-2 focus:ring-vecta-dark/40 form-input-validate
-               narrow:h-[80px] narrow:text-[clamp(18px,2.5vw,32px)] narrow:mb-[24px]
+               narrow:h-[80px] narrow:text-[clamp(18px,2.5vw,32px)] narrow:mb-[24px] tablet:h-[52px] tablet:text-[16px] tablet:mb-[16px]
                mobile:h-[46px] mobile:text-[15px] mobile:mb-[12px]" />
 
-      <label class="block text-vecta-dark text-[clamp(14px,1.6vw,20px)] font-semibold mb-[6px] narrow:text-[clamp(20px,2.8vw,36px)] narrow:mb-[12px] mobile:text-[14px] mobile:mb-[5px]" for="form-apellido">Apellido:</label>
+      <label class="block text-vecta-dark text-[clamp(14px,1.6vw,20px)] font-semibold mb-[6px] narrow:text-[clamp(20px,2.8vw,36px)] narrow:mb-[12px] tablet:text-[18px] tablet:mb-[8px] mobile:text-[14px] mobile:mb-[5px]" for="form-apellido">Apellido:</label>
       <input
         id="form-apellido"
         name="apellido"
@@ -66,10 +72,10 @@
         maxlength="80"
         autocomplete="family-name"
         class="w-full h-[47px] rounded-[10px] border-2 border-vecta-dark bg-transparent px-[14px] text-vecta-dark mb-[15px] focus:outline-none focus:ring-2 focus:ring-vecta-dark/40 form-input-validate
-               narrow:h-[80px] narrow:text-[clamp(18px,2.5vw,32px)] narrow:mb-[24px]
+               narrow:h-[80px] narrow:text-[clamp(18px,2.5vw,32px)] narrow:mb-[24px] tablet:h-[52px] tablet:text-[16px] tablet:mb-[16px]
                mobile:h-[46px] mobile:text-[15px] mobile:mb-[12px]" />
 
-      <label class="block text-vecta-dark text-[clamp(14px,1.6vw,20px)] font-semibold mb-[6px] narrow:text-[clamp(20px,2.8vw,36px)] narrow:mb-[12px] mobile:text-[14px] mobile:mb-[5px]" for="form-celular">Celular:</label>
+      <label class="block text-vecta-dark text-[clamp(14px,1.6vw,20px)] font-semibold mb-[6px] narrow:text-[clamp(20px,2.8vw,36px)] narrow:mb-[12px] tablet:text-[18px] tablet:mb-[8px] mobile:text-[14px] mobile:mb-[5px]" for="form-celular">Celular:</label>
       <input
         id="form-celular"
         name="celular"
@@ -79,10 +85,10 @@
         inputmode="numeric"
         autocomplete="tel"
         class="w-full h-[47px] rounded-[10px] border-2 border-vecta-dark bg-transparent px-[14px] text-vecta-dark mb-[15px] focus:outline-none focus:ring-2 focus:ring-vecta-dark/40 form-input-validate
-               narrow:h-[80px] narrow:text-[clamp(18px,2.5vw,32px)] narrow:mb-[24px]
+               narrow:h-[80px] narrow:text-[clamp(18px,2.5vw,32px)] narrow:mb-[24px] tablet:h-[52px] tablet:text-[16px] tablet:mb-[16px]
                mobile:h-[46px] mobile:text-[15px] mobile:mb-[12px]" />
 
-      <label class="block text-vecta-dark text-[clamp(14px,1.6vw,20px)] font-semibold mb-[6px] narrow:text-[clamp(20px,2.8vw,36px)] narrow:mb-[12px] mobile:text-[14px] mobile:mb-[5px]" for="form-correo">Correo:</label>
+      <label class="block text-vecta-dark text-[clamp(14px,1.6vw,20px)] font-semibold mb-[6px] narrow:text-[clamp(20px,2.8vw,36px)] narrow:mb-[12px] tablet:text-[18px] tablet:mb-[8px] mobile:text-[14px] mobile:mb-[5px]" for="form-correo">Correo:</label>
       <input
         id="form-correo"
         name="correo"
@@ -91,62 +97,63 @@
         maxlength="120"
         autocomplete="email"
         class="w-full h-[47px] rounded-[10px] border-2 border-vecta-dark bg-transparent px-[14px] text-vecta-dark mb-[15px] focus:outline-none focus:ring-2 focus:ring-vecta-dark/40 form-input-validate
-               narrow:h-[80px] narrow:text-[clamp(18px,2.5vw,32px)] narrow:mb-[24px]
+               narrow:h-[80px] narrow:text-[clamp(18px,2.5vw,32px)] narrow:mb-[24px] tablet:h-[52px] tablet:text-[16px] tablet:mb-[16px]
                mobile:h-[46px] mobile:text-[15px] mobile:mb-[12px]" />
 
-      <p class="text-vecta-dark text-[clamp(14px,1.6vw,20px)] font-semibold mb-[8px] narrow:text-[clamp(20px,2.8vw,36px)] narrow:mb-[12px] mobile:text-[14px] mobile:mb-[6px]">Este proyecto se acomoda a ti para:</p>
-      <div class="flex items-center gap-[12px] mb-[14px] narrow:gap-[18px] narrow:mb-[22px] mobile:gap-[10px] mobile:mb-[12px]">
-        <label class="flex items-center gap-[12px] cursor-pointer narrow:gap-[18px] mobile:gap-[8px]">
-          <span class="text-vecta-dark text-[clamp(14px,1.6vw,20px)] narrow:text-[clamp(18px,2.5vw,32px)] mobile:text-[14px]">Inversión:</span>
+      <p class="text-vecta-dark text-[clamp(14px,1.6vw,20px)] font-semibold mb-[8px] narrow:text-[clamp(20px,2.8vw,36px)] narrow:mb-[12px] tablet:text-[18px] tablet:mb-[8px] mobile:text-[14px] mobile:mb-[6px]">Este proyecto se acomoda a ti para:</p>
+      <div class="flex items-center gap-[12px] mb-[14px] narrow:gap-[18px] narrow:mb-[22px] tablet:gap-[14px] tablet:mb-[16px] mobile:gap-[10px] mobile:mb-[12px]">
+        <label class="flex items-center gap-[12px] cursor-pointer narrow:gap-[18px] tablet:gap-[14px] mobile:gap-[8px]">
+          <span class="text-vecta-dark text-[clamp(14px,1.6vw,20px)] narrow:text-[clamp(18px,2.5vw,32px)] tablet:text-[16px] mobile:text-[14px]">Inversión:</span>
           <input
             type="radio"
             name="proposito"
             value="inversion"
             required
             class="appearance-none inline-block w-[22px] h-[23px] rounded-[5px] border-2 border-vecta-dark cursor-pointer checked:bg-vecta-dark transition-colors
-                   narrow:w-[44px] narrow:h-[44px] mobile:w-[20px] mobile:h-[20px]" />
+                   narrow:w-[44px] narrow:h-[44px] tablet:w-[26px] tablet:h-[26px] mobile:w-[20px] mobile:h-[20px]" />
         </label>
-        <label class="flex items-center gap-[12px] cursor-pointer ml-[44px] narrow:gap-[18px] mobile:gap-[8px] mobile:ml-[16px]">
-          <span class="text-vecta-dark text-[clamp(14px,1.6vw,20px)] narrow:text-[clamp(18px,2.5vw,32px)] mobile:text-[14px]">Vivienda:</span>
+        <label class="flex items-center gap-[12px] cursor-pointer ml-[44px] narrow:gap-[18px] tablet:gap-[14px] mobile:gap-[8px] mobile:ml-[16px]">
+          <span class="text-vecta-dark text-[clamp(14px,1.6vw,20px)] narrow:text-[clamp(18px,2.5vw,32px)] tablet:text-[16px] mobile:text-[14px]">Vivienda:</span>
           <input
             type="radio"
             name="proposito"
             value="vivienda"
             class="appearance-none inline-block w-[22px] h-[23px] rounded-[5px] border-2 border-vecta-dark cursor-pointer checked:bg-vecta-dark transition-colors
-                   narrow:w-[44px] narrow:h-[44px] mobile:w-[20px] mobile:h-[20px]" />
+                   narrow:w-[44px] narrow:h-[44px] tablet:w-[26px] tablet:h-[26px] mobile:w-[20px] mobile:h-[20px]" />
         </label>
       </div>
 
-      <p class="text-vecta-dark text-[clamp(14px,1.6vw,20px)] font-semibold mb-[8px] narrow:text-[clamp(20px,2.8vw,36px)] narrow:mb-[12px] mobile:text-[14px] mobile:mb-[6px]">Quieres ser contactado telefónicamente:</p>
-      <div class="flex items-center gap-[12px] mb-[14px] narrow:gap-[18px] narrow:mb-[22px] mobile:gap-[10px] mobile:mb-[12px]">
-        <label class="flex items-center gap-[12px] cursor-pointer narrow:gap-[18px] mobile:gap-[8px]">
-          <span class="text-vecta-dark text-[clamp(14px,1.6vw,20px)] narrow:text-[clamp(18px,2.5vw,32px)] mobile:text-[14px]">Sí:</span>
+      <p class="text-vecta-dark text-[clamp(14px,1.6vw,20px)] font-semibold mb-[8px] narrow:text-[clamp(20px,2.8vw,36px)] narrow:mb-[12px] tablet:text-[18px] tablet:mb-[8px] mobile:text-[14px] mobile:mb-[6px]">Quieres ser contactado telefónicamente:</p>
+      <div class="flex items-center gap-[12px] mb-[14px] narrow:gap-[18px] narrow:mb-[22px] tablet:gap-[14px] tablet:mb-[16px] mobile:gap-[10px] mobile:mb-[12px]">
+        <label class="flex items-center gap-[12px] cursor-pointer narrow:gap-[18px] tablet:gap-[14px] mobile:gap-[8px]">
+          <span class="text-vecta-dark text-[clamp(14px,1.6vw,20px)] narrow:text-[clamp(18px,2.5vw,32px)] tablet:text-[16px] mobile:text-[14px]">Sí:</span>
           <input
             type="radio"
             name="contactoTelefonico"
             value="si"
             required
             class="appearance-none inline-block w-[22px] h-[23px] rounded-[5px] border-2 border-vecta-dark cursor-pointer checked:bg-vecta-dark transition-colors
-                   narrow:w-[44px] narrow:h-[44px] mobile:w-[20px] mobile:h-[20px]" />
+                   narrow:w-[44px] narrow:h-[44px] tablet:w-[26px] tablet:h-[26px] mobile:w-[20px] mobile:h-[20px]" />
         </label>
-        <label class="flex items-center gap-[12px] cursor-pointer ml-[44px] narrow:gap-[18px] mobile:gap-[8px] mobile:ml-[16px]">
-          <span class="text-vecta-dark text-[clamp(14px,1.6vw,20px)] narrow:text-[clamp(18px,2.5vw,32px)] mobile:text-[14px]">No:</span>
+        <label class="flex items-center gap-[12px] cursor-pointer ml-[44px] narrow:gap-[18px] tablet:gap-[14px] mobile:gap-[8px] mobile:ml-[16px]">
+          <span class="text-vecta-dark text-[clamp(14px,1.6vw,20px)] narrow:text-[clamp(18px,2.5vw,32px)] tablet:text-[16px] mobile:text-[14px]">No:</span>
           <input
             type="radio"
             name="contactoTelefonico"
             value="no"
             class="appearance-none inline-block w-[22px] h-[23px] rounded-[5px] border-2 border-vecta-dark cursor-pointer checked:bg-vecta-dark transition-colors
-                   narrow:w-[44px] narrow:h-[44px] mobile:w-[20px] mobile:h-[20px]" />
+                   narrow:w-[44px] narrow:h-[44px] tablet:w-[26px] tablet:h-[26px] mobile:w-[20px] mobile:h-[20px]" />
         </label>
       </div>
 
-      <label class="block text-vecta-dark text-[clamp(14px,1.6vw,20px)] font-semibold mb-[6px] narrow:text-[clamp(20px,2.8vw,36px)] narrow:mb-[12px] mobile:text-[14px] mobile:mb-[5px]" for="form-origen">¿Por dónde te enteraste del proyecto?</label>
+      <label class="block text-vecta-dark text-[clamp(14px,1.6vw,20px)] font-semibold mb-[6px] narrow:text-[clamp(20px,2.8vw,36px)] narrow:mb-[12px] tablet:text-[18px] tablet:mb-[8px] mobile:text-[14px] mobile:mb-[5px]" for="form-origen">¿Por dónde te enteraste del proyecto?</label>
       <select
         id="form-origen"
         name="origenContacto"
         required
         class="w-full h-[47px] rounded-[10px] border-2 border-vecta-dark bg-transparent px-[14px] text-vecta-dark text-[14px] mb-[15px] focus:outline-none focus:ring-2 focus:ring-vecta-dark/40 form-input-validate font-display appearance-none cursor-pointer
                narrow:h-[80px] narrow:text-[clamp(16px,1.9vw,22px)] narrow:mb-[24px]
+               tablet:h-[52px] tablet:text-[16px] tablet:mb-[16px]
                mobile:h-[46px] mobile:text-[15px] mobile:mb-[12px]"
         style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%2322291d%22 stroke-width=%222.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M6 9l6 6 6-6%22/></svg>'); background-repeat: no-repeat; background-position: right 14px center; background-size: 18px 18px; padding-right: 40px;">
         <option class="text-[14px] min-[2000px]:text-[12px] min-[2400px]:text-[11px] min-[3000px]:text-[9px] min-[3500px]:text-[8px]" value="" disabled selected hidden>Selecciona una opción</option>
@@ -162,8 +169,9 @@
     </form>
 
     <!-- Consent + checkbox (associated to the form via form="contactForm") -->
-    <label class="absolute left-[706px] top-[660px] w-[395px] flex gap-[12px] cursor-pointer
+    <label class="absolute left-[55.16%] top-[70.21%] w-[30.86%] flex gap-[12px] cursor-pointer
                   narrow:left-1/2 narrow:top-[1760px] narrow:-translate-x-1/2 narrow:w-[1000px] narrow:gap-[18px]
+                  tablet:top-[1180px] tablet:w-[640px] tablet:gap-[14px]
                   mobile:top-[1120px] mobile:w-[calc(100vw-48px)] mobile:gap-[10px]">
       <input
         type="checkbox"
@@ -172,8 +180,9 @@
         required
         class="mt-[3px] appearance-none inline-block w-[18px] h-[18px] rounded-[3px] border-2 border-vecta-dark shrink-0 cursor-pointer checked:bg-vecta-dark transition-colors
                narrow:mt-[4px] narrow:w-[44px] narrow:h-[44px]
+               tablet:mt-[3px] tablet:w-[22px] tablet:h-[22px]
                mobile:w-[18px] mobile:h-[18px] mobile:mt-[2px]" />
-      <p class="text-vecta-dark text-[14px] leading-[1.3] font-display narrow:text-[clamp(15px,1.9vw,24px)] mobile:text-[13px]">
+      <p class="text-vecta-dark text-[14px] leading-[1.3] font-display narrow:text-[clamp(15px,1.9vw,24px)] tablet:text-[14px] mobile:text-[13px]">
         Autorizo a recibir información del proyecto a mi correo electrónico y autorizo el uso de mis datos según la política de tratamiento de datos personales.
       </p>
     </label>
@@ -182,8 +191,9 @@
     <button
       type="submit"
       form="contactForm"
-      class="absolute left-[875px] top-[760px] w-[214px] h-[47px] rounded-[10px] bg-vecta-dark text-white text-[clamp(16px,2.2vw,28px)] font-semibold flex items-center justify-center hover:bg-vecta-dark/90 transition-colors disabled:opacity-50 font-display
+      class="absolute left-[68.36%] top-[80.85%] w-[16.72%] h-[47px] rounded-[10px] bg-vecta-dark text-white text-[clamp(16px,2.2vw,28px)] font-semibold flex items-center justify-center hover:bg-vecta-dark/90 transition-colors disabled:opacity-50 font-display
              narrow:left-1/2 narrow:top-[1940px] narrow:-translate-x-1/2 narrow:w-[360px] narrow:h-[80px] narrow:text-[clamp(22px,3.2vw,40px)]
+             tablet:top-[1300px] tablet:w-[240px] tablet:h-[52px] tablet:text-[18px]
              mobile:top-[1220px] mobile:w-[180px] mobile:h-[48px] mobile:text-[16px]">
       ENVIAR
     </button>

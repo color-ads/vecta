@@ -57,6 +57,7 @@ const ADDRESS = encodeURIComponent(mapQuery);
 const initialMapSrc = `https://www.google.com/maps?q=${ADDRESS}&z=16&hl=es&output=embed`;
 ---
 <section id="ubicacion" class="relative w-full min-h-screen overflow-hidden bg-vecta-night flex items-center justify-center
+                tablet:block tablet:h-[152.5vh] tablet:min-h-[152.5vh]
                 mobile:block mobile:h-[140vh] mobile:min-h-[140vh]">
   <!-- Map + pin wrapper. El iframe se restringe a la mitad derecha (en
        desktop) para que su centro geométrico — donde Google Maps dibuja
@@ -65,7 +66,8 @@ const initialMapSrc = `https://www.google.com/maps?q=${ADDRESS}&z=16&hl=es&outpu
        lime se posiciona al 50%/50% del wrapper para superponerse al
        marker rojo. -->
   <div class="absolute inset-y-0 left-1/2 right-0 overflow-hidden
-              mobile:inset-auto mobile:top-[50vh] mobile:left-0 mobile:right-0 mobile:w-full mobile:h-[90vh]">
+              min-[2400px]:left-[30%]
+              tablet:inset-auto tablet:top-[62.5vh] tablet:left-0 tablet:right-0 tablet:w-full tablet:h-[90vh] mobile:inset-auto mobile:top-[50vh] mobile:left-0 mobile:right-0 mobile:w-full mobile:h-[90vh]">
     <iframe
       src={initialMapSrc}
       data-address={ADDRESS}
@@ -93,41 +95,45 @@ const initialMapSrc = `https://www.google.com/maps?q=${ADDRESS}&z=16&hl=es&outpu
        En desktop mantenemos el `min-w-[639px]` para que el panel nunca
        quede más estrecho que el contenido textual; en móvil el panel
        cubre todo el ancho del viewport sin tope mínimo. -->
-  <div class="absolute left-0 inset-y-0 bg-vecta-lime w-[calc(50vw-1px)] min-w-[639px]
-              mobile:inset-auto mobile:top-0 mobile:left-0 mobile:right-0 mobile:w-full mobile:min-w-0 mobile:h-[50vh]"></div>
+  <div class="absolute left-0 inset-y-0 bg-vecta-lime w-[calc(50vw-1px)] min-w-[639px] min-[2400px]:w-[30vw]
+              tablet:inset-auto tablet:top-0 tablet:left-0 tablet:right-0 tablet:w-full tablet:min-w-0 tablet:h-[62.5vh] mobile:inset-auto mobile:top-0 mobile:left-0 mobile:right-0 mobile:w-full mobile:min-w-0 mobile:h-[50vh]"></div>
 
   <!-- Lime-panel text wrapper. Mirrors the lime panel width so text stays
        centered in it regardless of viewport width. -->
-  <div class="absolute left-0 inset-y-0 w-[calc(50vw-1px)] min-w-[639px]
-              mobile:inset-auto mobile:top-0 mobile:left-0 mobile:right-0 mobile:w-full mobile:min-w-0 mobile:h-[50vh]">
-    <!-- Decorative bracket around the heading + subtitle (Figma 2075:350-353). -->
-    <div class="absolute left-0 right-0 h-px bg-vecta-dark top-[153px] mobile:top-[12vh]"></div>
-    <div class="absolute left-0 right-0 h-px bg-vecta-dark top-[380px] mobile:top-[26vh]"></div>
-    <!-- Vertical bracket + dots are hidden on phone (would create asymmetric
-         left margin once the content is centered). -->
-    <div class="absolute w-px bg-vecta-dark top-[106px] h-[728px] left-[calc(50%-171px)] mobile:hidden"></div>
-    <div class="absolute w-[12px] h-[12px] rounded-full bg-vecta-dark top-[147px] left-[calc(50%-177px)] mobile:hidden"></div>
-    <div class="absolute w-[12px] h-[12px] rounded-full bg-vecta-dark top-[374px] left-[calc(50%-177px)] mobile:hidden"></div>
+  <div class="absolute left-0 inset-y-0 w-[calc(50vw-1px)] min-w-[639px] min-[2400px]:w-[30vw]
+              tablet:inset-auto tablet:top-0 tablet:left-0 tablet:right-0 tablet:w-full tablet:min-w-0 tablet:h-[62.5vh] mobile:inset-auto mobile:top-0 mobile:left-0 mobile:right-0 mobile:w-full mobile:min-w-0 mobile:h-[50vh]">
+    <!-- Decorative bracket around the heading + subtitle (Figma 2075:350-353).
+         Tops convertidos a % del canvas Figma (1000px) para escalar con altura del panel. -->
+    <div class="absolute left-0 right-0 h-px bg-vecta-dark top-[15.3%] tablet:top-[10vh] mobile:top-[10vh]"></div>
+    <div class="absolute left-0 right-0 h-px bg-vecta-dark top-[38%] tablet:top-[33vh] mobile:top-[33vh]"></div>
+    <!-- Vertical bracket + dots hidden en phone Y tablet (rompen la simetría
+         cuando el contenido se centra en el panel apilado). -->
+    <div class="absolute w-px bg-vecta-dark top-[10.6%] h-[72.8%] left-[calc(50%-171px)] tablet:hidden mobile:hidden"></div>
+    <div class="absolute w-[12px] h-[12px] rounded-full bg-vecta-dark top-[14.7%] left-[calc(50%-177px)] tablet:hidden mobile:hidden"></div>
+    <div class="absolute w-[12px] h-[12px] rounded-full bg-vecta-dark top-[37.4%] left-[calc(50%-177px)] tablet:hidden mobile:hidden"></div>
 
     <!-- All text is left-aligned at Figma x=184 (35 px right of the vertical
          bracket line at x=149). 184 - 319.5 = -135.5 px from the 639-wide
          panel centerline, so we anchor everything via calc(50% - 135.5px).
          On phone (vertical bracket hidden) we re-center each element on
-         the panel midline AND retime the vertical tops in vh so the cluster
-         centers vertically inside the 50vh lime card. -->
-    <h2 class="absolute top-[186px] w-[440px] text-vecta-dark font-semibold text-[clamp(36px,6vw,72px)] leading-[0.959] font-display left-[calc(50%-135.5px)]
-               mobile:top-[14vh] mobile:left-1/2 mobile:-translate-x-1/2 mobile:text-center
+         the panel midline AND retime the vertical tops en vh para que el
+         cluster centre verticalmente dentro del 50vh lime card. -->
+    <h2 class="absolute top-[18.6%] w-[68.86%] max-w-[440px] text-vecta-dark font-semibold text-[clamp(36px,6vw,72px)] leading-[0.959] font-display left-[calc(50%-135.5px)]
+               tablet:top-[13vh] tablet:left-1/2 tablet:-translate-x-1/2 tablet:text-center tablet:!w-[90%] tablet:text-[7vw]
+               mobile:top-[13vh] mobile:left-1/2 mobile:-translate-x-1/2 mobile:text-center mobile:!w-[90%] mobile:text-[7vw]
                pc-small:!text-[clamp(24px,4vw,48px)]
                desktop:!text-[clamp(28px,4.5vw,56px)]">{heading}</h2>
 
-    <p class="absolute top-[317px] text-vecta-dark text-[clamp(20px,3vw,38px)] leading-[0.959] font-display left-[calc(50%-135.5px)]
-              mobile:top-[22vh] mobile:left-1/2 mobile:-translate-x-1/2 mobile:text-center
+    <p class="absolute top-[31.7%] text-vecta-dark text-[clamp(20px,3vw,38px)] leading-[0.959] font-display left-[calc(50%-135.5px)]
+              tablet:top-[25vh] tablet:left-1/2 tablet:-translate-x-1/2 tablet:text-center tablet:w-[90%] tablet:text-[4.5vw]
+              mobile:top-[25vh] mobile:left-1/2 mobile:-translate-x-1/2 mobile:text-center mobile:w-[90%] mobile:text-[4.5vw]
               pc-small:!text-[clamp(16px,2.1vw,26px)]
               desktop:!text-[clamp(16px,2.2vw,28px)]
               desktop:mt-[2vh]">{subtitle}</p>
 
-    <div class="absolute top-[450px] w-[420px] text-vecta-dark text-[clamp(20px,3vw,38px)] leading-[0.959] space-y-[1.2em] font-display left-[calc(50%-135.5px)]
-                mobile:top-[30vh] mobile:left-1/2 mobile:-translate-x-1/2 mobile:text-center
+    <div class="absolute top-[45%] w-[65.73%] max-w-[420px] text-vecta-dark text-[clamp(20px,3vw,38px)] leading-[0.959] space-y-[1.2em] font-display left-[calc(50%-135.5px)]
+                tablet:top-[36vh] tablet:left-1/2 tablet:-translate-x-1/2 tablet:text-center tablet:!w-[90%] tablet:text-[4vw]
+                mobile:top-[36vh] mobile:left-1/2 mobile:-translate-x-1/2 mobile:text-center mobile:!w-[90%] mobile:text-[4vw]
                 pc-small:!text-[clamp(16px,2.1vw,26px)]
                 desktop:!text-[clamp(16px,2.2vw,28px)]">
       <p>{description1}</p>
@@ -135,10 +141,11 @@ const initialMapSrc = `https://www.google.com/maps?q=${ADDRESS}&z=16&hl=es&outpu
     </div>
 
     <!-- Decorative horizontal line — 3vh top gap separates it from the
-         description ending in "actividad real." above. Hidden on desktop
-         where the descriptions can be long enough to overlap with it. -->
-    <div class="absolute top-[590px] mt-[3vh] w-[292px] h-px bg-vecta-dark left-[calc(50%-135.5px)]
-                mobile:top-[38vh] mobile:left-1/2 mobile:-translate-x-1/2
+         description ending in "actividad real." above. Hidden en desktop
+         (las descripciones largas pueden chocar). -->
+    <div class="absolute top-[59%] mt-[3vh] w-[45.7%] max-w-[292px] h-px bg-vecta-dark left-[calc(50%-135.5px)]
+                tablet:top-[47vh] tablet:left-1/2 tablet:-translate-x-1/2
+                mobile:top-[47vh] mobile:left-1/2 mobile:-translate-x-1/2
                 desktop:hidden"></div>
   </div>
 
