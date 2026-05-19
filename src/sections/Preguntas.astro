@@ -94,13 +94,13 @@ const lastQuestionParts = splitForMobile(items[lastIdx].q);
     <span class="absolute rounded-full bg-white pointer-events-none left-[58.75%] top-[32.81%] w-[13px] h-[12px] max-sm:hidden"></span>
     <span class="absolute rounded-full bg-white pointer-events-none left-[58.75%] top-[59.38%] w-[13px] h-[12px] max-sm:hidden"></span>
 
-    <!-- Building fascade — repositions on mobile to occupy the bottom half.
-         Section is 100vh tall on mobile (10vh taller than before) so the
-         fachada gets the extra room to show the full building.
-         Tablet: bajamos el top para cerrar el hueco que queda abajo cuando
-         la sección min-h-screen es más alta que el canvas 832 (≈1024px en
-         tablet portrait → 112px vacíos al fondo). -->
-    <div class="absolute pointer-events-none left-[47.19%] top-[-19.64%] w-[64.77%] h-[124.64%]
+    <!-- Building fascade — pinned al bottom de la sección (no del canvas)
+         vía calc(100vh - alto_imagen). Así en cualquier viewport (768, 900,
+         1080, 1440) el edificio queda apoyado en el borde inferior visible
+         de la sección, sin huecos blancos abajo.
+         Alto imagen = 124.64% × canvas(832) = 1037px.
+         Mobile y tablet usan overrides porque el layout cambia. -->
+    <div class="absolute pointer-events-none left-[47.19%] top-[calc(100vh-1037px)] w-[64.77%] h-[124.64%]
                 sm:max-md:top-[-2%]
                 max-sm:left-0 max-sm:right-0 max-sm:top-[38vh] max-sm:w-full max-sm:h-[62vh]">
       <picture>
