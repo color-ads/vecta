@@ -130,9 +130,17 @@ const navItems = [
   <span class={`burger-line block w-[60px] h-[4px] ${burger}`}></span>
 </button>
 
-<!-- Drawer fullscreen. position:fixed para cubrir más allá del nav strip. -->
+<!-- Drawer mobile/tablet. IMPORTANTE: el script de abajo lo teletransporta
+     a <body> en runtime. El motivo: el <header> contenedor tiene
+     `transform-gpu` (aceleración GPU en iOS), y un ancestro con transform
+     crea un nuevo containing block para descendientes `position: fixed`
+     → el inset-0 se dimensionaba contra el header (130px), no contra el
+     viewport. Por eso el menú aparecía "arriba" y el bg incompleto.
+     Una vez en <body>, fixed inset-0 cubre el viewport real y el centrado
+     con flex items-center justify-center funciona como debe.
+     max-md:data-[open=true]:flex cubre ≤768px (iPad portrait incluido). -->
 <div
-  class="mobile-menu fixed inset-0 z-40 bg-vecta-night/95 backdrop-blur-sm hidden max-sm:data-[open=true]:flex items-center justify-center pointer-events-auto"
+  class="mobile-menu fixed inset-0 z-40 bg-vecta-night/95 backdrop-blur-sm hidden max-md:data-[open=true]:flex items-center justify-center pointer-events-auto"
   data-mobile-menu
   hidden
 >
@@ -154,6 +162,16 @@ const navItems = [
 <script>
   const toggle = document.querySelector<HTMLButtonElement>('[data-mobile-toggle]');
   const menu = document.querySelector<HTMLElement>('[data-mobile-menu]');
+
+  // Teleport drawer to <body>. El <header> contenedor tiene transform-gpu
+  // para acelerar el scroll en iOS, pero eso crea un containing block que
+  // confina los `position: fixed` descendientes al área del header (130px),
+  // rompiendo el inset-0 del drawer (queda chiquito y "muy arriba"). Sacarlo
+  // a body restaura el comportamiento estándar de position:fixed (vs viewport).
+  if (menu && menu.parentElement !== document.body) {
+    document.body.appendChild(menu);
+  }
+
   const links = document.querySelectorAll<HTMLAnchorElement>('[data-mobile-link]');
 
   function setOpen(open: boolean) {
