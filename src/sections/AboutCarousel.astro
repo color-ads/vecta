@@ -67,7 +67,8 @@ const items = extractHeadingPairs(ws?.fields?.bloque3seccion3textos, 'heading-3'
   <!-- Slide indicator dots — clickable, centered along the left strip. Only
        navigation control for this carousel on desktop. Hidden on mobile, where
        slides auto-advance every 5s instead. -->
-  <div class="absolute left-[4.69%] top-1/2 -translate-y-1/2 flex flex-col gap-[14px] z-50 max-sm:hidden">
+  <div class="absolute left-[4.69%] top-1/2 -translate-y-1/2 flex flex-col gap-[14px] z-50
+              max-sm:left-1/2 max-sm:-translate-x-1/2 max-sm:translate-y-0 max-sm:top-[3vh] max-sm:flex-row">
     {[0, 1, 2].map((i) => (
       <button data-about-dot={i} aria-label={`Ir al slide ${i + 1}`} type="button"
               class={`w-[14px] h-[14px] rounded-full border-2 border-vecta-dark cursor-pointer transition-all hover:scale-125 ${i === 0 ? 'bg-vecta-dark' : 'bg-transparent'}`}></button>
