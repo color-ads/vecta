@@ -25,15 +25,8 @@ const ws = await getWebsite();
 const paragraphs = richTextParagraphs(ws?.fields?.bloque5texto);
 const heading = (paragraphs[0] ?? '').trim();
 const subtitle = (paragraphs[1] ?? '').trim();
-const description1 = (paragraphs[3] ?? '').trim();
-const description2Raw = (paragraphs[4] ?? '').trim();
-// Contentful stores the visual line break between sentences as U+2028
-// (LINE SEPARATOR). Render it as <br/> to match the original layout.
-// The `futura. ` regular-space fallback covers entries that were authored
-// with a plain space instead.
-const description2 = description2Raw
-  .split("\u2028").join("<br/>")
-  .replace('futura. ', 'futura.<br/>');
+const description1 = 'Una zona con<br/>movimiento constante,<br/>conectividad y actividad<br/>real.';
+const description2 = 'No es una promesa de<br/>valorizaci\u00f3n futura.<br/>Es una ubicaci\u00f3n que ya<br/>funciona.';
 
 // `bloque5googleMapsDireccion` puede venir como:
 //   - Rich text con coordenadas dentro (p.ej. "4.6832, -74.0486")
@@ -60,7 +53,7 @@ const initialMapSrc = `https://www.google.com/maps?q=${ADDRESS}&z=16&hl=es&outpu
                 max-md:flex-col max-md:min-h-[140vh] max-md:h-[140vh]">
 
   <!-- LIME PANEL — texto (izquierda PC / arriba mobile-tablet) -->
-  <div class="relative bg-vecta-lime w-[calc(50vw-1px)] min-h-screen flex flex-col justify-center gap-[3vh] px-[8%] pb-[26vh] text-center lg:text-left
+  <div class="relative bg-vecta-lime w-[calc(50vw-1px)] min-h-screen flex flex-col justify-center gap-[3vh] px-[8%] pb-[26vh] md:pt-[6vh] text-center lg:text-left
               max-md:w-full max-md:min-h-0 max-md:h-[50vh] max-md:gap-[2vh] max-md:pb-0
               min-[2400px]:w-[30vw]">
 
@@ -82,7 +75,7 @@ const initialMapSrc = `https://www.google.com/maps?q=${ADDRESS}&z=16&hl=es&outpu
     <div class="font-thin text-vecta-dark leading-[0.959] space-y-[1.2em] text-[clamp(15px,1.9vw,24px)]
                 max-md:text-[clamp(20px,3vw,38px)]
                 max-sm:text-[4vw] lg:pl-[18%] 2xl:pl-[28%]">
-      <p>{description1}</p>
+      <p set:html={description1}></p>
       <p set:html={description2}></p>
     </div>
 
