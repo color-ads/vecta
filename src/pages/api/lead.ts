@@ -9,13 +9,21 @@ const HUBSPOT_HOST = 'api.hsforms.com';
 const HUBSPOT_PORTAL_ID = '44459766';
 const HUBSPOT_FORM_ID = 'f9390f8d-a76b-4b5f-9de1-544a208f4358';
 const HUBSPOT_PATH = `/submissions/v3/integration/submit/${HUBSPOT_PORTAL_ID}/${HUBSPOT_FORM_ID}`;
+const HUBSPOT_URL = `https://${HUBSPOT_HOST}${HUBSPOT_PATH}`;
 
-// Node's global fetch resolves hostnames via the OS resolver (dns.lookup).
-// Some local networks (pi-hole, AdGuard, corporate filters) NXDOMAIN
-// api.hsforms.com, breaking `pnpm dev`. Resolve via Cloudflare/Google
-// explicitly so the proxy works regardless of the box's DNS.
-const resolver = new Resolver();
-resolver.setServers(['1.1.1.1', '8.8.8.8']);
+// Manual resolver only used as fallback when the system DNS can't resolve
+// api.hsforms.com (e.g. `pnpm dev` behind a pi-hole / corporate filter).
+// In production (Vercel) system DNS works fine and the fallback is never hit.
+// Lazy-instantiated because some serverless runtimes don't allow UDP DNS
+// queries to public resolvers — touching it at module load would crash boot.
+let fallbackResolver: Resolver | null = null;
+function getFallbackResolver(): Resolver {
+  if (!fallbackResolver) {
+    fallbackResolver = new Resolver();
+    fallbackResolver.setServers(['1.1.1.1', '8.8.8.8']);
+  }
+  return fallbackResolver;
+}
 
 // Internal names del form en HubSpot. Algunos están en español
 // (auto-generados desde el label) en vez de los estándar en inglés.
@@ -35,46 +43,72 @@ const FIELD_MAP: Record<string, string> = {
 const CONSENT_TEXT =
   'Autorizo a recibir información del proyecto a mi correo electrónico y autorizo el uso de mis datos según la política de tratamiento de datos personales.';
 
-function postToHubspot(payload: unknown): Promise<{ status: number; body: string }> {
-  return resolver.resolve4(HUBSPOT_HOST).then(
-    (addresses) =>
-      new Promise((resolve, reject) => {
-        const ip = addresses[0];
-        if (!ip) {
-          reject(new Error(`no_a_record_for_${HUBSPOT_HOST}`));
-          return;
-        }
-        const data = Buffer.from(JSON.stringify(payload), 'utf8');
-        const req = https.request(
-          {
-            host: ip,
-            port: 443,
-            method: 'POST',
-            path: HUBSPOT_PATH,
-            // SNI must be the real hostname so TLS cert validation succeeds.
-            servername: HUBSPOT_HOST,
-            headers: {
-              Host: HUBSPOT_HOST,
-              'Content-Type': 'application/json',
-              'Content-Length': String(data.byteLength),
-            },
-          },
-          (res) => {
-            const chunks: Buffer[] = [];
-            res.on('data', (c: Buffer) => chunks.push(c));
-            res.on('end', () =>
-              resolve({
-                status: res.statusCode ?? 0,
-                body: Buffer.concat(chunks).toString('utf8'),
-              }),
-            );
-          },
+async function postToHubspot(
+  payload: unknown,
+): Promise<{ status: number; body: string }> {
+  const body = JSON.stringify(payload);
+  // Primary path: Node's global fetch (uses system DNS). Works on Vercel.
+  try {
+    const res = await fetch(HUBSPOT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body,
+    });
+    return { status: res.status, body: await res.text() };
+  } catch (err) {
+    if (!isDnsError(err)) throw err;
+    // Fallback: manual https with hostname resolved via 1.1.1.1.
+    // Only hit when the box's DNS NXDOMAINs api.hsforms.com.
+    return postViaManualDns(Buffer.from(body, 'utf8'));
+  }
+}
+
+function isDnsError(err: unknown): boolean {
+  const code = (err as NodeJS.ErrnoException | undefined)?.code;
+  const causeCode = (
+    (err as { cause?: NodeJS.ErrnoException })?.cause as
+      | NodeJS.ErrnoException
+      | undefined
+  )?.code;
+  const dnsCodes = new Set(['ENOTFOUND', 'EAI_AGAIN', 'EAI_NODATA']);
+  return dnsCodes.has(code ?? '') || dnsCodes.has(causeCode ?? '');
+}
+
+async function postViaManualDns(
+  body: Buffer,
+): Promise<{ status: number; body: string }> {
+  const addresses = await getFallbackResolver().resolve4(HUBSPOT_HOST);
+  const ip = addresses[0];
+  if (!ip) throw new Error(`no_a_record_for_${HUBSPOT_HOST}`);
+  return new Promise((resolve, reject) => {
+    const req = https.request(
+      {
+        host: ip,
+        port: 443,
+        method: 'POST',
+        path: HUBSPOT_PATH,
+        servername: HUBSPOT_HOST, // SNI for TLS cert validation
+        headers: {
+          Host: HUBSPOT_HOST,
+          'Content-Type': 'application/json',
+          'Content-Length': String(body.byteLength),
+        },
+      },
+      (res) => {
+        const chunks: Buffer[] = [];
+        res.on('data', (c: Buffer) => chunks.push(c));
+        res.on('end', () =>
+          resolve({
+            status: res.statusCode ?? 0,
+            body: Buffer.concat(chunks).toString('utf8'),
+          }),
         );
-        req.on('error', reject);
-        req.write(data);
-        req.end();
-      }),
-  );
+      },
+    );
+    req.on('error', reject);
+    req.write(body);
+    req.end();
+  });
 }
 
 export const POST: APIRoute = async ({ request }) => {

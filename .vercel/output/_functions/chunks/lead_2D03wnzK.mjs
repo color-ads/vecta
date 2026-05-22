@@ -6,12 +6,19 @@ const HUBSPOT_HOST = "api.hsforms.com";
 const HUBSPOT_PORTAL_ID = "44459766";
 const HUBSPOT_FORM_ID = "f9390f8d-a76b-4b5f-9de1-544a208f4358";
 const HUBSPOT_PATH = `/submissions/v3/integration/submit/${HUBSPOT_PORTAL_ID}/${HUBSPOT_FORM_ID}`;
-const resolver = new Resolver();
-resolver.setServers(["1.1.1.1", "8.8.8.8"]);
+const HUBSPOT_URL = `https://${HUBSPOT_HOST}${HUBSPOT_PATH}`;
+let fallbackResolver = null;
+function getFallbackResolver() {
+  if (!fallbackResolver) {
+    fallbackResolver = new Resolver();
+    fallbackResolver.setServers(["1.1.1.1", "8.8.8.8"]);
+  }
+  return fallbackResolver;
+}
 const FIELD_MAP = {
   nombre: "firstname",
   apellido: "lastname",
-  celular: "phone",
+  celular: "celular",
   correo: "email",
   comentario: "message",
   proposito: "proposito",
@@ -19,46 +26,61 @@ const FIELD_MAP = {
   origenContacto: "origen_contacto"
 };
 const CONSENT_TEXT = "Autorizo a recibir información del proyecto a mi correo electrónico y autorizo el uso de mis datos según la política de tratamiento de datos personales.";
-function postToHubspot(payload) {
-  return resolver.resolve4(HUBSPOT_HOST).then(
-    (addresses) => new Promise((resolve, reject) => {
-      const ip = addresses[0];
-      if (!ip) {
-        reject(new Error(`no_a_record_for_${HUBSPOT_HOST}`));
-        return;
-      }
-      const data = Buffer.from(JSON.stringify(payload), "utf8");
-      const req = https.request(
-        {
-          host: ip,
-          port: 443,
-          method: "POST",
-          path: HUBSPOT_PATH,
-          // SNI must be the real hostname so TLS cert validation succeeds.
-          servername: HUBSPOT_HOST,
-          headers: {
-            Host: HUBSPOT_HOST,
-            "Content-Type": "application/json",
-            "Content-Length": String(data.byteLength)
-          }
-        },
-        (res) => {
-          const chunks = [];
-          res.on("data", (c) => chunks.push(c));
-          res.on(
-            "end",
-            () => resolve({
-              status: res.statusCode ?? 0,
-              body: Buffer.concat(chunks).toString("utf8")
-            })
-          );
+async function postToHubspot(payload) {
+  const body = JSON.stringify(payload);
+  try {
+    const res = await fetch(HUBSPOT_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body
+    });
+    return { status: res.status, body: await res.text() };
+  } catch (err) {
+    if (!isDnsError(err)) throw err;
+    return postViaManualDns(Buffer.from(body, "utf8"));
+  }
+}
+function isDnsError(err) {
+  const code = err?.code;
+  const causeCode = err?.cause?.code;
+  const dnsCodes = /* @__PURE__ */ new Set(["ENOTFOUND", "EAI_AGAIN", "EAI_NODATA"]);
+  return dnsCodes.has(code ?? "") || dnsCodes.has(causeCode ?? "");
+}
+async function postViaManualDns(body) {
+  const addresses = await getFallbackResolver().resolve4(HUBSPOT_HOST);
+  const ip = addresses[0];
+  if (!ip) throw new Error(`no_a_record_for_${HUBSPOT_HOST}`);
+  return new Promise((resolve, reject) => {
+    const req = https.request(
+      {
+        host: ip,
+        port: 443,
+        method: "POST",
+        path: HUBSPOT_PATH,
+        servername: HUBSPOT_HOST,
+        // SNI for TLS cert validation
+        headers: {
+          Host: HUBSPOT_HOST,
+          "Content-Type": "application/json",
+          "Content-Length": String(body.byteLength)
         }
-      );
-      req.on("error", reject);
-      req.write(data);
-      req.end();
-    })
-  );
+      },
+      (res) => {
+        const chunks = [];
+        res.on("data", (c) => chunks.push(c));
+        res.on(
+          "end",
+          () => resolve({
+            status: res.statusCode ?? 0,
+            body: Buffer.concat(chunks).toString("utf8")
+          })
+        );
+      }
+    );
+    req.on("error", reject);
+    req.write(body);
+    req.end();
+  });
 }
 const POST = async ({ request }) => {
   let body;
