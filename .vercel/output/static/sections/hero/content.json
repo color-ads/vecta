@@ -1,0 +1,15 @@
+{
+  "section": "hero",
+  "tagline": "Un buen activo\nno necesita convencer,\nse demuestra.",
+  "navigation": [
+    { "label": "HOME", "active": true },
+    { "label": "ABOUT US" },
+    { "label": "ESPACIOS" },
+    { "label": "TIPOLOGÍAS" },
+    { "label": "INVERSIÓN" }
+  ],
+  "logo": "VECTA 98",
+  "assets": {
+    "logo": "/sections/hero/vecta-logo.svg"
+  }
+}

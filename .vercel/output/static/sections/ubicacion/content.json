@@ -1,0 +1,12 @@
+{
+  "section": "ubicacion",
+  "title": "Ubicación que funciona",
+  "address": "Carrera 15 con calle 98.",
+  "body": [
+    "Una zona con movimiento constante, conectividad y actividad real.",
+    "No es una promesa de valorización futura. Es una ubicación que ya funciona."
+  ],
+  "assets": {
+    "map": "/sections/ubicacion/map-bg.png"
+  }
+}
