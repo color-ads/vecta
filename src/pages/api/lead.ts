@@ -32,12 +32,13 @@ function getFallbackResolver(): Resolver {
 const FIELD_MAP: Record<string, string> = {
   nombre: 'firstname',
   apellido: 'lastname',
-  celular: 'celular',
+  celular: 'phone',
   correo: 'email',
   comentario: 'message',
-  proposito: 'proposito',
+  proposito: 'tipologia_proyecto',
   contactoTelefonico: 'contacto_telefonico',
   origenContacto: 'origen_contacto',
+  consent: 'acepto_el_tratamiento_de_mis_datos_personales__las__a_href__http___iactual_co_wp_content_uploads_20',
 };
 
 const CONSENT_TEXT =
@@ -120,11 +121,11 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   const fields = Object.entries(FIELD_MAP)
-    .map(([local, hsName]) => ({
-      objectTypeId: '0-1',
-      name: hsName,
-      value: String(body[local] ?? '').trim(),
-    }))
+    .map(([local, hsName]) => {
+      let value = String(body[local] ?? '').trim();
+      if (local === 'consent') value = value ? 'true' : '';
+      return { objectTypeId: '0-1', name: hsName, value };
+    })
     .filter((f) => f.value.length > 0);
 
   const email = fields.find((f) => f.name === 'email')?.value;
