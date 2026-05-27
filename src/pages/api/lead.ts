@@ -6,8 +6,8 @@ import https from 'node:https';
 export const prerender = false;
 
 const HUBSPOT_HOST = 'api.hsforms.com';
-const HUBSPOT_PORTAL_ID = '44459766';
-const HUBSPOT_FORM_ID = 'f9390f8d-a76b-4b5f-9de1-544a208f4358';
+const HUBSPOT_PORTAL_ID = '19575552';
+const HUBSPOT_FORM_ID = '8db66949-101b-4205-8602-84d360d28bab';
 const HUBSPOT_PATH = `/submissions/v3/integration/submit/${HUBSPOT_PORTAL_ID}/${HUBSPOT_FORM_ID}`;
 const HUBSPOT_URL = `https://${HUBSPOT_HOST}${HUBSPOT_PATH}`;
 
@@ -159,7 +159,8 @@ export const POST: APIRoute = async ({ request }) => {
         502,
       );
     }
-    return json({ ok: true });
+    console.log('HubSpot accepted submit:', res.status, res.body);
+    return json({ ok: true, hs_status: res.status, hs_body: res.body });
   } catch (err) {
     console.error('Network error reaching HubSpot:', err);
     return json({ ok: false, error: 'network_error' }, 502);
