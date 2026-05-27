@@ -128,6 +128,8 @@ export const POST: APIRoute = async ({ request }) => {
     })
     .filter((f) => f.value.length > 0);
 
+  fields.push({ objectTypeId: '0-1', name: 'proyecto_de_interes', value: 'Vecta 98' });
+
   const email = fields.find((f) => f.name === 'email')?.value;
   if (!email) {
     return json({ ok: false, error: 'missing_email' }, 400);
