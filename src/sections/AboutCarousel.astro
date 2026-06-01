@@ -67,12 +67,29 @@ const items = extractHeadingPairs(ws?.fields?.bloque3seccion3textos, 'heading-3'
   <!-- Slide indicator dots — clickable, centered along the left strip. Only
        navigation control for this carousel on desktop. Hidden on mobile, where
        slides auto-advance every 5s instead. -->
-  <div class="absolute left-[4.69%] top-1/2 -translate-y-1/2 flex flex-col gap-[14px] z-50
+  <div class="absolute left-[4.69%] top-1/2 -translate-y-1/2 flex flex-col items-center gap-[14px] z-50
               max-sm:left-1/2 max-sm:-translate-x-1/2 max-sm:translate-y-0 max-sm:top-[3vh] max-sm:flex-row">
+    <!-- Flecha arriba (slide anterior). En mobile la fila es horizontal, así que
+         rotamos -90° para que apunte a la izquierda. Color vía JS (accent). -->
+    <button data-about-arrow="prev" aria-label="Slide anterior" type="button"
+            class="text-vecta-dark cursor-pointer transition-all hover:scale-125 max-sm:-rotate-90">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" class="w-[14px] h-[14px] animate-arrow-hint-up">
+        <path d="M6 15l6-6 6 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
     {[0, 1, 2].map((i) => (
       <button data-about-dot={i} aria-label={`Ir al slide ${i + 1}`} type="button"
               class={`w-[14px] h-[14px] rounded-full border-2 border-vecta-dark cursor-pointer transition-all hover:scale-125 ${i === 0 ? 'bg-vecta-dark' : 'bg-transparent'}`}></button>
     ))}
+
+    <!-- Flecha abajo (slide siguiente). -->
+    <button data-about-arrow="next" aria-label="Slide siguiente" type="button"
+            class="text-vecta-dark cursor-pointer transition-all hover:scale-125 max-sm:-rotate-90">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" class="w-[14px] h-[14px] animate-arrow-hint-down">
+        <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
   </div>
 
   <!-- ============================================================
@@ -143,42 +160,18 @@ const items = extractHeadingPairs(ws?.fields?.bloque3seccion3textos, 'heading-3'
       <div class="absolute left-[6.56%] top-[28.49%] flex gap-[10px] w-[87.03%]
                   sm:max-md:relative sm:max-md:top-auto sm:max-md:left-auto sm:max-md:grid sm:max-md:grid-cols-1 sm:max-md:gap-[16px] sm:max-md:w-[75%] sm:max-md:mx-auto
                   max-sm:relative max-sm:top-auto max-sm:left-auto max-sm:grid max-sm:grid-cols-1 max-sm:gap-[16px] max-sm:w-[92%] max-sm:mx-auto">
-        {cards.map((c, idx) => {
-          // Cards 1 y 4 (idx 0 y 3) tienen descripción de 2 líneas en PC.
-          // Subimos su título, separador y descripción ~4% para que el bloque
-          // de texto termine a la misma altura visual que las cards 2 y 3
-          // (que tienen descripción de 1 línea).
-          const isLongDesc = idx === 0 || idx === 3;
-          const titleBottom = isLongDesc ? 'bottom-[33%]' : 'bottom-[29.13%]';
-          const sepTop      = isLongDesc ? 'top-[70%]'    : 'top-[73.85%]';
-          const descTop     = isLongDesc ? 'top-[75%]'    : 'top-[78.67%]';
-          return (
+        {cards.map((c) => (
           <article class="relative w-[24.33%] aspect-[271/436] rounded-[10px] bg-[#0a0a0a] text-white
                           sm:max-md:w-full sm:max-md:aspect-auto sm:max-md:h-[22vh]
                           max-sm:w-full max-sm:aspect-auto max-sm:h-[22vh]">
             <span class="absolute left-[8.86%] top-[2.52%] text-[clamp(40px,7vw,105px)] leading-none font-bold text-white font-display
                          sm:max-md:left-[6%] sm:max-md:top-[3%] sm:max-md:text-[6.5vw]
                          max-sm:left-[6%] max-sm:top-[3%] max-sm:text-[9vw]">{c.number}</span>
-            <div class="absolute right-[7.38%] top-[5.05%] w-[20.3%] aspect-square rounded-full bg-white flex items-center justify-center
-                        sm:max-md:right-[6%] sm:max-md:top-[3%] sm:max-md:w-[3.5vh] sm:max-md:h-[3.5vh]
-                        max-sm:right-[6%] max-sm:top-[3%] max-sm:w-[3.5vh] max-sm:h-[3.5vh]">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" fill="none" class="w-[50%] h-[50%] sm:max-md:w-[1.8vh] sm:max-md:h-[1.8vh] max-sm:w-[1.8vh] max-sm:h-[1.8vh]">
-                <path d="M10.4954 17.4921V20.9905C10.4954 22.9226 8.92908 24.4889 6.99696 24.4889C5.06483 24.4889 3.49854 22.9226 3.49854 20.9905C3.49854 19.0584 5.06483 17.4921 6.99696 17.4921H10.4954ZM10.4954 17.4921H17.4922M10.4954 17.4921V10.4953M17.4922 17.4921V20.9905C17.4922 22.9226 19.0585 24.4889 20.9906 24.4889C22.9228 24.4889 24.4891 22.9226 24.4891 20.9905C24.4891 19.0584 22.9228 17.4921 20.9906 17.4921H17.4922ZM17.4922 17.4921V10.4953M17.4922 10.4953H10.4954M17.4922 10.4953V6.99683C17.4922 5.06471 19.0585 3.49841 20.9906 3.49841C22.9228 3.49841 24.4891 5.06471 24.4891 6.99683C24.4891 8.92896 22.9228 10.4953 20.9906 10.4953H17.4922ZM10.4954 10.4953V6.99683C10.4954 5.06471 8.92908 3.49841 6.99696 3.49841C5.06483 3.49841 3.49854 5.06471 3.49854 6.99683C3.49854 8.92896 5.06483 10.4953 6.99696 10.4953H10.4954Z" stroke="#151515" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-
-            <h3 class={`absolute left-[8.86%] ${titleBottom} w-[80.07%] text-[clamp(15px,2vw,36px)] font-semibold leading-[0.95] font-display
-                       sm:max-md:left-[6%] sm:max-md:bottom-[32%] sm:max-md:w-[88%] sm:max-md:text-[2.8vw]
-                       max-sm:left-[6%] max-sm:bottom-[40%] max-sm:w-[88%] max-sm:text-[3.8vw]`}>{c.title}</h3>
-            <span class={`absolute left-[8.86%] ${sepTop} w-[46.49%] h-px bg-white
-                         sm:max-md:left-[6%] sm:max-md:top-[73%] sm:max-md:w-[25%]
-                         max-sm:left-[6%] max-sm:top-[65%] max-sm:w-[25%]`}></span>
-            <p class={`absolute left-[8.86%] ${descTop} w-[80.44%] text-[clamp(10px,1vw,18px)] leading-[1.3] font-thin font-display
-                      sm:max-md:left-[6%] sm:max-md:top-[79%] sm:max-md:w-[88%] sm:max-md:text-[2.4vw]
-                      max-sm:left-[6%] max-sm:top-[71%] max-sm:w-[88%] max-sm:text-[3.2vw]`}>{c.description}</p>
+            <p class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[80.44%] text-center text-[clamp(10px,1vw,18px)] leading-[1.3] font-thin font-display
+                      sm:max-md:w-[88%] sm:max-md:text-[2.4vw]
+                      max-sm:w-[88%] max-sm:text-[3.2vw]">{c.description}</p>
           </article>
-          );
-        })}
+        ))}
       </div>
     </div>
   </div>
@@ -269,6 +262,7 @@ const items = extractHeadingPairs(ws?.fields?.bloque3seccion3textos, 'heading-3'
   function initAboutCarousel() {
     const slides = document.querySelectorAll<HTMLElement>('[data-about-slide]');
     const dots = document.querySelectorAll<HTMLButtonElement>('[data-about-dot]');
+    const arrows = document.querySelectorAll<HTMLButtonElement>('[data-about-arrow]');
     const total = slides.length;
     if (!total) return;
     let active = 0;
@@ -292,6 +286,8 @@ const items = extractHeadingPairs(ws?.fields?.bloque3seccion3textos, 'heading-3'
         d.style.borderColor = accent;
         d.style.backgroundColor = idx === active ? accent : 'transparent';
       });
+      // Las flechas usan stroke="currentColor", así que basta con setear color.
+      arrows.forEach((a) => { a.style.color = accent; });
       // Mirror active slide on the section so the global nav theme handler
       // can react (slide 3 → lime nav over the dark amenidades card).
       if (sectionEl) sectionEl.dataset.activeSlide = String(active);
@@ -304,6 +300,17 @@ const items = extractHeadingPairs(ws?.fields?.bloque3seccion3textos, 'heading-3'
         e.stopPropagation();
         show(idx);
         // Manual selection on desktop also pauses auto-rotate (if running).
+        pauseThenResume();
+      });
+    });
+
+    // Flechas arriba/abajo → slide anterior/siguiente (con wrap-around).
+    arrows.forEach((a) => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const dir = a.getAttribute('data-about-arrow') === 'next' ? 1 : -1;
+        show(active + dir);
         pauseThenResume();
       });
     });
