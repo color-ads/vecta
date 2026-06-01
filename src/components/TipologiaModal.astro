@@ -223,6 +223,14 @@ import TipologiaAbierta2 from './TipologiaAbierta2.astro';
 
   closeBtn?.addEventListener('click', close);
 
+  // Flecha grande de la vista render → scroll suave hasta la vista del plano.
+  const scrollDownBtn = modal?.querySelector<HTMLButtonElement>('[data-tipologia-scroll-down]');
+  scrollDownBtn?.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    planoView?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
   // Close on Escape key.
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && modal && !modal.hasAttribute('hidden')) close();

@@ -15,6 +15,26 @@
      `max-md:` covers ≤768 INCLUSIVE (iPad portrait at exactly 768
      gets mobile/tablet styling instead of PC layout). */
   --breakpoint-md: 769px;
+
+  /* AboutCarousel nav arrows: "nudge" continuo (oscilación arriba/abajo sin
+     pausa) para insinuar que suben/bajan de slide. Usados como utilidades
+     `animate-arrow-hint-up/down` en las flechas. */
+  --animate-arrow-hint-up: arrow-hint-up 1.2s ease-in-out infinite;
+  --animate-arrow-hint-down: arrow-hint-down 1.2s ease-in-out infinite;
+}
+
+@keyframes arrow-hint-up {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+@keyframes arrow-hint-down {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(4px); }
+}
+
+/* Respeta usuarios con movimiento reducido. */
+@media (prefers-reduced-motion: reduce) {
+  [data-about-arrow] { animation: none !important; }
 }
 
 /* ============================================================

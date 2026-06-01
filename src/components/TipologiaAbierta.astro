@@ -112,5 +112,22 @@ const tituloEndsIn2 = /2$/.test(tituloMostrado);
 
     <!-- Bottom-right rule — decorativo, oculto en mobile. -->
     <div class="absolute left-[48.44%] top-[79.93%] w-[47.66%] h-px bg-white max-sm:hidden"></div>
+
+    <!-- Flecha grande inferior: insinúa que el modal scrollea hacia abajo
+         (hacia la vista del plano, TipologiaAbierta2) y, al hacer click,
+         hace scroll suave hasta ahí. Misma animación de "nudge" continuo
+         que las flechas pequeñas del AboutCarousel. -->
+    <button
+      data-tipologia-scroll-down
+      type="button"
+      aria-label="Ver el plano"
+      class="absolute left-1/2 -translate-x-1/2 bottom-[4%] z-20 text-white cursor-pointer transition-transform hover:scale-110">
+      <svg
+        aria-hidden="true"
+        class="animate-arrow-hint-down w-[clamp(40px,5vw,64px)] h-auto [filter:drop-shadow(0_4px_10px_rgba(0,0,0,0.35))]"
+        viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5 9l7 7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
   </div>
 </section>
