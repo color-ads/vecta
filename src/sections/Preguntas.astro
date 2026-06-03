@@ -68,14 +68,14 @@ function splitForMobile(q: string): { first: string; second: string } {
 const lastIdx = items.length - 1;
 const lastQuestionParts = splitForMobile(items[lastIdx].q);
 ---
-<section class="relative w-full min-h-screen overflow-hidden bg-vecta-night sm:max-md:min-h-[95vh] max-sm:block max-sm:overflow-visible max-sm:h-auto max-sm:min-h-[100vh] max-sm:pb-20">
-  <div class="relative w-full max-w-[1280px] h-[832px] mx-auto max-sm:h-auto max-sm:pb-24">
+<section class="relative w-full min-h-screen overflow-hidden bg-vecta-night sm:max-md:min-h-[95vh] max-sm:block max-sm:overflow-visible max-sm:h-auto max-sm:min-h-0 max-sm:pb-0">
+  <div class="relative w-full max-w-[1280px] h-[832px] mx-auto max-lg:hidden">
     <!-- Title — canvas 1280×832, posiciones en %.
          Mobile: baja a 18% para no quedar pegado arriba (FAQ items
          arrancan ~30% en mobile vía JS). -->
     <h2 class="absolute text-vecta-lime font-semibold text-[clamp(28px,4.7vw,60px)] 
     leading-[0.959] font-display left-[5.31%] top-[12.38%] w-[49.92%]
-               max-sm:top-[50%] max-sm:text-[clamp(22px,5.5vw,30px)] 
+               max-sm:top-[180px] max-sm:text-[clamp(22px,5.5vw,30px)]
                max-sm:left-0 max-sm:right-0 max-sm:w-full max-sm:text-center">
       Algunas preguntas<br/>frecuentes
     </h2>
@@ -102,11 +102,11 @@ const lastQuestionParts = splitForMobile(items[lastIdx].q);
          Mobile y tablet usan overrides porque el layout cambia. -->
     <div class="absolute pointer-events-none left-[47.19%] top-[calc(100vh-1037px)] w-[64.77%] h-[124.64%]
                 sm:max-md:top-[-2%]
-                max-sm:left-0 max-sm:right-0 max-sm:top-[38vh] max-sm:w-full max-sm:h-[62vh]">
+                max-sm:left-0 max-sm:right-0 max-sm:top-[770px] max-sm:w-full max-sm:h-auto">
       <picture>
         <source srcset="/sections/preguntas/fachada.webp" type="image/webp" />
         <img src="/sections/preguntas/fachada.jpg" alt="Fachada VECTA 98"
-             class="w-full h-full object-cover max-w-full" loading="lazy" decoding="async" />
+             class="w-full h-full object-contain object-bottom max-w-full" loading="lazy" decoding="async" />
       </picture>
     </div>
 
@@ -175,6 +175,63 @@ const lastQuestionParts = splitForMobile(items[lastIdx].q);
            style={`top: ${CLOSED_TOPS[idx] + 126}px;`}></div>
     ))}
   </div>
+
+  <!-- ============================================================
+       MOBILE LAYOUT (≤768px) — flujo normal, 100% responsive.
+       Título + preguntas centrados verticalmente en el primer
+       viewport; imagen del edificio debajo a ancho completo.
+       Acordeón puramente CSS (grid-rows 0fr→1fr) — sin px fijos
+       ni JS de medición, así escala en cualquier alto/ancho.
+       ============================================================ -->
+  <div class="hidden max-lg:flex flex-col w-full">
+    <div class="flex flex-col justify-start min-h-screen w-full max-w-[680px] mx-auto px-5 pt-[16vh] pb-16">
+      <h2 class="text-vecta-lime font-semibold font-display text-center leading-[0.959]
+                 text-[clamp(24px,7vw,34px)] mb-8">
+        Algunas preguntas<br/>frecuentes
+      </h2>
+
+      <ul class="w-full">
+        {items.map((item) => (
+          <li class="group border-b border-white/25" data-m-item>
+            <button
+              class="w-full flex items-start gap-3 py-4 text-left cursor-pointer"
+              data-m-faq
+              aria-expanded="false"
+              type="button">
+              <span class="shrink-0 mt-0.5 w-9 h-9 rounded-full border-2 border-vecta-lime
+                           text-vecta-lime flex items-center justify-center
+                           [transition:background-color_0.2s_ease]">
+                <svg viewBox="0 0 24 24" class="w-3.5 h-3.5 [transition:transform_0.3s_ease] group-data-[open]:rotate-180"
+                     fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </span>
+              <span class="flex-1 text-vecta-lime font-semibold font-display leading-[1.15]
+                           text-[clamp(15px,4.4vw,19px)] tracking-[-0.3px]">
+                {item.q}
+              </span>
+            </button>
+            <!-- Panel acordeón: grid-rows 0fr→1fr para alto animado sin JS -->
+            <div class="grid grid-rows-[0fr] group-data-[open]:grid-rows-[1fr]
+                        [transition:grid-template-rows_0.3s_ease]">
+              <div class="overflow-hidden">
+                <p class="text-white font-display leading-[1.35] pl-12 pb-5
+                          text-[clamp(13px,3.7vw,15px)] tracking-[-0.2px]">
+                  {item.a}
+                </p>
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <picture>
+      <source srcset="/sections/preguntas/fachada.webp" type="image/webp" />
+      <img src="/sections/preguntas/fachada.jpg" alt="Fachada VECTA 98"
+           class="block w-full h-auto" loading="lazy" decoding="async" />
+    </picture>
+  </div>
 </section>
 
 <script>
@@ -187,7 +244,7 @@ const lastQuestionParts = splitForMobile(items[lastIdx].q);
   // (html[data-device="phone"]) so JS positions match CSS layout.
   const isMobile = document.documentElement.getAttribute('data-device') === 'phone';
   const ROW_SPACING = isMobile ? 62 : 73;
-  const CLOSED_TOPS = Array.from({ length: total }, (_, i) => (isMobile ? 210 : 313) + i * ROW_SPACING);
+  const CLOSED_TOPS = Array.from({ length: total }, (_, i) => (isMobile ? 280 : 313) + i * ROW_SPACING);
   // CARET_OFFSET ya no se usa como fallback fijo — caretOffsetFor(i)
   // calcula dinámicamente el offset por item leyendo el font-size real,
   // así el botón siempre queda centrado verticalmente con la primera
@@ -320,4 +377,25 @@ const lastQuestionParts = splitForMobile(items[lastIdx].q);
   // Initial pass — overrides the SSR'd inline tops so the mobile layout uses
   // the bigger row spacing computed above.
   applyPositions();
+
+  // ── Mobile accordion (≤768px) ───────────────────────────────────
+  // Layout en flujo normal: el alto lo anima CSS (grid-rows 0fr→1fr).
+  // Aquí sólo alternamos el atributo data-open y forzamos uno abierto
+  // a la vez. Sin posicionamiento px — el documento reacomoda solo.
+  const mItems = Array.from(document.querySelectorAll<HTMLElement>('[data-m-item]'));
+  mItems.forEach((li) => {
+    const btn = li.querySelector<HTMLButtonElement>('[data-m-faq]');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      const willOpen = !li.hasAttribute('data-open');
+      mItems.forEach((other) => {
+        other.removeAttribute('data-open');
+        other.querySelector('[data-m-faq]')?.setAttribute('aria-expanded', 'false');
+      });
+      if (willOpen) {
+        li.setAttribute('data-open', '');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
 </script>
