@@ -1,0 +1,47 @@
+---
+// Registro de visitantes en sala de ventas (se abre con el QR físico).
+// Página independiente: no usa Layout para no mostrar el botón flotante de WhatsApp.
+// Envía al form HubSpot "Vecta 98 · QR Sala de Ventas", que marca cada contacto con marcacion_qr = "QR SALA".
+---
+
+<html lang="es">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<title>Vecta 98 · Bienvenido a la Sala de Ventas</title>
+		<style is:inline>
+			:root{--bg:#0b0b0a;--dark:#22291d;--lime:#eafc9d}
+			*{box-sizing:border-box;margin:0;padding:0}
+			html{background:var(--bg)}
+			body{font-family:"Albert Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:#f2f3ec;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+			.wrap{width:100%;max-width:480px;padding:38px 22px 50px}
+			.logo{display:block;margin:0 auto 6px;height:52px}
+			.eyebrow{text-align:center;font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--lime);opacity:.85;margin-top:16px}
+			h1{text-align:center;font-size:clamp(26px,7vw,34px);font-weight:800;letter-spacing:-.01em;line-height:1.1;margin-top:8px;color:#fff}
+			.lead{text-align:center;font-size:14.5px;color:#c9ccbf;margin-top:10px;line-height:1.5}
+			.card{background:#fff;border-radius:16px;padding:22px 20px;margin-top:24px;box-shadow:0 10px 40px rgba(0,0,0,.5);color:var(--dark)}
+			.foot{text-align:center;font-size:11px;color:#8a8d82;margin-top:22px;line-height:1.5}
+		</style>
+	</head>
+	<body>
+		<div class="wrap">
+			<img class="logo" src="/sections/hero/vecta-logo.svg" alt="Vecta 98" />
+			<div class="eyebrow">Sala de ventas · Chicó Norte</div>
+			<h1>¡Bienvenido!</h1>
+			<p class="lead">Regístrate para acompañarte mejor durante tu visita.</p>
+			<div class="card"><div id="formulario">Cargando…</div></div>
+			<p class="foot">Vecta 98 · Actual Inmobiliaria<br />Tus datos se usan únicamente para atender tu visita y enviarte información del proyecto.</p>
+		</div>
+		<script is:inline charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+		<script is:inline>
+			hbspt.forms.create({
+				region: "na1",
+				portalId: "19575552",
+				formId: "f2ee5c6e-abe3-43e6-96af-1e7e8fe181e3",
+				target: "#formulario",
+				css: ".hs-button.primary,.hs-button{background:#22291d!important;border-color:#22291d!important;color:#eafc9d!important;font-weight:800!important;border-radius:999px!important;padding:14px 28px!important;width:100%!important;font-size:16px!important}.hs-button:hover{background:#000!important}label{color:#22291d!important;font-weight:700!important}.hs-input{border-radius:10px!important;font-size:16px!important}"
+			});
+		</script>
+	</body>
+</html>
